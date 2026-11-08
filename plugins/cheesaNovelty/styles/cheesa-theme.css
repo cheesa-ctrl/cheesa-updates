@@ -1116,3 +1116,12 @@
 }
 :root body .ch-card-top .ch-pages-badge b { color: var(--nv-navy); font-weight: 700; }
 :root body .ch-card-top .ch-pages-badge .fa { color: var(--nv-accent); }
+
+/* v1.5.4 — ikon statistik kartu artikel selalu terlihat (tidak tertimpa CSS lain di situs) */
+:root body .obj_article_summary .ch-cstats .fa,
+:root body .obj_article_summary .ch-card-top .fa {
+  color: var(--nv-accent, #ed991f) !important; -webkit-text-fill-color: var(--nv-accent, #ed991f) !important;
+  opacity: 1 !important; filter: none !important; visibility: visible !important;
+  display: inline-block !important; font: normal normal normal 14px/1 FontAwesome !important; font-size: .95em !important;
+  text-shadow: none !important; background: none !important;
+}
