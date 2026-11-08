@@ -51,7 +51,7 @@ class CheesaNoveltyThemePlugin extends ThemePlugin {
 		]);
 		$this->addOption('chHeaderAccent', 'FieldColor', [
 			'label' => 'Warna sorotan header & menu (di atas navy)',
-			'description' => 'Angka ISSN, ikon menu, hover menu, tombol Login/pengguna, tombol Search, dan pita judul artikel. Hindari warna yang terlalu mirip warna utama (navy), karena teks/ikon di header akan sulit terlihat.',
+			'description' => 'Angka ISSN, ikon menu, hover menu, tombol Login/pengguna, tombol Search, dan pita judul artikel. Bila warnanya terlalu gelap di atas warna utama, otomatis dipakai versi lebih terang dari warna yang sama agar tetap terlihat.',
 			'default' => '#ed991f',
 		]);
 		$this->addOption('chLeftBlocks', 'FieldText', [
@@ -155,8 +155,9 @@ class CheesaNoveltyThemePlugin extends ThemePlugin {
 
 		$navy = $this->_color($this->getOption('chNavy'), '#030271');
 		$accent = $this->_color($this->getOption('chAccent'), '#ed991f');
-		// warna pilihan pengelola dipakai apa adanya (tidak diganti otomatis)
-		$hl = $this->_color($this->getOption('chHeaderAccent'), '#ed991f');
+		// warna pilihan pengelola tetap dipakai; bila terlalu gelap di atas warna utama,
+		// dipakai versi lebih terang dari warna yang SAMA (mis. biru -> biru muda) supaya ISSN, ikon & tombol terlihat
+		$hl = $this->_lighten($this->_color($this->getOption('chHeaderAccent'), '#ed991f'), $navy, 4.5);
 		$this->addStyle('cheesa-vars', ':root{--nv-navy:' . $navy . ';--nv-accent:' . $accent . ';--nv-on-accent:' . $this->_onColor($accent)
 			. ';--nv-accent-base:' . $accent . ';--nv-on-accent-base:' . $this->_onColor($accent) . ';--nv-hl:' . $hl . ';--nv-on-hl:' . $this->_onColor($hl) . ';}', ['inline' => true]);
 		if ($this->getOption('chHomeArticles') === 'off') {
@@ -484,6 +485,16 @@ class CheesaNoveltyThemePlugin extends ThemePlugin {
 	/** Warna teks di atas latar $bg: gelap atau putih, mana yang lebih kontras. */
 	private function _onColor($bg) {
 		return $this->_contrast($bg, '#1a1300') >= $this->_contrast($bg, '#ffffff') ? '#1a1300' : '#ffffff';
+	}
+	/** Campur $c dengan putih sedikit demi sedikit sampai kontrasnya terhadap $bg >= $min (rona warna tetap). */
+	private function _lighten($c, $bg, $min) {
+		if ($this->_contrast($c, $bg) >= $min) return $c;
+		list($r, $g, $b) = $this->_rgb($c);
+		for ($t = 0.1; $t <= 1.0001; $t += 0.05) {
+			$x = sprintf('#%02x%02x%02x', round($r + (255 - $r) * $t), round($g + (255 - $g) * $t), round($b + (255 - $b) * $t));
+			if ($this->_contrast($x, $bg) >= $min) return $x;
+		}
+		return '#ffffff';
 	}
 	/** $c bila cukup terbaca di atas $bg (kontras >= 3), jika tidak amber CHEESA / putih. */
 	private function _readable($c, $bg) {
