@@ -1,0 +1,6 @@
+/* Crossmark Button */
+.cmk-wrap { margin: 8px 0; }
+.cmk-wrap.cmk-top { display: flex; justify-content: flex-end; margin: 0 0 10px; }
+.cmk-button { display: inline-block; line-height: 0; border-radius: 4px; }
+.cmk-button img { display: block; width: 150px; height: auto; }
+.cmk-button:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }

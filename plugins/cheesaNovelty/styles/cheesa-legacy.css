@@ -1,0 +1,3694 @@
+/* CHEESA legacy stylesheet (dibawa dari Journal style sheet + Header/Footer). */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@500;600;700;800&display=swap');
+/* 
+CHEESA
+*/
+
+.pkp_brand_footer {
+	display: none;
+}
+.journals ul .body .description a {display: inline;}
+body {
+  background: url("") #f5f9fb fixed !important;
+}
+
+header #headerNavigationContainer{
+max-height: 200% !important; /*mengganti warna menu (#31A9E1) dan gambar header */
+}
+
+.pkp_site_name,
+.has_site_logo .pkp_site_name {
+  position: relative;
+  width: 100%;
+  left: auto;
+  right: auto;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+}
+
+
+/* ==========================================================================
+   Header & Navigasi Modern (Adopsi Style PE)
+   ========================================================================== */
+
+/* Structure & Brand Wrapper */
+.pkp_site_name_wrapper {
+  width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.pkp_screen_reader {
+  margin: 0 !important;
+}
+
+.pkp_site_name {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.pkp_site_name > a {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin: auto !important;
+  display: flex;
+  justify-content: center;
+}
+
+.pkp_site_name .is_img img {
+  max-height: 100% !important;
+  max-width: 100% !important;
+  height: auto;
+  transition: opacity 0.2s ease;
+}
+
+/* Navigasi Utama (Bar) */
+.pkp_navigation_primary_row {
+  background: #030271 !important; /* Navy CHEESA */
+  border-top: none !important;
+  border-bottom: 0px solid #ffffff !important; /* Garis aksen Orange CHEESA */
+  box-shadow: 0 4px 12px rgba(3, 2, 113, 0.12);
+}
+
+.pkp_navigation_primary_row .pkp_navigation_primary_wrapper ul li {
+  padding: 0 !important;
+  margin: 0 2px !important;
+}
+
+/* Link Menu Utama */
+.pkp_navigation_primary_row .pkp_navigation_primary_wrapper ul li a {
+  font-family: 'Inter', 'Montserrat', sans-serif !important;
+  font-size: 0.875rem !important; /* 14px modern */
+  font-weight: 600 !important;
+  color: #ffffff !important;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 48px !important;
+  padding: 0 16px !important;
+  margin: 0 !important;
+  position: relative;
+  transition: all 0.2s ease-in-out !important;
+}
+
+/* Hover Menu Utama (Gaya Modern PE) */
+.pkp_navigation_primary_row .pkp_navigation_primary_wrapper ul li a:hover,
+.pkp_navigation_primary_row .pkp_navigation_primary_wrapper ul li a:focus {
+  background: rgb(255 255 255) !important;
+  color: #030271!important; /* Teks berubah menjadi Orange */
+  border-radius: 6px !important;
+  border: none !important;
+}
+
+/* Indicators Garis Bawah Aksen Hover */
+.pkp_navigation_primary_row .pkp_navigation_primary_wrapper ul li a::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 3px;
+  background: #030271;
+  transition: all 0.25s ease;
+  transform: translateX(-50%);
+  border-radius: 2px 2px 0 0;
+}
+
+.pkp_navigation_primary_row .pkp_navigation_primary_wrapper ul li a:hover::after {
+  width: 70%;
+}
+
+/* Dropdown Sub-Menu Modern */
+.pkp_navigation_primary_row .pkp_navigation_primary_wrapper ul li ul {
+  background: #030271 !important;
+  border-radius: 8px !important;
+  padding: 8px 0 !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  margin-top: 4px;
+}
+
+.pkp_navigation_primary_row .pkp_navigation_primary_wrapper ul li ul li {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+  margin: 0 !important;
+}
+
+.pkp_navigation_primary_row .pkp_navigation_primary_wrapper ul li ul li:last-child {
+  border-bottom: none !important;
+}
+
+.pkp_navigation_primary_row .pkp_navigation_primary_wrapper ul li ul li a {
+  font-size: 0.9rem !important;
+  text-transform: none; /* Sub menu dibuat kapital normal agar rapi */
+  letter-spacing: normal;
+  line-height: 36px !important;
+  padding: 0 18px !important;
+  font-weight: 600 !important;
+}
+
+.pkp_navigation_primary_row .pkp_navigation_primary_wrapper ul li ul li a:hover {
+  background: #ffffff !important;
+  color: #030271 !important;
+  border-radius: 4px !important;
+}
+
+.pkp_navigation_primary_row .pkp_navigation_primary_wrapper ul li ul li a::after {
+  display: none; /* Hilangkan garis indikator pada sub menu */
+}
+
+/* Breadcrumbs / Anak Menu Modern */
+.cmp_breadcrumbs {
+  padding: 1.25rem 0 0.75rem 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.825rem;
+  font-weight: 500;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cmp_breadcrumbs a {
+  color: #030271;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.cmp_breadcrumbs a:hover {
+  color: #ed991f;
+}
+
+.cmp_breadcrumbs .separator {
+  margin: 0 0.5rem;
+  opacity: 0.5;
+}
+
+/* ==========================================================================
+   List Artikel Background (Adopsi PE Style Modern)
+   ========================================================================== */
+
+.obj_article_summary {
+  position: relative;
+  overflow: hidden;
+  padding: 1.25rem 1.5rem !important;
+  margin-bottom: 0rem;
+  background: #ffffff !important; /* Latar bersih putih modern */
+  border: 1px solid #e2e8f0 !important; /* Border tipis halus */
+  border-radius: 10px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02) !important; /* Soft elevation shadow */
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+/* ==========================================================================
+   CHEESA — Style untuk Form Role Registration
+   TEMPEL di PALING BAWAH stylesheet jurnal:
+   Settings > Website > Appearance > Advanced > Journal style sheet
+   (Editor halaman OJS membuang tag <style>, jadi CSS harus ditaruh di sini.)
+   ========================================================================== */
+
+.ch-form {
+  --ch-navy: #030271;
+  --ch-navy-deep: #02024f;
+  --ch-amber: #ed991f;
+  --ch-amber-bg: #fff4e0;
+  --ch-mist: #f5f9fb;
+  --ch-line: #dfe5ee;
+  --ch-ink: #14143a;
+  --ch-muted: #5d6482;
+  --ch-hex: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'%3E%3Cpath d='M28 66L0 50V16L28 0l28 16v34L28 66v34' fill='none' stroke='%23ffffff' stroke-opacity='.08' stroke-width='1.5'/%3E%3Cpath d='M28 0v34L0 50v34l28 16 28-16V50L28 34' fill='none' stroke='%23ffffff' stroke-opacity='.08' stroke-width='1.5'/%3E%3C/svg%3E");
+  max-width: 760px;
+  margin: 10px 0 30px;
+  background: #fff;
+  border: 1px solid var(--ch-line);
+  border-radius: 4px 20px 4px 20px;
+  box-shadow: 0 18px 36px -18px rgba(3, 2, 113, .4);
+  overflow: hidden;
+  font-family: 'Plus Jakarta Sans', 'Inter', Arial, sans-serif;
+  color: var(--ch-ink);
+  font-size: 16px;
+  line-height: 1.5;
+}
+.ch-form *, .ch-form *::before, .ch-form *::after { box-sizing: border-box; }
+
+/* Header */
+.ch-form .ch-head {
+  position: relative;
+  padding: 26px 32px 24px 84px;
+  background-color: var(--ch-navy);
+  background-image: var(--ch-hex);
+  background-size: 56px 100px;
+  border-bottom: 5px solid var(--ch-amber);
+  color: #fff;
+}
+.ch-form .ch-head::before {
+  content: "";
+  position: absolute;
+  left: 30px; top: 50%;
+  width: 36px; height: 40px;
+  margin-top: -20px;
+  background: var(--ch-amber);
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+}
+.ch-form .ch-head h3 {
+  margin: 0 0 4px;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 1.55rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #fff;
+}
+.ch-form .ch-head p { margin: 0; color: rgba(255,255,255,.82); font-size: .95rem; }
+
+/* Body */
+.ch-form form { padding: 28px 32px 32px; margin: 0; }
+.ch-form .ch-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.ch-form .ch-field { margin-bottom: 18px; }
+.ch-form label, .ch-form .ch-legend {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 700;
+  font-size: .9rem;
+  color: var(--ch-navy);
+}
+.ch-form .ch-req { color: #c0392b; margin-left: 2px; }
+.ch-form .ch-opt { font-weight: 500; color: var(--ch-muted); font-size: .8rem; margin-left: 4px; }
+.ch-form input[type="text"],
+.ch-form input[type="email"] {
+  display: block;
+  width: 100%;
+  padding: 12px 14px;
+  font: inherit;
+  color: var(--ch-ink);
+  background: var(--ch-mist);
+  border: 1.5px solid var(--ch-line);
+  border-radius: 8px;
+  transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+}
+.ch-form input[type="text"]:focus,
+.ch-form input[type="email"]:focus {
+  outline: 0;
+  background: #fff;
+  border-color: var(--ch-navy);
+  box-shadow: 0 0 0 3px rgba(237, 153, 31, .35);
+}
+.ch-form input::placeholder { color: #98a0b8; }
+.ch-form .ch-hint { margin: 5px 0 0; font-size: .8rem; color: var(--ch-muted); }
+
+/* Dropdown */
+.ch-form select {
+  display: block;
+  width: 100%;
+  padding: 12px 44px 12px 14px;
+  font: inherit;
+  color: var(--ch-ink);
+  background-color: var(--ch-mist);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%23030271' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  border: 1.5px solid var(--ch-line);
+  border-radius: 8px;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
+}
+.ch-form select:focus {
+  outline: 0;
+  background-color: #fff;
+  border-color: var(--ch-navy);
+  box-shadow: 0 0 0 3px rgba(237, 153, 31, .35);
+}
+.ch-form select:invalid { color: #98a0b8; }
+.ch-form select option { color: var(--ch-ink); }
+
+/* Submit */
+.ch-form .ch-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 8px; }
+.ch-form button[type="submit"] {
+  padding: 13px 34px;
+  font: inherit;
+  font-weight: 800;
+  letter-spacing: .02em;
+  color: var(--ch-navy-deep);
+  background: var(--ch-amber);
+  border: 2px solid var(--ch-amber);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all .18s ease;
+}
+.ch-form button[type="submit"]:hover,
+.ch-form button[type="submit"]:focus-visible {
+  background: var(--ch-navy);
+  border-color: var(--ch-navy);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -8px rgba(3, 2, 113, .5);
+}
+.ch-form .ch-note { font-size: .82rem; color: var(--ch-muted); }
+
+/* Spam trap (hidden) */
+.ch-form .ch-honey { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+@media (max-width: 640px) {
+  .ch-form .ch-row { grid-template-columns: 1fr; gap: 0; }
+  .ch-form .ch-head { padding: 22px 20px 20px 74px; }
+  .ch-form .ch-head::before { left: 20px; }
+  .ch-form form { padding: 22px 20px 26px; }
+}
+
+/* ==========================================================================
+   CHEESA — Halaman Terima Kasih (Role Registration)
+   ========================================================================== */
+ 
+.ch-thanks {
+  --ch-navy: #030271;
+  --ch-navy-deep: #02024f;
+  --ch-amber: #ed991f;
+  --ch-amber-bg: #fff4e0;
+  --ch-mist: #f5f9fb;
+  --ch-line: #dfe5ee;
+  --ch-ink: #14143a;
+  --ch-muted: #5d6482;
+  --ch-hex: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'%3E%3Cpath d='M28 66L0 50V16L28 0l28 16v34L28 66v34' fill='none' stroke='%23ffffff' stroke-opacity='.08' stroke-width='1.5'/%3E%3Cpath d='M28 0v34L0 50v34l28 16 28-16V50L28 34' fill='none' stroke='%23ffffff' stroke-opacity='.08' stroke-width='1.5'/%3E%3C/svg%3E");
+  --ch-hexshape: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  max-width: 760px;
+  margin: 10px 0 30px;
+  background: #fff;
+  border: 1px solid var(--ch-line);
+  border-radius: 4px 20px 4px 20px;
+  box-shadow: 0 18px 36px -18px rgba(3, 2, 113, .4);
+  overflow: hidden;
+  font-family: 'Plus Jakarta Sans', 'Inter', Arial, sans-serif;
+  color: var(--ch-ink);
+  font-size: 16px;
+  line-height: 1.55;
+}
+.ch-thanks *, .ch-thanks *::before, .ch-thanks *::after { box-sizing: border-box; }
+ 
+/* Hero */
+.ch-thanks .ch-th-hero {
+  padding: 40px 32px 34px;
+  text-align: center;
+  background-color: var(--ch-navy);
+  background-image: var(--ch-hex);
+  background-size: 56px 100px;
+  border-bottom: 5px solid var(--ch-amber);
+  color: #fff;
+}
+.ch-thanks .ch-th-hex {
+  position: relative;
+  width: 92px;
+  height: 102px;
+  margin: 0 auto 22px;
+  background: var(--ch-amber);
+  clip-path: var(--ch-hexshape);
+  animation: ch-pop .6s cubic-bezier(.2, 1.4, .4, 1) both;
+}
+/* Tanda centang dibuat dari CSS */
+.ch-thanks .ch-th-check {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 22px;
+  height: 40px;
+  margin: -24px 0 0 -9px;
+  border: solid var(--ch-navy-deep);
+  border-width: 0 7px 7px 0;
+  border-radius: 2px;
+  transform: rotate(45deg);
+}
+.ch-thanks .ch-th-hero h3 {
+  margin: 0 0 8px;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #fff;
+}
+.ch-thanks .ch-th-hero p {
+  max-width: 520px;
+  margin: 0 auto;
+  color: rgba(255, 255, 255, .85);
+  font-size: 1rem;
+}
+ 
+/* Body */
+.ch-thanks .ch-th-body { padding: 30px 32px 34px; }
+.ch-thanks .ch-th-body h4 {
+  margin: 0 0 18px;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--ch-navy);
+}
+ 
+.ch-thanks .ch-th-steps {
+  list-style: none;
+  margin: 0 0 24px;
+  padding: 0;
+  counter-reset: ch-step;
+}
+.ch-thanks .ch-th-steps li {
+  position: relative;
+  counter-increment: ch-step;
+  margin: 0 0 14px;
+  padding: 16px 20px 16px 76px;
+  background: var(--ch-mist);
+  border: 1px solid var(--ch-line);
+  border-left: 5px solid var(--ch-amber);
+  border-radius: 4px 14px 4px 14px;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.ch-thanks .ch-th-steps li:hover {
+  transform: translateX(4px);
+  box-shadow: 0 12px 22px -14px rgba(3, 2, 113, .45);
+}
+.ch-thanks .ch-th-steps li::before {
+  content: counter(ch-step);
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  width: 40px;
+  height: 44px;
+  margin-top: -22px;
+  background: var(--ch-navy);
+  clip-path: var(--ch-hexshape);
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.05rem;
+  line-height: 44px;
+  text-align: center;
+}
+.ch-thanks .ch-th-steps strong {
+  display: block;
+  color: var(--ch-navy);
+  font-size: 1.02rem;
+}
+.ch-thanks .ch-th-steps span {
+  display: block;
+  color: var(--ch-muted);
+  font-size: .92rem;
+}
+ 
+.ch-thanks .ch-th-note {
+  margin: 0 0 26px;
+  padding: 14px 18px;
+  background: var(--ch-amber-bg);
+  border-left: 5px solid var(--ch-amber);
+  border-radius: 4px 12px 4px 12px;
+  font-size: .92rem;
+  color: var(--ch-ink);
+}
+ 
+/* Tombol */
+.ch-thanks .ch-th-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+.ch-thanks a.ch-th-btn {
+  display: inline-block;
+  padding: 12px 30px;
+  font-weight: 800;
+  letter-spacing: .02em;
+  text-decoration: none;
+  color: var(--ch-navy-deep);
+  background: var(--ch-amber);
+  border: 2px solid var(--ch-amber);
+  border-radius: 999px;
+  transition: all .18s ease;
+}
+.ch-thanks a.ch-th-btn:hover,
+.ch-thanks a.ch-th-btn:focus-visible {
+  background: var(--ch-navy);
+  border-color: var(--ch-navy);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -8px rgba(3, 2, 113, .5);
+}
+.ch-thanks a.ch-th-btn.ch-th-ghost {
+  background: #fff;
+  border-color: var(--ch-navy);
+  color: var(--ch-navy);
+}
+.ch-thanks a.ch-th-btn.ch-th-ghost:hover,
+.ch-thanks a.ch-th-btn.ch-th-ghost:focus-visible {
+  background: var(--ch-navy);
+  color: #fff;
+}
+ 
+@keyframes ch-pop {
+  from { transform: scale(.3) rotate(-30deg); opacity: 0; }
+  to   { transform: scale(1) rotate(0); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ch-thanks .ch-th-hex { animation: none; }
+  .ch-thanks .ch-th-steps li, .ch-thanks a.ch-th-btn { transition: none; }
+}
+@media (max-width: 640px) {
+  .ch-thanks .ch-th-hero { padding: 32px 20px 28px; }
+  .ch-thanks .ch-th-hero h3 { font-size: 1.6rem; }
+  .ch-thanks .ch-th-body { padding: 24px 20px 28px; }
+}
+ 
+/* Efek Hover Modern: Kartu terangkat sedikit & warna border berubah */
+.obj_article_summary:hover {
+  background: #ffffff !important;
+  border-color: #030271 !important; /* Warna aksen orange CHEESA */
+  transform: translateY(-3px); /* Efek melayang */
+  box-shadow: 0 10px 20px -5px rgba(3, 2, 113, 0.08), 0 6px 8px -6px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Aksen Batang Warna Vertikal di Sisi Kiri saat Hover */
+.obj_article_summary::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: #030271; /* Aksen Orange */
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.obj_article_summary:hover::before {
+  opacity: 1;
+}
+
+/* Judul Artikel di Dalam Ringkasan */
+.obj_article_summary > .title {
+  font-family: 'Spectral', Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+}
+
+.obj_article_summary > .title a {
+  color: #030271 !important; /* Navy CHEESA */
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.obj_article_summary > .title a:hover {
+  color: #d35400 !important; /* Deep Orange saat hover teks */
+}
+
+.obj_article_summary {
+    padding-bottom: 10px !important;
+    font-size: 12px;
+}
+.obj_issue_summary .description {
+    font-size: 1rem;
+}
+
+.obj_article_details .copyright {
+    font-size: .93rem;
+}
+.homepage_about {
+    text-align: justify;
+}
+
+.description {
+    text-align: justify;
+}
+.obj_article_details .page_title {
+    background: #030271;
+    color: #fff;
+    padding: 15px;
+    border-radius: 7px;
+    box-shadow: 3px 3px 5px;
+}
+
+.pkp_site_name {padding-top: 0 !important; padding-bottom: 0 !important}
+.pkp_site_name > a {padding-top: 0; padding-bottom: 0;}
+.pkp_site_name .is_img img {max-height: 200px !important;}
+.pkp_site_name_wrapper {padding-left: 0; padding-right: 0;}
+.pkp_navigation_user_wrapper {top: 0; right: 0; padding-right:30px;}
+
+/*.pkp_structure_page {margin-top:  20px !important; margin-bottom:20 !important; padding-bottom: 20 !important;}
+*/
+/*menu css*/
+*, *:before, *:after {
+  -webkit-border-sizing: border-box;
+  -moz-border-sizing: border-box;
+  border-sizing: border-box;
+}
+
+.container > ul {
+  list-style: none;
+}
+
+.dropdown {
+  position: relative;
+}
+.dropdown a {
+  text-decoration: none;
+}
+.dropdown [data-toggle="dropdown"] {
+  display: block;
+  color: white;
+  background: #4682B4;
+  -moz-box-shadow: 0 1px 0 #1F3A93 inset, 0 -1px 0 #1F3A93 inset;
+  -webkit-box-shadow: 0 1px 0 #1F3A93 inset, 0 -1px 0 #1F3A93 inset;
+  box-shadow: 0 1px 0 #1F3A93 inset, 0 -1px 0 #1F3A93 inset;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
+  padding: 10px;
+}
+.dropdown [data-toggle="dropdown"]:hover {
+  background: #cd3d2e;
+}
+.dropdown [data-toggle="dropdown"]:before {
+  position: absolute;
+  display: block;
+  content: '\25BC';
+  font-size: 0.7em;
+  color: #fff;
+  top: 13px;
+  right: 10px;
+  -moz-transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  -webkit-transform: rotate(0deg);
+  transform: rotate(0deg);
+  -moz-transition: -moz-transform 0.6s;
+  -o-transition: -o-transform 0.6s;
+  -webkit-transition: -webkit-transform 0.6s;
+  transition: transform 0.6s;
+}
+.dropdown > .dropdown-menu {
+  max-height: 0;
+  overflow: hidden;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  -moz-transform: scaleY(0);
+  -ms-transform: scaleY(0);
+  -webkit-transform: scaleY(0);
+  transform: scaleY(0);
+  -moz-transform-origin: 50% 0%;
+  -ms-transform-origin: 50% 0%;
+  -webkit-transform-origin: 50% 0%;
+  transform-origin: 50% 0%;
+  -moz-transition: max-height 0.6s ease-out;
+  -o-transition: max-height 0.6s ease-out;
+  -webkit-transition: max-height 0.6s ease-out;
+  transition: max-height 0.6s ease-out;
+  animation: hideAnimation 0.4s ease-out;
+  -moz-animation: hideAnimation 0.4s ease-out;
+  -webkit-animation: hideAnimation 0.4s ease-out;
+}
+.dropdown > .dropdown-menu li {
+  padding: 0;
+}
+.dropdown > input[type="checkbox"] {
+  opacity: 0;
+  display: block;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+.dropdown > input[type="checkbox"]:checked ~ .dropdown-menu {
+  max-height: 9999px;
+  display: block;
+  -moz-transform: scaleY(1);
+  -ms-transform: scaleY(1);
+  -webkit-transform: scaleY(1);
+  transform: scaleY(1);
+  animation: showAnimation 0.5s ease-in-out;
+  -moz-animation: showAnimation 0.5s ease-in-out;
+  -webkit-animation: showAnimation 0.5s ease-in-out;
+  -moz-transition: max-height 2s ease-in-out;
+  -o-transition: max-height 2s ease-in-out;
+  -webkit-transition: max-height 2s ease-in-out;
+  transition: max-height 2s ease-in-out;
+}
+.dropdown > input[type="checkbox"]:checked + a[data-toggle="dropdown"]:before {
+  -moz-transform: rotate(-180deg);
+  -ms-transform: rotate(-180deg);
+  -webkit-transform: rotate(-180deg);
+  transform: rotate(-180deg);
+  -moz-transition: -moz-transform 0.6s;
+  -o-transition: -o-transform 0.6s;
+  -webkit-transition: -webkit-transform 0.6s;
+  transition: transform 0.6s;
+}
+
+@keyframes showAnimation {
+  0% {
+    -moz-transform: scaleY(0.1);
+    -ms-transform: scaleY(0.1);
+    -webkit-transform: scaleY(0.1);
+    transform: scaleY(0.1);
+  }
+  40% {
+    -moz-transform: scaleY(1.04);
+    -ms-transform: scaleY(1.04);
+    -webkit-transform: scaleY(1.04);
+    transform: scaleY(1.04);
+  }
+  60% {
+    -moz-transform: scaleY(0.98);
+    -ms-transform: scaleY(0.98);
+    -webkit-transform: scaleY(0.98);
+    transform: scaleY(0.98);
+  }
+  80% {
+    -moz-transform: scaleY(1.04);
+    -ms-transform: scaleY(1.04);
+    -webkit-transform: scaleY(1.04);
+    transform: scaleY(1.04);
+  }
+  100% {
+    -moz-transform: scaleY(0.98);
+    -ms-transform: scaleY(0.98);
+    -webkit-transform: scaleY(0.98);
+    transform: scaleY(0.98);
+  }
+  80% {
+    -moz-transform: scaleY(1.02);
+    -ms-transform: scaleY(1.02);
+    -webkit-transform: scaleY(1.02);
+    transform: scaleY(1.02);
+  }
+  100% {
+    -moz-transform: scaleY(1);
+    -ms-transform: scaleY(1);
+    -webkit-transform: scaleY(1);
+    transform: scaleY(1);
+  }
+}
+@-moz-keyframes showAnimation {
+  0% {
+    -moz-transform: scaleY(0.1);
+    -ms-transform: scaleY(0.1);
+    -webkit-transform: scaleY(0.1);
+    transform: scaleY(0.1);
+  }
+  40% {
+    -moz-transform: scaleY(1.04);
+    -ms-transform: scaleY(1.04);
+    -webkit-transform: scaleY(1.04);
+    transform: scaleY(1.04);
+  }
+  60% {
+    -moz-transform: scaleY(0.98);
+    -ms-transform: scaleY(0.98);
+    -webkit-transform: scaleY(0.98);
+    transform: scaleY(0.98);
+  }
+  80% {
+    -moz-transform: scaleY(1.04);
+    -ms-transform: scaleY(1.04);
+    -webkit-transform: scaleY(1.04);
+    transform: scaleY(1.04);
+  }
+  100% {
+    -moz-transform: scaleY(0.98);
+    -ms-transform: scaleY(0.98);
+    -webkit-transform: scaleY(0.98);
+    transform: scaleY(0.98);
+  }
+  80% {
+    -moz-transform: scaleY(1.02);
+    -ms-transform: scaleY(1.02);
+    -webkit-transform: scaleY(1.02);
+    transform: scaleY(1.02);
+  }
+  100% {
+    -moz-transform: scaleY(1);
+    -ms-transform: scaleY(1);
+    -webkit-transform: scaleY(1);
+    transform: scaleY(1);
+  }
+}
+@-webkit-keyframes showAnimation {
+  0% {
+    -moz-transform: scaleY(0.1);
+    -ms-transform: scaleY(0.1);
+    -webkit-transform: scaleY(0.1);
+    transform: scaleY(0.1);
+  }
+  40% {
+    -moz-transform: scaleY(1.04);
+    -ms-transform: scaleY(1.04);
+    -webkit-transform: scaleY(1.04);
+    transform: scaleY(1.04);
+  }
+  60% {
+    -moz-transform: scaleY(0.98);
+    -ms-transform: scaleY(0.98);
+    -webkit-transform: scaleY(0.98);
+    transform: scaleY(0.98);
+  }
+  80% {
+    -moz-transform: scaleY(1.04);
+    -ms-transform: scaleY(1.04);
+    -webkit-transform: scaleY(1.04);
+    transform: scaleY(1.04);
+  }
+  100% {
+    -moz-transform: scaleY(0.98);
+    -ms-transform: scaleY(0.98);
+    -webkit-transform: scaleY(0.98);
+    transform: scaleY(0.98);
+  }
+  80% {
+    -moz-transform: scaleY(1.02);
+    -ms-transform: scaleY(1.02);
+    -webkit-transform: scaleY(1.02);
+    transform: scaleY(1.02);
+  }
+  100% {
+    -moz-transform: scaleY(1);
+    -ms-transform: scaleY(1);
+    -webkit-transform: scaleY(1);
+    transform: scaleY(1);
+  }
+}
+@keyframes hideAnimation {
+  0% {
+    -moz-transform: scaleY(1);
+    -ms-transform: scaleY(1);
+    -webkit-transform: scaleY(1);
+    transform: scaleY(1);
+  }
+  60% {
+    -moz-transform: scaleY(0.98);
+    -ms-transform: scaleY(0.98);
+    -webkit-transform: scaleY(0.98);
+    transform: scaleY(0.98);
+  }
+  80% {
+    -moz-transform: scaleY(1.02);
+    -ms-transform: scaleY(1.02);
+    -webkit-transform: scaleY(1.02);
+    transform: scaleY(1.02);
+  }
+  100% {
+    -moz-transform: scaleY(0);
+    -ms-transform: scaleY(0);
+    -webkit-transform: scaleY(0);
+    transform: scaleY(0);
+  }
+}
+@-moz-keyframes hideAnimation {
+  0% {
+    -moz-transform: scaleY(1);
+    -ms-transform: scaleY(1);
+    -webkit-transform: scaleY(1);
+    transform: scaleY(1);
+  }
+  60% {
+    -moz-transform: scaleY(0.98);
+    -ms-transform: scaleY(0.98);
+    -webkit-transform: scaleY(0.98);
+    transform: scaleY(0.98);
+  }
+  80% {
+    -moz-transform: scaleY(1.02);
+    -ms-transform: scaleY(1.02);
+    -webkit-transform: scaleY(1.02);
+    transform: scaleY(1.02);
+  }
+  100% {
+    -moz-transform: scaleY(0);
+    -ms-transform: scaleY(0);
+    -webkit-transform: scaleY(0);
+    transform: scaleY(0);
+  }
+}
+@-webkit-keyframes hideAnimation {
+  0% {
+    -moz-transform: scaleY(1);
+    -ms-transform: scaleY(1);
+    -webkit-transform: scaleY(1);
+    transform: scaleY(1);
+  }
+  60% {
+    -moz-transform: scaleY(0.98);
+    -ms-transform: scaleY(0.98);
+    -webkit-transform: scaleY(0.98);
+    transform: scaleY(0.98);
+  }
+  80% {
+    -moz-transform: scaleY(1.02);
+    -ms-transform: scaleY(1.02);
+    -webkit-transform: scaleY(1.02);
+    transform: scaleY(1.02);
+  }
+  100% {
+    -moz-transform: scaleY(0);
+    -ms-transform: scaleY(0);
+    -webkit-transform: scaleY(0);
+    transform: scaleY(0);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Create two equal columns that floats next to each other */
+.column2 {
+  float: left;
+  width: 33%;
+  padding: 10px;
+}
+
+/* Clear floats after the columns */
+.row2:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+/* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .column2 {
+    width: 100%;
+  }
+}
+
+.pkp_footer_content {
+  float: left;
+  width: 100%;  padding-top: 10px;
+  padding-bottom:10px;
+}
+.pkp_brand_footer {
+  float: right;
+  width: 30%;
+  padding-bottom:30px;
+  padding-top: 100px;
+}
+/*.pkp_brand_footer {
+	display: none;
+}
+*/.pkp_structure_footer_wrapper {
+ background: url('')repeat;
+ border-top:1px solid #ddd;
+ font-size: 0.9em;
+ border-bottom:10px solid #030271
+}
+body {
+	overflow-x:hidden;
+}
+.clearfix:before,
+.clearfix:after {
+    content: " ";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+.clearfix {
+    *zoom: 1;
+}
+
+.container {
+    position: relative;
+    margin: 0px auto;
+    padding: 0px 0;
+    clear: both;
+}
+@media only screen and (min-width: 1200px) {
+    .container {
+        width: 1210px;
+    }
+}
+
+@media only screen and (min-width: 960px) and (max-width: 1199px) {
+    .container {
+        width: 1030px;
+    }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 959px) {
+    .container {
+        width: 682px;
+    }
+}
+
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+    .container {
+        width: 428px;
+        margin: 0 auto;
+    }
+}
+
+@media only screen and (max-width: 479px) {
+    .container {
+        width: 320px;
+        margin: 0 auto;
+    }
+}
+
+
+  
+.mcd-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: #FFF;
+  /*height: 100px;*/
+  border-radius: 2px;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  
+  /* == */
+  width: 250px;
+  /* == */
+}
+.mcd-menu li {
+  position: relative;
+  /*float:left;*/
+}
+.mcd-menu li a {
+  display: block;
+  text-decoration: none;
+  padding: 12px 20px;
+  color: #777;
+  /*text-align: center;
+  border-right: 1px solid #E7E7E7;*/
+  
+  /* == */
+  text-align: left;
+  height: 36px;
+  position: relative;
+  border-bottom: 1px solid #EEE;
+  /* == */
+}
+.mcd-menu li a i {
+  /*display: block;
+  font-size: 30px;
+  margin-bottom: 10px;*/
+  
+  /* == */
+  float: left;
+  font-size: 20px;
+  margin: 0 10px 0 0;
+  /* == */
+  
+}
+/* == */
+.mcd-menu li a p {
+  float: left;
+  margin: 0 ;
+}
+/* == */
+
+.mcd-menu li a strong {
+  display: block;
+  text-transform: uppercase;
+}
+.mcd-menu li a small {
+  display: block;
+  font-size: 10px;
+}
+
+.mcd-menu li a i, .mcd-menu li a strong, .mcd-menu li a small {
+  position: relative;
+  
+  transition: all 300ms linear;
+  -o-transition: all 300ms linear;
+  -ms-transition: all 300ms linear;
+  -moz-transition: all 300ms linear;
+  -webkit-transition: all 300ms linear;
+}
+.mcd-menu li:hover > a i {
+    opacity: 1;
+    -webkit-animation: moveFromTop 300ms ease-in-out;
+    -moz-animation: moveFromTop 300ms ease-in-out;
+    -ms-animation: moveFromTop 300ms ease-in-out;
+    -o-animation: moveFromTop 300ms ease-in-out;
+    animation: moveFromTop 300ms ease-in-out;
+}
+.mcd-menu li:hover a strong {
+    opacity: 1;
+    -webkit-animation: moveFromLeft 300ms ease-in-out;
+    -moz-animation: moveFromLeft 300ms ease-in-out;
+    -ms-animation: moveFromLeft 300ms ease-in-out;
+    -o-animation: moveFromLeft 300ms ease-in-out;
+    animation: moveFromLeft 300ms ease-in-out;
+}
+.mcd-menu li:hover a small {
+    opacity: 1;
+    -webkit-animation: moveFromRight 300ms ease-in-out;
+    -moz-animation: moveFromRight 300ms ease-in-out;
+    -ms-animation: moveFromRight 300ms ease-in-out;
+    -o-animation: moveFromRight 300ms ease-in-out;
+    animation: moveFromRight 300ms ease-in-out;
+}
+
+.mcd-menu li:hover > a {
+  color: #e67e22;
+}
+.mcd-menu li a.active {
+  position: relative;
+  color: #e67e22;
+  border:0;
+  /*border-top: 4px solid #e67e22;
+  border-bottom: 4px solid #e67e22;
+  margin-top: -4px;*/
+  box-shadow: 0 0 5px #DDD;
+  -moz-box-shadow: 0 0 5px #DDD;
+  -webkit-box-shadow: 0 0 5px #DDD;
+  
+  /* == */
+  border-left: 4px solid #e67e22;
+  border-right: 4px solid #e67e22;
+  margin: 0 -4px;
+  /* == */
+}
+.mcd-menu li a.active:before {
+  content: "";
+  position: absolute;
+  /*top: 0;
+  left: 45%;
+  border-top: 5px solid #e67e22;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;*/
+  
+  /* == */
+  top: 42%;
+  left: 0;
+  border-left: 5px solid #e67e22;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  /* == */
+}
+
+/* == */
+.mcd-menu li a.active:after {
+  content: "";
+  position: absolute;
+  top: 42%;
+  right: 0;
+  border-right: 5px solid #e67e22;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+}
+/* == */
+
+@-webkit-keyframes moveFromTop {
+    from {
+        opacity: 0;
+        -webkit-transform: translateY(200%);
+        -moz-transform: translateY(200%);
+        -ms-transform: translateY(200%);
+        -o-transform: translateY(200%);
+        transform: translateY(200%);
+    }
+    to {
+        opacity: 1;
+        -webkit-transform: translateY(0%);
+        -moz-transform: translateY(0%);
+        -ms-transform: translateY(0%);
+        -o-transform: translateY(0%);
+        transform: translateY(0%);
+    }
+}
+@-webkit-keyframes moveFromLeft {
+    from {
+        opacity: 0;
+        -webkit-transform: translateX(200%);
+        -moz-transform: translateX(200%);
+        -ms-transform: translateX(200%);
+        -o-transform: translateX(200%);
+        transform: translateX(200%);
+    }
+    to {
+        opacity: 1;
+        -webkit-transform: translateX(0%);
+        -moz-transform: translateX(0%);
+        -ms-transform: translateX(0%);
+        -o-transform: translateX(0%);
+        transform: translateX(0%);
+    }
+}
+@-webkit-keyframes moveFromRight {
+    from {
+        opacity: 0;
+        -webkit-transform: translateX(-200%);
+        -moz-transform: translateX(-200%);
+        -ms-transform: translateX(-200%);
+        -o-transform: translateX(-200%);
+        transform: translateX(-200%);
+    }
+    to {
+        opacity: 1;
+        -webkit-transform: translateX(0%);
+        -moz-transform: translateX(0%);
+        -ms-transform: translateX(0%);
+        -o-transform: translateX(0%);
+        transform: translateX(0%);
+    }
+}
+
+
+
+.mcd-menu li ul,
+.mcd-menu li ul li ul {
+  position: absolute;
+  height: auto;
+  min-width: 200px;
+  padding: 0;
+  margin: 0;
+  background: #FFF;
+  /*border-top: 4px solid #e67e22;*/
+  opacity: 0;
+  visibility: hidden;
+  transition: all 300ms linear;
+  -o-transition: all 300ms linear;
+  -ms-transition: all 300ms linear;
+  -moz-transition: all 300ms linear;
+  -webkit-transition: all 300ms linear;
+  /*top: 130px;*/
+  z-index: 1000;
+  
+  /* == */
+  left:280px;
+  top: 0px;
+  border-left: 4px solid #e67e22;
+  /* == */
+}
+.mcd-menu li ul:before {
+  content: "";
+  position: absolute;
+  /*top: -8px;
+  left: 23%;
+  border-bottom: 5px solid #e67e22;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;*/
+  
+  /* == */
+  top: 25px;
+  left: -9px;
+  border-right: 5px solid #e67e22;
+  border-bottom: 5px solid transparent;
+  border-top: 5px solid transparent;
+  /* == */
+}
+.mcd-menu li:hover > ul,
+.mcd-menu li ul li:hover > ul {
+  display: block;
+  opacity: 1;
+  visibility: visible;
+  /*top: 100px;*/
+  
+  /* == */
+  left:250px;
+  /* == */
+}
+/*.mcd-menu li ul li {
+  float: none;
+}*/
+.mcd-menu li ul li a {
+  padding: 10px;
+  text-align: left;
+  border: 0;
+  border-bottom: 1px solid #EEE;
+  
+  /* == */
+  height: auto;
+  /* == */
+}
+.mcd-menu li ul li a i {
+  font-size: 16px;
+  display: inline-block;
+  margin: 0 10px 0 0;
+}
+.mcd-menu li ul li ul {
+  left: 230px;
+  top: 0;
+  border: 0;
+  border-left: 4px solid #e67e22;
+}  
+.mcd-menu li ul li ul:before {
+  content: "";
+  position: absolute;
+  top: 15px;
+  /*left: -14px;*/
+  /* == */
+  left: -9px;
+  /* == */
+  border-right: 5px solid #e67e22;
+  border-bottom: 5px solid transparent;
+  border-top: 5px solid transparent;
+}
+.mcd-menu li ul li:hover > ul {
+  top: 0px;
+  left: 200px;
+}
+
+
+
+/*.mcd-menu li.float {
+  float: right;
+}*/
+.mcd-menu li a.search {
+  /*padding: 29px 20px 30px 10px;*/
+  padding: 10px 10px 15px 10px;
+  clear: both;
+}
+.mcd-menu li a.search i {
+  margin: 0;
+  display: inline-block;
+  font-size: 18px;
+}
+.mcd-menu li a.search input {
+  border: 1px solid #EEE;
+  padding: 10px;
+  background: #FFF;
+  outline: none;
+  color: #777;
+  
+  /* == */
+  width:170px;
+  float:left;
+  /* == */
+}
+.mcd-menu li a.search button {
+  border: 1px solid #e67e22;
+  /*padding: 10px;*/
+  background: #e67e22;
+  outline: none;
+  color: #FFF;
+  margin-left: -4px;
+  
+  /* == */
+  float:left;
+  padding: 10px 10px 11px 10px;
+  /* == */
+}
+.mcd-menu li a.search input:focus {
+  border: 1px solid #e67e22;
+}
+
+
+.search-mobile { 
+	display:none !important;
+	background:#e67e22;
+	border-left:1px solid #e67e22;
+	border-radius:0 3px 3px 0;
+}
+.search-mobile i { 
+	color:#FFF; 
+	margin:0 !important;
+}
+
+
+@media only screen and (min-width: 960px) and (max-width: 1199px) {
+    .mcd-menu {
+		margin-left:10px;
+	}
+}
+
+@media only screen and (min-width: 768px) and (max-width: 959px) {
+    .mcd-menu {
+		width: 200px;
+	}
+	.mcd-menu li a {
+		height:30px;
+	}
+	.mcd-menu li a i {
+		font-size: 22px;
+	}
+	.mcd-menu li a strong {
+		font-size: 12px;
+	}
+	.mcd-menu li a small {
+		font-size: 10px;
+	}	
+	.mcd-menu li a.search input {
+		width: 120px;
+		font-size: 12px;
+	}
+	.mcd-menu li a.search buton{
+		padding: 8px 10px 9px 10px;
+	}
+	.mcd-menu li > ul {
+		min-width:180px;
+	}
+	.mcd-menu li:hover > ul {
+		min-width:180px;
+		left:200px;
+	}
+	.mcd-menu li ul li > ul, .mcd-menu li ul li ul li > ul {
+		min-width:150px;
+	}
+	.mcd-menu li ul li:hover > ul {
+		left:180px;
+		min-width:150px;
+	}
+	.mcd-menu li ul li ul li:hover > ul {
+		left:150px;
+		min-width:150px;
+	}
+	.mcd-menu li ul a {
+		font-size:12px;
+	}
+	.mcd-menu li ul a i {
+		font-size:14px;
+	}
+}
+
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+	
+	.mcd-menu { 
+		width: 50px;
+	}
+	.mcd-menu li a { 
+		position: relative;
+		padding: 12px 16px;
+		height:20px;
+	}
+	.mcd-menu li a small { 
+		display: none;
+	}
+	.mcd-menu li a strong { 
+		display: none;
+	}
+	.mcd-menu li a:hover strong,.mcd-menu li a.active strong {
+		display:block;
+		font-size:10px;
+		padding:3px 0;
+		position:absolute;
+		bottom:0px;
+		left:0;
+		background:#e67e22;
+		color:#FFF;
+		min-width:100%;
+		text-transform:lowercase;
+		font-weight:normal;
+		text-align:center;
+	}
+	.mcd-menu li .search { 
+		display: none;
+	}
+	
+	.mcd-menu li > ul {
+		min-width:180px;
+		left:70px;
+	}
+	.mcd-menu li:hover > ul {
+		min-width:180px;
+		left:50px;
+	}
+	.mcd-menu li ul li > ul, .mcd-menu li ul li ul li > ul {
+		min-width:150px;
+	}
+	.mcd-menu li ul li:hover > ul {
+		left:180px;
+		min-width:150px;
+	}
+	.mcd-menu li ul li ul li > ul {
+		left:35px;
+		top: 45px;
+		border:0;
+		border-top:4px solid #e67e22;
+	}
+	.mcd-menu li ul li ul li > ul:before {
+		left:30px;
+		top: -9px;
+		border:0;
+		border-bottom:5px solid #e67e22;
+		border-left:5px solid transparent;
+		border-right:5px solid transparent;
+	}
+	.mcd-menu li ul li ul li:hover > ul {
+		left:30px;
+		min-width:150px;
+		top: 35px;
+	}
+	.mcd-menu li ul a {
+		font-size:12px;
+	}
+	.mcd-menu li ul a i {
+		font-size:14px;
+	}
+	
+}
+
+@media only screen and (max-width: 479px) {
+    .mcd-menu { 
+		width: 50px;
+	}
+	.mcd-menu li a { 
+		position: relative;
+		padding: 12px 16px;
+		height:20px;
+	}
+	.mcd-menu li a small { 
+		display: none;
+	}
+	.mcd-menu li a strong { 
+		display: none;
+	}
+	.mcd-menu li a:hover strong,.mcd-menu li a.active strong {
+		display:block;
+		font-size:10px;
+		padding:3px 0;
+		position:absolute;
+		bottom:0px;
+		left:0;
+		background:#e67e22;
+		color:#FFF;
+		min-width:100%;
+		text-transform:lowercase;
+		font-weight:normal;
+		text-align:center;
+	}
+	.mcd-menu li .search { 
+		display: none;
+	}
+	
+	.mcd-menu li > ul {
+		min-width:180px;
+		left:70px;
+	}
+	.mcd-menu li:hover > ul {
+		min-width:180px;
+		left:50px;
+	}
+	.mcd-menu li ul li > ul, .mcd-menu li ul li ul li > ul {
+		min-width:150px;
+	}
+	.mcd-menu li ul li:hover > ul {
+		left:180px;
+		min-width:150px;
+	}
+	.mcd-menu li ul li ul li > ul {
+		left:35px;
+		top: 45px;
+		border:0;
+		border-top:4px solid #e67e22;
+	}
+	.mcd-menu li ul li ul li > ul:before {
+		left:30px;
+		top: -9px;
+		border:0;
+		border-bottom:5px solid #e67e22;
+		border-left:5px solid transparent;
+		border-right:5px solid transparent;
+	}
+	.mcd-menu li ul li ul li:hover > ul {
+		left:30px;
+		min-width:150px;
+		top: 35px;
+	}
+	.mcd-menu li ul a {
+		font-size:12px;
+	}
+	.mcd-menu li ul a i {
+		font-size:14px;
+	}
+    
+}
+.editorial-list{
+    position: relative; 
+}
+.editorial-list li{
+    margin-bottom: 1.125rem;
+}
+.editorial-list .img-profile{
+    position: absolute;
+    width: 95px;
+    height: 105px;
+    border: 1px solid #ddd;
+    padding: .5rem;
+}
+.editorial-list .img-profile .imgthumb{ 
+    width: 80px;
+    height: 90px;
+    overflow: hidden;
+    margin: 0 auto; 
+    object-fit: fill;
+}
+.editorial-list .img-profile img{
+    width: 100%;
+    height:100%;
+}
+.team-content{
+    margin-left: 100px;
+    min-height: 130px;
+}
+.team-content .ico-label{
+    width: 18px;
+    height: 18px;
+    margin-right: .5rem;
+}   
+.team-aff ul li{
+    margin-bottom: 0;
+}
+.team-aff ul li .tm_label{
+    display: inline-block;
+    width: 80px;
+}
+ 
+.team-aff ul li .ico-label{
+    width: 18px;
+    height: 18px;
+    margin-right: .5rem;
+}
+.pkp_navigation_search_wrapper a {
+        padding-bottom: 6px;
+        border-bottom-width: 4px;
+        color: #ffffff;
+}
+.pkp_page_index .cmp_announcements h2+.obj_announcement_summary,.pkp_page_index .cmp_announcements .more {
+        padding-top:120px;
+        padding-bottom: 0px
+}
+ .pkp_block {
+        padding-top:0.5rem
+}
+
+
+/* ==========================================================================
+   STATISTIK JURNAL MODERN 
+   ========================================================================== */
+
+/* 1. Wrapper Container Statistik */
+.journal_stats_wrapper,
+.journal-stats-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;   /* 3 kolom x 2 baris */
+  gap: 1rem !important;
+  margin: 1.5rem 0 !important;
+  font-family: 'Inter', -apple-system, sans-serif !important;
+}
+
+/* Hilangkan garis hr lama */
+.journal_stats_wrapper hr,
+.journal-stats-grid hr {
+  display: none !important;
+}
+
+/* 2. Kartu Statistik Individual */
+.stat-item,
+.stat_box {
+  background: #fdfbf7 !important; /* Cream lembut sesuai Gambar 2 */
+  border: 1px solid #f3ebd8 !important;
+  border-radius: 12px !important;
+  padding: 1.25rem 1rem !important;
+  text-align: center !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+/* Efek Hover Melayang */
+.stat-item:hover,
+.stat_box:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 10px 20px -5px rgba(3, 2, 113, 0.08) !important;
+  border-color: #030271 !important; /* Aksen Orange */
+}
+
+/* 3. Angka / Nilai Utama (200 days, 78%, Sinta 1, dll) */
+.stat-item .stat-value,
+.stat_box .number,
+.stat_box h3,
+.stat_box strong {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 1.65rem !important;
+  font-weight: 800 !important;
+  color: #030271 !important; /* Navy CHEESA */
+  line-height: 1.2 !important;
+  margin-bottom: 0.35rem !important;
+  display: block !important;
+}
+
+/* Kustomisasi khusus jika nilainya "Sinta 1 / Grade" */
+.stat-item .stat-value.sinta {
+  color: #030271 !important; /* Orange */
+}
+
+/* 4. Label Deskripsi di Bawah Angka */
+.stat-item .stat-label,
+.stat_box .label,
+.stat_box p,
+.stat_box span {
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  color: #64748b !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  margin: 0 !important;
+  line-height: 1.3 !important;
+}
+
+/* ==========================================================================
+   OJS ARCHIVES - MODERN CARD GRID (GAYA GAMBAR KANAN)
+   (Ukuran kartu diperkecil oleh blok "ARCHIVES - kartu issue lebih kecil" di akhir file ini.)
+   ========================================================================== */
+
+/* 1. Pengaturan Container Utama Archives */
+.page_archives, 
+.obj_issue_archive {
+  font-family: 'Inter', -apple-system, sans-serif !important;
+}
+
+/* 2. Grid Layout Mengambang (Seperti Card UI Kanan) */
+.obj_issue_summary_list,
+.issues_archive {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+  gap: 0px !important;
+  margin-top: 0px !important;
+}
+
+/* 3. Kartu Issue Individual (Glassmorphism / Border UI) */
+.obj_issue_summary {
+  background: #ffffff !important; /* Biru Navy Modern */
+  border: 1px solid #030271 !important;
+  border-radius: 16px !important;
+  padding: 16px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  box-shadow: 0 1px 5px #030271  !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+  color: #ffffff !important;
+}
+
+.obj_issue_summary:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25) !important;
+  border-color: #f5b814 !important; /* Highlight Kuning PE */
+}
+
+/* 4. Cover Jurnal di Dalam Kartu */
+.obj_issue_summary .cover {
+  width: 100% !important;
+  margin: 0 0 14px 0 !important;
+  float: none !important;
+  text-align: center !important;
+}
+
+.obj_issue_summary .cover img {
+  width: 100% !important;
+  height: auto !important;
+  max-height: 320px !important;
+  object-fit: cover !important;
+  border-radius: 8px !important;   /* sebelumnya "px" tanpa angka (tidak berlaku) */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* 5. Judul Issue (Vol & No) */
+.obj_issue_summary .title,
+.obj_issue_summary h2 {
+  font-size: 1.1rem !important;
+  font-weight: 700 !important;
+  color: #000000 !important;
+  margin: 0 0 8px 0 !important;
+  line-height: 1.3 !important;
+  text-align: -webkit-left!important;
+}
+
+.obj_issue_summary .title a {
+  color: #000000 !important;
+  text-decoration: none !important;
+}
+
+/* 6. Deskripsi / Info Terbitan */
+.obj_issue_summary .description,
+.obj_issue_summary .series_info {
+  font-size: 0.8rem !important;
+  color: #000000 !important;
+  line-height: 1.4 !important;
+  margin-bottom: 16px !important;
+  text-align: -webkit-left !important;
+}
+
+/* 7. Group Tombol Aksi Bawah (Lihat Issue & Download) */
+.obj_issue_summary .issue_actions,
+.obj_issue_summary .links {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 10px !important;
+  margin-top: auto !important;
+}
+
+/* Style Tombol Kiri (Outline) */
+.obj_issue_summary a.read_more,
+.obj_issue_summary .btn-outline {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 8px 12px !important;
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  border-radius: 20px !important;
+  color: #ffffff !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  background: transparent !important;
+  transition: all 0.2s ease !important;
+}
+
+.obj_issue_summary a.read_more:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+}
+
+/* Style Tombol Kanan */
+.obj_issue_summary a.pdf_download,
+.obj_issue_summary .btn-accent {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 8px 12px !important;
+  background: #f5b814 !important; /* Warna Kuning seperti di gambar kanan */
+  border-radius: 20px !important;
+  color: #0d1b3e !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+}
+
+.obj_issue_summary a.pdf_download:hover {
+  background: #ffffff !important;
+  color: #0d1b3e !important;
+}
+
+/* Responsif untuk Layar HP */
+@media (max-width: 640px) {
+  .obj_issue_summary_list,
+  .issues_archive {
+    grid-template-columns: 1fr !important;
+  }
+}
+/* Menargetkan gambar bendera langsung di dalam deskripsi isu Archives */
+.obj_issue_summary .description img[src*="pixabay"],
+.obj_issue_summary .description .flag-list img,
+.obj_issue_summary .description .imgflag img,
+div.description img[alt*="flag"] {
+    width: 40px !important;
+    max-width: 40px !important;
+    height: 28px !important;
+    max-height: 28px !important;
+    display: inline-block !important;
+    object-fit: contain !important;
+}
+
+
+/* CHEESA: gaya sidebar global (semua blok sidebar OJS jadi senada dengan Journal Archive).
+   Cara pasang: Website Settings > Appearance > Advanced > Journal style sheet (upload file .css ini). */
+
+/* Kartu blok */
+.pkp_structure_sidebar .pkp_block {
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 2px 12px rgba(3,2,113,.12);
+  overflow: hidden;
+  margin: 0 0 12px;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Header blok (judul) */
+.pkp_structure_sidebar .pkp_block > .title,
+.pkp_structure_sidebar .pkp_block > h2.title,
+.pkp_structure_sidebar .pkp_block > span.title {
+  display: block;
+  margin: 0;
+  padding: 8px 14px;
+  color: #fff;
+  font-weight: 700;
+  font-size: .85em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: .2px;
+  background: linear-gradient(100deg, #030271, #1a1a9e);
+}
+
+/* Isi blok */
+.pkp_structure_sidebar .pkp_block .content {
+  padding: 4px 14px 8px;
+}
+
+/* Daftar menu */
+.pkp_structure_sidebar .pkp_block .content ul {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.pkp_structure_sidebar .pkp_block .content li {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-bottom: 1px solid #eceff5;
+}
+.pkp_structure_sidebar .pkp_block .content li:last-child { border-bottom: 0; }
+
+/* Link menu + hover seperti tombol All Archive */
+.pkp_structure_sidebar .pkp_block .content li > a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 3px 0;
+  padding: 7px 10px;
+  border-radius: 6px;
+  color: #22304f;
+  text-decoration: none;
+  transition: background .2s ease, color .2s ease;
+}
+.pkp_structure_sidebar .pkp_block .content li > a:hover,
+.pkp_structure_sidebar .pkp_block .content li > a:focus-visible {
+  background: #030271;
+  color: #fff;
+  text-decoration: none;
+}
+
+/* Panah kecil di depan menu (berubah putih saat hover) */
+.pkp_structure_sidebar .pkp_block .content li > a::before {
+  content: "";
+  flex: none;
+  width: 14px;
+  height: 14px;
+  background: no-repeat center / contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238d9ab4' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l6 6-6 6'/%3E%3C/svg%3E");
+}
+.pkp_structure_sidebar .pkp_block .content li > a:hover::before,
+.pkp_structure_sidebar .pkp_block .content li > a:focus-visible::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l6 6-6 6'/%3E%3C/svg%3E");
+}
+
+/* Judul blok yang disembunyikan tema (pkp_screen_reader) dimunculkan lagi */
+.pkp_structure_sidebar .pkp_block > .title.pkp_screen_reader {
+  position: static !important;
+  clip: auto !important;
+  width: auto !important;
+  height: auto !important;
+  overflow: visible !important;
+  margin: 0 !important;
+}
+
+/* Cadangan: blok Additional Information yang judulnya tidak dirender sama sekali */
+.pkp_structure_sidebar .pkp_block:has(a[href$="/focusscope"]):not(:has(> .title))::before {
+  content: "Additional Information";
+  display: block;
+  padding: 8px 14px;
+  color: #fff;
+  font-weight: 700;
+  font-size: .85em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: .2px;
+  background: linear-gradient(100deg, #030271, #1a1a9e);
+}
+
+/* Blok yang berisi widget Journal Archive: jangan dobel kartu */
+.pkp_structure_sidebar .pkp_block:has(#ch-archive) {
+  background: none;
+  box-shadow: none;
+  border-radius: 0;
+  overflow: visible;
+}
+.pkp_structure_sidebar .pkp_block:has(#ch-archive) > .title { display: none; }
+.pkp_structure_sidebar .pkp_block:has(#ch-archive) .content { padding: 0; }
+
+/* Daftar logo (mis. CHEESA Profiles): tambahkan class="ch-logos" pada <ul> */
+.pkp_structure_sidebar .pkp_block .content ul.ch-logos li > a {
+  justify-content: center;
+  padding: 8px 10px;
+}
+.pkp_structure_sidebar .pkp_block .content ul.ch-logos li > a::before { display: none; }
+.pkp_structure_sidebar .pkp_block .content ul.ch-logos li > a:hover,
+.pkp_structure_sidebar .pkp_block .content ul.ch-logos li > a:focus-visible {
+  background: #f2f4fa;
+  color: inherit;
+}
+.pkp_structure_sidebar .pkp_block .content ul.ch-logos img {
+  display: block;
+  max-width: 100%;
+  max-height: 70px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  margin: 0 auto;
+}
+
+/* Embed grafik + tombol See Detail (versi rapat). Ganti blok .ch-embed / .ch-btn yang lama. */
+.ch-embed{
+  --ch-ratio:600 / 345;          /* kecilkan angka kedua bila masih ada ruang kosong di bawah grafik, besarkan bila grafik terpotong */
+  position:relative;
+  box-sizing:border-box;
+  width:100%;
+  max-width:900px;
+  height:auto!important;
+  aspect-ratio:var(--ch-ratio)!important;
+  margin:6px auto 0!important;
+  padding:0!important;
+  border-radius:8px;
+  background:#fff;
+  box-shadow:0 0 0 1px #eceff5,0 2px 12px rgba(3,2,113,.08);
+  overflow:hidden;
+}
+.ch-embed iframe{
+  position:absolute;
+  top:0;
+  left:0;
+  display:block;
+  width:600px;                   /* diskalakan otomatis oleh script cheesa-chart-fit */
+  height:371px;
+  border:0;
+  transform-origin:0 0;
+}
+.ch-embed + .ch-btn{max-width:600px;margin:8px auto 0}
+.ch-btn,
+.pkp_structure_sidebar .pkp_block .content a.ch-btn{
+  display:block;
+  margin:8px 0 0;
+  padding:8px 14px;
+  border-radius:6px;
+  background:#030271;
+  color:#fff!important;
+  text-align:center;
+  text-decoration:none!important;
+  font-weight:600;
+  font-size:.9em;
+  transition:background .2s ease;
+}
+.ch-btn:hover,.ch-btn:focus-visible,
+.pkp_structure_sidebar .pkp_block .content a.ch-btn:hover,
+.pkp_structure_sidebar .pkp_block .content a.ch-btn:focus-visible{background:#1a1a9e}
+/* jarak antar blok grafik: rapatkan paragraf/pembungkus di sekitar embed dan tombol */
+.ch-embed,.ch-btn{margin-bottom:0}
+p:has(>.ch-embed),p:has(>.ch-btn),div:has(>.ch-embed)+p:empty{margin-top:0!important;margin-bottom:12px!important}
+/* ==========================================================================
+   CHEESA: baris menu = [User/Login] ...... [HOME - ABOUT di tengah] ...... [SEARCH]
+   Butuh script cheesa-header-nav (memindahkan menu user ke kiri dan Search ke kanan).
+   Hanya aktif di layar >= 992px; layar kecil pakai tampilan bawaan tema.
+   ========================================================================== */
+@media (min-width: 992px) {
+  .pkp_navigation_primary_row.ch-nav-row {
+    display: grid !important;
+    grid-template-columns: 1fr auto 1fr;   /* kiri: user | tengah: menu | kanan: search */
+    align-items: center;
+    column-gap: 12px;
+    padding: 0 16px !important;
+    overflow: visible !important;
+  }
+
+  /* kiri: user / login */
+  .ch-nav-row .ch-nav-left {
+    grid-column: 1;
+    justify-self: start;
+    display: flex;
+    align-items: center;
+    position: relative;
+    z-index: 30;
+  }
+  .ch-nav-left #navigationUserWrapper,
+  .ch-nav-left .pkp_navigation_user_wrapper {
+    position: static !important;
+    float: none !important;
+    top: auto !important;
+    right: auto !important;
+    width: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .ch-nav-left .pkp_navigation_user {
+    display: flex !important;
+    flex-wrap: nowrap;
+    align-items: center;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .ch-nav-left .pkp_navigation_user > li {
+    float: none !important;
+    margin: 0 !important;
+    white-space: nowrap;
+  }
+  .ch-nav-left .pkp_navigation_user > li > a {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap !important;
+    line-height: 48px !important;
+    padding: 0 10px !important;
+    color: #ffffff !important;
+  }
+
+  /* tengah: HOME - ABOUT (satu baris, tepat di tengah) */
+  .ch-nav-row .pkp_navigation_primary_wrapper {
+    grid-column: 2;
+    justify-self: center;
+    float: none !important;
+    width: auto !important;
+    margin: 0 !important;
+  }
+  .ch-nav-row .pkp_navigation_primary {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    justify-content: center;
+    align-items: center;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .ch-nav-row .pkp_navigation_primary > li {
+    float: none !important;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+  .ch-nav-row .pkp_navigation_primary > li > a {
+    display: inline-flex !important;   /* ikon di kiri teks */
+    flex-direction: row !important;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap !important;
+    line-height: 48px !important;
+    height: 48px;
+    padding: 0 12px !important;
+  }
+  .ch-nav-row .pkp_navigation_primary > li > a i,
+  .ch-nav-row .pkp_navigation_primary > li > a svg {
+    display: inline-block !important;
+    flex: 0 0 auto;
+    margin: 0 !important;
+  }
+
+  /* sub-menu: lebih lega */
+  .ch-nav-row .pkp_navigation_primary_wrapper ul li ul {
+    min-width: 240px;
+    padding: 10px 8px !important;
+    margin-top: 0;
+  }
+  .ch-nav-row .pkp_navigation_primary_wrapper ul li ul li {
+    white-space: nowrap;
+    float: none !important;
+    margin: 2px 0 !important;
+  }
+  .ch-nav-row .pkp_navigation_primary_wrapper ul li ul li > a {
+    display: block !important;
+    height: auto !important;
+    line-height: 1.4 !important;
+    padding: 11px 18px !important;
+    font-size: 0.9rem !important;
+  }
+
+  /* kanan: Search */
+  .ch-nav-row .ch-nav-right {
+    grid-column: 3;
+    justify-self: end;
+    display: flex;
+    align-items: center;
+    position: relative;
+    z-index: 20;
+  }
+  .ch-nav-right .pkp_navigation_search_wrapper {
+    position: static !important;
+    float: none !important;
+    width: auto !important;
+    margin: 0 !important;
+  }
+  .ch-nav-right .pkp_navigation_search_wrapper a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    line-height: 48px;
+    padding: 0 12px;
+    border-bottom: 0;
+  }
+}
+
+/* layar 992-1199px: rapatkan sedikit supaya semua menu muat satu baris */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .ch-nav-row .pkp_navigation_primary > li > a,
+  .ch-nav-left .pkp_navigation_user > li > a {
+    padding: 0 7px !important;
+    font-size: 0.78rem !important;
+    letter-spacing: 0.02em !important;
+  }
+}
+.w3-image{max-width:100%;height:auto}img{vertical-align:middle}a{color:inherit}
+.w3-table,.w3-table-all{border-collapse:collapse;border-spacing:0;width:100%;display:table}.w3-table-all{border:1px solid #ccc}
+.w3-bordered tr,.w3-table-all tr{border-bottom:1px solid #ddd}.w3-striped tbody tr:nth-child(even){background-color:#f1f1f1}
+.w3-table-all tr:nth-child(odd){background-color:#fff}.w3-table-all tr:nth-child(even){background-color:#f1f1f1}
+.w3-hoverable tbody tr:hover,.w3-ul.w3-hoverable li:hover{background-color:#ccc}.w3-centered tr th,.w3-centered tr td{text-align:center}
+.w3-table td,.w3-table th,.w3-table-all td,.w3-table-all th{padding:8px 8px;display:table-cell;text-align:left;vertical-align:top}
+.w3-table th:first-child,.w3-table td:first-child,.w3-table-all th:first-child,.w3-table-all td:first-child{padding-left:16px}
+.w3-btn,.w3-button{border:none;display:inline-block;padding:8px 16px;vertical-align:middle;overflow:hidden;text-decoration:none;color:inherit;background-color:inherit;text-align:center;cursor:pointer;white-space:nowrap}
+.w3-btn:hover{box-shadow:0 8px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19)}
+.w3-btn,.w3-button{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}   
+.w3-disabled,.w3-btn:disabled,.w3-button:disabled{cursor:not-allowed;opacity:0.3}.w3-disabled *,:disabled *{pointer-events:none}
+.w3-btn.w3-disabled:hover,.w3-btn:disabled:hover{box-shadow:none}
+.w3-badge,.w3-tag{background-color:#000;color:#fff;display:inline-block;padding-left:8px;padding-right:8px;text-align:center}.w3-badge{border-radius:50%}
+.w3-ul{list-style-type:none;padding:0;margin:0}.w3-ul li{padding:8px 16px;border-bottom:1px solid #ddd}.w3-ul li:last-child{border-bottom:none}
+.w3-tooltip,.w3-display-container{position:relative}.w3-tooltip .w3-text{display:none}.w3-tooltip:hover .w3-text{display:inline-block}
+.w3-ripple:active{opacity:0.5}.w3-ripple{transition:opacity 0s}
+.w3-input{padding:8px;display:block;border:none;border-bottom:1px solid #ccc;width:100%}
+.w3-select{padding:9px 0;width:100%;border:none;border-bottom:1px solid #ccc}
+.w3-dropdown-click,.w3-dropdown-hover{position:relative;display:inline-block;cursor:pointer}
+.w3-dropdown-hover:hover .w3-dropdown-content{display:block}
+.w3-dropdown-hover:first-child,.w3-dropdown-click:hover{background-color:#ccc;color:#000}
+.w3-dropdown-hover:hover > .w3-button:first-child,.w3-dropdown-click:hover > .w3-button:first-child{background-color:#ccc;color:#000}
+.w3-dropdown-content{cursor:auto;color:#000;background-color:#fff;display:none;position:absolute;min-width:160px;margin:0;padding:0;z-index:1}
+.w3-check,.w3-radio{width:24px;height:24px;position:relative;top:6px}
+.w3-sidebar{height:100%;width:200px;background-color:#fff;position:fixed!important;z-index:1;overflow:auto}
+.w3-bar-block .w3-dropdown-hover,.w3-bar-block .w3-dropdown-click{width:100%}
+.w3-bar-block .w3-dropdown-hover .w3-dropdown-content,.w3-bar-block .w3-dropdown-click .w3-dropdown-content{min-width:100%}
+.w3-bar-block .w3-dropdown-hover .w3-button,.w3-bar-block .w3-dropdown-click .w3-button{width:100%;text-align:left;padding:8px 16px}
+.w3-main,#main{transition:margin-left .4s}
+.w3-modal{z-index:3;display:none;padding-top:100px;position:fixed;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgb(0,0,0);background-color:rgba(0,0,0,0.4)}
+.w3-modal-content{margin:auto;background-color:#fff;position:relative;padding:0;outline:0;width:600px}
+.w3-bar{width:100%;overflow:hidden}.w3-center .w3-bar{display:inline-block;width:auto}
+.w3-bar .w3-bar-item{padding:8px 16px;float:left;width:auto;border:none;display:block;outline:0}
+.w3-bar .w3-dropdown-hover,.w3-bar .w3-dropdown-click{position:static;float:left}
+.w3-bar .w3-button{white-space:normal}
+.w3-bar-block .w3-bar-item{width:100%;display:block;padding:8px 16px;text-align:left;border:none;white-space:normal;float:none;outline:0}
+.w3-bar-block.w3-center .w3-bar-item{text-align:center}.w3-block{display:block;width:100%}
+.w3-responsive{display:block;overflow-x:auto}
+.w3-container:after,.w3-container:before,.w3-panel:after,.w3-panel:before,.w3-row:after,.w3-row:before,.w3-row-padding:after,.w3-row-padding:before,
+.w3-cell-row:before,.w3-cell-row:after,.w3-clear:after,.w3-clear:before,.w3-bar:before,.w3-bar:after{content:"";display:table;clear:both}
+.w3-col,.w3-half,.w3-third,.w3-twothird,.w3-threequarter,.w3-quarter{float:left;width:100%}
+.w3-col.s1{width:8.33333%}.w3-col.s2{width:16.66666%}.w3-col.s3{width:24.99999%}.w3-col.s4{width:33.33333%}
+.w3-col.s5{width:41.66666%}.w3-col.s6{width:49.99999%}.w3-col.s7{width:58.33333%}.w3-col.s8{width:66.66666%}
+.w3-col.s9{width:74.99999%}.w3-col.s10{width:83.33333%}.w3-col.s11{width:91.66666%}.w3-col.s12{width:99.99999%}
+@media (min-width:601px){.w3-col.m1{width:8.33333%}.w3-col.m2{width:16.66666%}.w3-col.m3,.w3-quarter{width:24.99999%}.w3-col.m4,.w3-third{width:33.33333%}
+.w3-col.m5{width:41.66666%}.w3-col.m6,.w3-half{width:49.99999%}.w3-col.m7{width:58.33333%}.w3-col.m8,.w3-twothird{width:66.66666%}
+.w3-col.m9,.w3-threequarter{width:74.99999%}.w3-col.m10{width:83.33333%}.w3-col.m11{width:91.66666%}.w3-col.m12{width:99.99999%}}
+@media (min-width:993px){.w3-col.l1{width:8.33333%}.w3-col.l2{width:16.66666%}.w3-col.l3{width:24.99999%}.w3-col.l4{width:33.33333%}
+.w3-col.l5{width:41.66666%}.w3-col.l6{width:49.99999%}.w3-col.l7{width:58.33333%}.w3-col.l8{width:66.66666%}
+.w3-col.l9{width:74.99999%}.w3-col.l10{width:83.33333%}.w3-col.l11{width:91.66666%}.w3-col.l12{width:99.99999%}}
+.w3-rest{overflow:hidden}.w3-stretch{margin-left:-16px;margin-right:-16px}
+.w3-content,.w3-auto{margin-left:auto;margin-right:auto}.w3-content{max-width:980px}.w3-auto{max-width:1140px}
+.w3-cell-row{display:table;width:100%}.w3-cell{display:table-cell}
+.w3-cell-top{vertical-align:top}.w3-cell-middle{vertical-align:middle}.w3-cell-bottom{vertical-align:bottom}
+.w3-hide{display:none!important}.w3-show-block,.w3-show{display:block!important}.w3-show-inline-block{display:inline-block!important}
+@media (max-width:1205px){.w3-auto{max-width:95%}}
+@media (max-width:600px){.w3-modal-content{margin:0 10px;width:auto!important}.w3-modal{padding-top:30px}
+.w3-dropdown-hover.w3-mobile .w3-dropdown-content,.w3-dropdown-click.w3-mobile .w3-dropdown-content{position:relative}  
+.w3-hide-small{display:none!important}.w3-mobile{display:block;width:100%!important}.w3-bar-item.w3-mobile,.w3-dropdown-hover.w3-mobile,.w3-dropdown-click.w3-mobile{text-align:center}
+.w3-dropdown-hover.w3-mobile,.w3-dropdown-hover.w3-mobile .w3-btn,.w3-dropdown-hover.w3-mobile .w3-button,.w3-dropdown-click.w3-mobile,.w3-dropdown-click.w3-mobile .w3-btn,.w3-dropdown-click.w3-mobile .w3-button{width:100%}}
+@media (max-width:768px){.w3-modal-content{width:500px}.w3-modal{padding-top:50px}}
+@media (min-width:993px){.w3-modal-content{width:900px}.w3-hide-large{display:none!important}.w3-sidebar.w3-collapse{display:block!important}}
+@media (max-width:992px) and (min-width:601px){.w3-hide-medium{display:none!important}}
+@media (max-width:992px){.w3-sidebar.w3-collapse{display:none}.w3-main{margin-left:0!important;margin-right:0!important}.w3-auto{max-width:100%}}
+.w3-top,.w3-bottom{position:fixed;width:100%;z-index:1}.w3-top{top:0}.w3-bottom{bottom:0}
+.w3-overlay{position:fixed;display:none;width:100%;height:100%;top:0;left:0;right:0;bottom:0;background-color:rgba(0,0,0,0.5);z-index:2}
+.w3-display-topleft{position:absolute;left:0;top:0}.w3-display-topright{position:absolute;right:0;top:0}
+.w3-display-bottomleft{position:absolute;left:0;bottom:0}.w3-display-bottomright{position:absolute;right:0;bottom:0}
+.w3-display-middle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%)}
+.w3-display-left{position:absolute;top:50%;left:0%;transform:translate(0%,-50%);-ms-transform:translate(-0%,-50%)}
+.w3-display-right{position:absolute;top:50%;right:0%;transform:translate(0%,-50%);-ms-transform:translate(0%,-50%)}
+.w3-display-topmiddle{position:absolute;left:50%;top:0;transform:translate(-50%,0%);-ms-transform:translate(-50%,0%)}
+.w3-display-bottommiddle{position:absolute;left:50%;bottom:0;transform:translate(-50%,0%);-ms-transform:translate(-50%,0%)}
+.w3-display-container:hover .w3-display-hover{display:block}.w3-display-container:hover span.w3-display-hover{display:inline-block}.w3-display-hover{display:none}
+.w3-display-position{position:absolute}
+.w3-circle{border-radius:50%}
+.w3-round-small{border-radius:2px}.w3-round,.w3-round-medium{border-radius:4px}.w3-round-large{border-radius:8px}.w3-round-xlarge{border-radius:16px}.w3-round-xxlarge{border-radius:32px}
+.w3-row-padding,.w3-row-padding>.w3-half,.w3-row-padding>.w3-third,.w3-row-padding>.w3-twothird,.w3-row-padding>.w3-threequarter,.w3-row-padding>.w3-quarter,.w3-row-padding>.w3-col{padding:0 8px}
+.w3-container,.w3-panel{padding:0.01em 16px}.w3-panel{margin-top:16px;margin-bottom:16px}
+.w3-code,.w3-codespan{font-family:"PT Sans", Helvetica, sans-serif;font-size:16px}
+.w3-code{width:auto;background-color:#fff;padding:8px 12px;border-left:4px solid #4CAF50;word-wrap:break-word}
+.w3-codespan{color:crimson;background-color:#f1f1f1;padding-left:4px;padding-right:4px;font-size:110%}
+.w3-card,.w3-card-2{box-shadow:0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)}
+.w3-card-4,.w3-hover-shadow:hover{box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19)}
+.w3-spin{animation:w3-spin 2s infinite linear}@keyframes w3-spin{0%{transform:rotate(0deg)}100%{transform:rotate(359deg)}}
+.w3-animate-fading{animation:fading 10s infinite}@keyframes fading{0%{opacity:0}50%{opacity:1}100%{opacity:0}}
+.w3-animate-opacity{animation:opac 0.8s}@keyframes opac{from{opacity:0} to{opacity:1}}
+.w3-animate-top{position:relative;animation:animatetop 0.4s}@keyframes animatetop{from{top:-300px;opacity:0} to{top:0;opacity:1}}
+.w3-animate-left{position:relative;animation:animateleft 0.4s}@keyframes animateleft{from{left:-300px;opacity:0} to{left:0;opacity:1}}
+.w3-animate-right{position:relative;animation:animateright 0.4s}@keyframes animateright{from{right:-300px;opacity:0} to{right:0;opacity:1}}
+.w3-animate-bottom{position:relative;animation:animatebottom 0.4s}@keyframes animatebottom{from{bottom:-300px;opacity:0} to{bottom:0;opacity:1}}
+.w3-animate-zoom {animation:animatezoom 0.6s}@keyframes animatezoom{from{transform:scale(0)} to{transform:scale(1)}}
+.w3-animate-input{transition:width 0.4s ease-in-out}.w3-animate-input:focus{width:100%!important}
+.w3-opacity,.w3-hover-opacity:hover{opacity:0.60}.w3-opacity-off,.w3-hover-opacity-off:hover{opacity:1}
+.w3-opacity-max{opacity:0.25}.w3-opacity-min{opacity:0.75}
+.w3-greyscale-max,.w3-grayscale-max,.w3-hover-greyscale:hover,.w3-hover-grayscale:hover{filter:grayscale(100%)}
+.w3-greyscale,.w3-grayscale{filter:grayscale(75%)}.w3-greyscale-min,.w3-grayscale-min{filter:grayscale(50%)}
+.w3-sepia{filter:sepia(75%)}.w3-sepia-max,.w3-hover-sepia:hover{filter:sepia(100%)}.w3-sepia-min{filter:sepia(50%)}
+.w3-tiny{font-size:10px!important}.w3-small{font-size:12px!important}.w3-medium{font-size:15px!important}.w3-large{font-size:18px!important}
+.w3-xlarge{font-size:24px!important}.w3-xxlarge{font-size:36px!important}.w3-xxxlarge{font-size:48px!important}.w3-jumbo{font-size:64px!important}
+.w3-left-align{text-align:left!important}.w3-right-align{text-align:right!important}.w3-justify{text-align:justify!important}.w3-center{text-align:center!important}
+.w3-border-0{border:0!important}.w3-border{border:1px solid #ccc!important}
+.w3-border-top{border-top:1px solid #ccc!important}.w3-border-bottom{border-bottom:1px solid #ccc!important}
+.w3-border-left{border-left:1px solid #ccc!important}.w3-border-right{border-right:1px solid #ccc!important}
+.w3-topbar{border-top:6px solid #ccc!important}.w3-bottombar{border-bottom:6px solid #ccc!important}
+.w3-leftbar{border-left:6px solid #ccc!important}.w3-rightbar{border-right:6px solid #ccc!important}
+.w3-section,.w3-code{margin-top:16px!important;margin-bottom:16px!important}
+.w3-margin{margin:16px!important}.w3-margin-top{margin-top:16px!important}.w3-margin-bottom{margin-bottom:16px!important}
+.w3-margin-left{margin-left:16px!important}.w3-margin-right{margin-right:16px!important}
+.w3-padding-small{padding:4px 8px!important}.w3-padding{padding:8px 16px!important}.w3-padding-large{padding:12px 24px!important}
+.w3-padding-16{padding-top:16px!important;padding-bottom:16px!important}.w3-padding-24{padding-top:24px!important;padding-bottom:24px!important}
+.w3-padding-32{padding-top:32px!important;padding-bottom:32px!important}.w3-padding-48{padding-top:48px!important;padding-bottom:48px!important}
+.w3-padding-64{padding-top:64px!important;padding-bottom:64px!important}
+.w3-padding-top-64{padding-top:64px!important}.w3-padding-top-48{padding-top:48px!important}
+.w3-padding-top-32{padding-top:32px!important}.w3-padding-top-24{padding-top:24px!important}
+.w3-left{float:left!important}.w3-right{float:right!important}
+.w3-button:hover{color:#000!important;background-color:#ccc!important}
+.w3-transparent,.w3-hover-none:hover{background-color:transparent!important}
+.w3-hover-none:hover{box-shadow:none!important}
+/* Colors */
+.w3-amber,.w3-hover-amber:hover{color:#000!important;background-color:#ffc107!important}
+.w3-aqua,.w3-hover-aqua:hover{color:#000!important;background-color:#00ffff!important}
+.w3-blue,.w3-hover-blue:hover{color:#fff!important;background-color:#2196F3!important}
+.w3-light-blue,.w3-hover-light-blue:hover{color:#000!important;background-color:#87CEEB!important}
+.w3-brown,.w3-hover-brown:hover{color:#fff!important;background-color:#795548!important}
+.w3-cyan,.w3-hover-cyan:hover{color:#000!important;background-color:#00bcd4!important}
+.w3-blue-grey,.w3-hover-blue-grey:hover,.w3-blue-gray,.w3-hover-blue-gray:hover{color:#fff!important;background-color:#607d8b!important}
+.w3-green,.w3-hover-green:hover{color:#fff!important;background-color:#4CAF50!important}
+.w3-light-green,.w3-hover-light-green:hover{color:#000!important;background-color:#8bc34a!important}
+.w3-indigo,.w3-hover-indigo:hover{color:#fff!important;background-color:#3f51b5!important}
+.w3-khaki,.w3-hover-khaki:hover{color:#000!important;background-color:#f0e68c!important}
+.w3-lime,.w3-hover-lime:hover{color:#000!important;background-color:#cddc39!important}
+.w3-orange,.w3-hover-orange:hover{color:#000!important;background-color:#ff9800!important}
+.w3-deep-orange,.w3-hover-deep-orange:hover{color:#fff!important;background-color:#ff5722!important}
+.w3-pink,.w3-hover-pink:hover{color:#fff!important;background-color:#e91e63!important}
+.w3-purple,.w3-hover-purple:hover{color:#fff!important;background-color:#9c27b0!important}
+.w3-deep-purple,.w3-hover-deep-purple:hover{color:#fff!important;background-color:#673ab7!important}
+.w3-red,.w3-hover-red:hover{color:#fff!important;background-color:#f44336!important}
+.w3-sand,.w3-hover-sand:hover{color:#000!important;background-color:#fdf5e6!important}
+.w3-teal,.w3-hover-teal:hover{color:#fff!important;background-color:#009688!important}
+.w3-yellow,.w3-hover-yellow:hover{color:#000!important;background-color:#ffeb3b!important}
+.w3-white,.w3-hover-white:hover{color:#000!important;background-color:#fff!important}
+.w3-black,.w3-hover-black:hover{color:#fff!important;background-color:#000!important}
+.w3-grey,.w3-hover-grey:hover,.w3-gray,.w3-hover-gray:hover{color:#000!important;background-color:#9e9e9e!important}
+.w3-light-grey,.w3-hover-light-grey:hover,.w3-light-gray,.w3-hover-light-gray:hover{color:#000!important;background-color:#f1f1f1!important}
+.w3-dark-grey,.w3-hover-dark-grey:hover,.w3-dark-gray,.w3-hover-dark-gray:hover{color:#fff!important;background-color:#616161!important}
+.w3-pale-red,.w3-hover-pale-red:hover{color:#000!important;background-color:#ffdddd!important}
+.w3-pale-green,.w3-hover-pale-green:hover{color:#000!important;background-color:#ddffdd!important}
+.w3-pale-yellow,.w3-hover-pale-yellow:hover{color:#000!important;background-color:#ffffcc!important}
+.w3-pale-blue,.w3-hover-pale-blue:hover{color:#000!important;background-color:#ddffff!important}
+.w3-text-amber,.w3-hover-text-amber:hover{color:#ffc107!important}
+.w3-text-aqua,.w3-hover-text-aqua:hover{color:#00ffff!important}
+.w3-text-blue,.w3-hover-text-blue:hover{color:#2196F3!important}
+.w3-text-light-blue,.w3-hover-text-light-blue:hover{color:#87CEEB!important}
+.w3-text-brown,.w3-hover-text-brown:hover{color:#795548!important}
+.w3-text-cyan,.w3-hover-text-cyan:hover{color:#00bcd4!important}
+.w3-text-blue-grey,.w3-hover-text-blue-grey:hover,.w3-text-blue-gray,.w3-hover-text-blue-gray:hover{color:#607d8b!important}
+.w3-text-green,.w3-hover-text-green:hover{color:#4CAF50!important}
+.w3-text-light-green,.w3-hover-text-light-green:hover{color:#8bc34a!important}
+.w3-text-indigo,.w3-hover-text-indigo:hover{color:#3f51b5!important}
+.w3-text-khaki,.w3-hover-text-khaki:hover{color:#b4aa50!important}
+.w3-text-lime,.w3-hover-text-lime:hover{color:#cddc39!important}
+.w3-text-orange,.w3-hover-text-orange:hover{color:#ff9800!important}
+.w3-text-deep-orange,.w3-hover-text-deep-orange:hover{color:#ff5722!important}
+.w3-text-pink,.w3-hover-text-pink:hover{color:#e91e63!important}
+.w3-text-purple,.w3-hover-text-purple:hover{color:#9c27b0!important}
+.w3-text-deep-purple,.w3-hover-text-deep-purple:hover{color:#673ab7!important}
+.w3-text-red,.w3-hover-text-red:hover{color:#f44336!important}
+.w3-text-sand,.w3-hover-text-sand:hover{color:#fdf5e6!important}
+.w3-text-teal,.w3-hover-text-teal:hover{color:#009688!important}
+.w3-text-yellow,.w3-hover-text-yellow:hover{color:#d2be0e!important}
+.w3-text-white,.w3-hover-text-white:hover{color:#fff!important}
+.w3-text-black,.w3-hover-text-black:hover{color:#000!important}
+.w3-text-grey,.w3-hover-text-grey:hover,.w3-text-gray,.w3-hover-text-gray:hover{color:#757575!important}
+.w3-text-light-grey,.w3-hover-text-light-grey:hover,.w3-text-light-gray,.w3-hover-text-light-gray:hover{color:#f1f1f1!important}
+.w3-text-dark-grey,.w3-hover-text-dark-grey:hover,.w3-text-dark-gray,.w3-hover-text-dark-gray:hover{color:#3a3a3a!important}
+.w3-border-amber,.w3-hover-border-amber:hover{border-color:#ffc107!important}
+.w3-border-aqua,.w3-hover-border-aqua:hover{border-color:#00ffff!important}
+.w3-border-blue,.w3-hover-border-blue:hover{border-color:#2196F3!important}
+.w3-border-light-blue,.w3-hover-border-light-blue:hover{border-color:#87CEEB!important}
+.w3-border-brown,.w3-hover-border-brown:hover{border-color:#795548!important}
+.w3-border-cyan,.w3-hover-border-cyan:hover{border-color:#00bcd4!important}
+.w3-border-blue-grey,.w3-hover-border-blue-grey:hover,.w3-border-blue-gray,.w3-hover-border-blue-gray:hover{border-color:#607d8b!important}
+.w3-border-green,.w3-hover-border-green:hover{border-color:#4CAF50!important}
+.w3-border-light-green,.w3-hover-border-light-green:hover{border-color:#8bc34a!important}
+.w3-border-indigo,.w3-hover-border-indigo:hover{border-color:#3f51b5!important}
+.w3-border-khaki,.w3-hover-border-khaki:hover{border-color:#f0e68c!important}
+.w3-border-lime,.w3-hover-border-lime:hover{border-color:#cddc39!important}
+.w3-border-orange,.w3-hover-border-orange:hover{border-color:#ff9800!important}
+.w3-border-deep-orange,.w3-hover-border-deep-orange:hover{border-color:#ff5722!important}
+.w3-border-pink,.w3-hover-border-pink:hover{border-color:#e91e63!important}
+.w3-border-purple,.w3-hover-border-purple:hover{border-color:#9c27b0!important}
+.w3-border-deep-purple,.w3-hover-border-deep-purple:hover{border-color:#673ab7!important}
+.w3-border-red,.w3-hover-border-red:hover{border-color:#f44336!important}
+.w3-border-sand,.w3-hover-border-sand:hover{border-color:#fdf5e6!important}
+.w3-border-teal,.w3-hover-border-teal:hover{border-color:#009688!important}
+.w3-border-yellow,.w3-hover-border-yellow:hover{border-color:#ffeb3b!important}
+.w3-border-white,.w3-hover-border-white:hover{border-color:#fff!important}
+.w3-border-black,.w3-hover-border-black:hover{border-color:#000!important}
+.w3-border-grey,.w3-hover-border-grey:hover,.w3-border-gray,.w3-hover-border-gray:hover{border-color:#9e9e9e!important}
+.w3-border-light-grey,.w3-hover-border-light-grey:hover,.w3-border-light-gray,.w3-hover-border-light-gray:hover{border-color:#f1f1f1!important}
+.w3-border-dark-grey,.w3-hover-border-dark-grey:hover,.w3-border-dark-gray,.w3-hover-border-dark-gray:hover{border-color:#616161!important}
+.w3-border-pale-red,.w3-hover-border-pale-red:hover{border-color:#ffe7e7!important}.w3-border-pale-green,.w3-hover-border-pale-green:hover{border-color:#e7ffe7!important}
+.w3-border-pale-yellow,.w3-hover-border-pale-yellow:hover{border-color:#ffffcc!important}.w3-border-pale-blue,.w3-hover-border-pale-blue:hover{border-color:#e7ffff!important}
+/* ==========================================================================
+   CHEESA: daftar 3 kolom (opsional) - tambahkan class "ch-cols-3" pada <ul>
+   Contoh: <ul class="ch-cols-3"> atau <ul class="ch-logos ch-cols-3">
+   Otomatis menjadi 2 kolom / 1 kolom bila area blok sempit (mis. di sidebar).
+   ========================================================================== */
+.pkp_structure_sidebar .pkp_block .content:has(> ul.ch-cols-3) { container-type: inline-size; }
+.pkp_structure_sidebar .pkp_block .content ul.ch-cols-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 14px;
+}
+.pkp_structure_sidebar .pkp_block .content ul.ch-cols-3 li:last-child { border-bottom: 1px solid #eceff5; }
+@container (max-width: 520px) {
+  .pkp_structure_sidebar .pkp_block .content ul.ch-cols-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@container (max-width: 300px) {
+  .pkp_structure_sidebar .pkp_block .content ul.ch-cols-3 { grid-template-columns: 1fr; }
+}
+
+/* ==========================================================================
+   CHEESA: layout 3 kolom = sidebar kiri | konten | sidebar kanan
+   Butuh script cheesa-layout-3col (menambah class .ch-3col dan membagi blok ke 2 kolom).
+   Hanya aktif di layar >= 1100px; di bawah itu semua ditumpuk seperti biasa.
+   ========================================================================== */
+@media (min-width: 1100px) {
+  .pkp_structure_content.ch-3col {
+    display: grid !important;
+    grid-template-columns: 250px minmax(0, 1fr) 250px;   /* lebar sidebar kiri | konten | sidebar kanan */
+    column-gap: 16px;
+    align-items: start;
+  }
+  .pkp_structure_content.ch-3col::before,
+  .pkp_structure_content.ch-3col::after,
+  .pkp_structure_content.ch-3col > .pkp_structure_sidebar::before,
+  .pkp_structure_content.ch-3col > .pkp_structure_sidebar::after {
+    content: none !important;
+    display: none !important;
+  }
+  .pkp_structure_content.ch-3col > .pkp_structure_main {
+    grid-column: 2;
+    grid-row: 1;
+    float: none !important;
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+  .pkp_structure_content.ch-3col > .pkp_structure_sidebar { display: contents !important; }
+  .pkp_structure_content.ch-3col .ch-sb-left  { grid-column: 1; grid-row: 1; min-width: 0; }
+  .pkp_structure_content.ch-3col .ch-sb-right { grid-column: 3; grid-row: 1; min-width: 0; }
+}
+.ch-sb-left > .pkp_block,
+.ch-sb-right > .pkp_block {
+  float: none !important;
+  width: auto !important;
+  margin: 0 0 12px !important;   /* jarak antar blok sidebar */
+}
+.pkp_structure_sidebar .pkp_block .ch-ar { margin-bottom: 0; }
+.ch-sb-left > *, .ch-sb-right > * { float: none !important; }
+.ch-sb-left > #ch-archive .ch-ar, .ch-sb-right > #ch-archive .ch-ar { margin-bottom: 12px; }
+
+/* Samakan font judul semua blok sidebar (Submission Menu, Additional Information, Journal Archive).
+   Judul blok bawaan tema memakai Montserrat, sedangkan header widget #ch-archive tidak punya
+   font-family sendiri sehingga ikut font isi (serif). */
+.pkp_structure_sidebar .pkp_block > .title,
+.pkp_structure_sidebar .pkp_block > h2.title,
+.pkp_structure_sidebar .pkp_block > span.title,
+.ch-ar-head,
+.ch-ar-head * {
+  font-family: 'Montserrat', 'Inter', Arial, sans-serif !important;
+}
+
+/* ==========================================================================
+   CHEESA: tampilan isi halaman statis (Publication Ethics, Focus and Scope, dst.)
+   Berlaku untuk semua halaman statis OJS (div.page). Tidak mengubah Archive, Issue, Artikel, Login, dll.
+   ========================================================================== */
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) { --c-navy:#030271; --c-navy2:#1a1a9e; --c-amber:#ed991f; --c-ink:#22304f; --c-line:#e3e8f2; --c-mist:#f3f5fb;
+  color: var(--c-ink); line-height: 1.8; font-size: 1.02rem; }
+
+/* Judul halaman */
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) > h1 { position: relative; margin: 0 0 28px; padding-bottom: 16px; color: var(--c-navy);
+  font-family: 'Montserrat','Inter',Arial,sans-serif; font-weight: 800; letter-spacing: -.01em; }
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) > h1::after { content: ""; position: absolute; left: 0; bottom: 0; width: 72px; height: 5px; border-radius: 3px;
+  background: linear-gradient(90deg, var(--c-amber), #f6c36b); }
+
+/* Sub judul */
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) h2 { margin: 2em 0 .8em; padding: 12px 18px; border-left: 6px solid var(--c-navy); border-radius: 0 10px 10px 0;
+  background: linear-gradient(90deg, var(--c-mist), rgba(243,245,251,0)); color: var(--c-navy);
+  font-family: 'Montserrat','Inter',Arial,sans-serif; font-size: 1.3rem; font-weight: 700; line-height: 1.35; }
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) h3 { display: flex; align-items: center; gap: 10px; margin: 1.6em 0 .6em; color: var(--c-navy);
+  font-family: 'Montserrat','Inter',Arial,sans-serif; font-size: 1.1rem; font-weight: 700; line-height: 1.4; }
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) h3::before { content: ""; flex: none; width: 10px; height: 10px; border-radius: 3px; background: var(--c-amber); transform: rotate(45deg); }
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) h4 { margin: 1.3em 0 .4em; color: var(--c-navy2); font-family: 'Montserrat','Inter',Arial,sans-serif; font-size: 1rem; font-weight: 700; }
+
+/* Paragraf & penekanan */
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) p { margin: 0 0 1.1em; text-align: justify; hyphens: auto; }
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) strong, .pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) b { color: var(--c-navy); }
+
+/* Link */
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) p a, .pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) li a, .pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) td a { color: var(--c-navy2); font-weight: 600; text-decoration: none;
+  border-bottom: 2px solid rgba(26,26,158,.25); transition: background .2s, border-color .2s; }
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) p a:hover, .pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) li a:hover, .pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) td a:hover { background: rgba(26,26,158,.08); border-bottom-color: var(--c-navy2); }
+
+/* Daftar bullet */
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) ul { list-style: none; margin: 0 0 1.3em; padding: 0; }
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) ul > li { position: relative; margin: 0 0 .55em; padding: 10px 14px 10px 44px; border: 1px solid var(--c-line);
+  border-radius: 10px; background: #fff; transition: border-color .2s, box-shadow .2s, transform .2s; }
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) ul > li:hover { border-color: #c6cdea; box-shadow: 0 6px 16px -10px rgba(3,2,113,.35); transform: translateX(2px); }
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) ul > li::before { content: ""; position: absolute; left: 14px; top: 15px; width: 18px; height: 18px; border-radius: 50%;
+  background: var(--c-navy) no-repeat center / 11px url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E"); }
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) ul ul { margin: .6em 0 0; }
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) ul ul > li { padding: 6px 10px 6px 30px; border: 0; background: none; box-shadow: none; transform: none; margin: 0; }
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) ul ul > li::before { left: 8px; top: 15px; width: 7px; height: 7px; background: var(--c-amber); }
+
+/* Daftar bernomor */
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) ol { list-style: none; counter-reset: chn; margin: 0 0 1.3em; padding: 0; }
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) ol > li { position: relative; counter-increment: chn; margin: 0 0 .6em; padding: 10px 14px 10px 56px;
+  border: 1px solid var(--c-line); border-radius: 10px; background: #fff; }
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) ol > li::before { content: counter(chn); position: absolute; left: 12px; top: 10px; width: 30px; height: 30px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--c-navy), var(--c-navy2)); color: #fff; font-family: 'Montserrat','Inter',Arial,sans-serif;
+  font-weight: 700; font-size: .85rem; line-height: 30px; text-align: center; }
+
+/* Kutipan / catatan */
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) blockquote { margin: 1.4em 0; padding: 16px 20px; border-left: 5px solid var(--c-amber); border-radius: 0 10px 10px 0;
+  background: #fff8ec; color: #5a4310; font-style: normal; }
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) blockquote p:last-child { margin-bottom: 0; }
+
+/* Tabel */
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) table { width: 100%; margin: 1.4em 0; border-collapse: separate; border-spacing: 0; overflow: hidden;
+  border: 1px solid var(--c-line); border-radius: 10px; font-size: .95rem; }
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) th { padding: 11px 14px; background: var(--c-navy); color: #fff; text-align: left; font-family: 'Montserrat','Inter',Arial,sans-serif; font-weight: 700; }
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) td { padding: 10px 14px; border-top: 1px solid var(--c-line); vertical-align: top; }
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) tbody tr:nth-child(even) td { background: var(--c-mist); }
+
+/* Garis pemisah & gambar */
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) hr { height: 3px; margin: 2em 0; border: 0; border-radius: 2px; background: linear-gradient(90deg, var(--c-navy), rgba(3,2,113,0)); }
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) img { max-width: 100%; height: auto; border-radius: 10px; }
+
+/* Kotak catatan opsional: <div class="ch-callout"><strong>Judul</strong><p>Isi…</p></div> */
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) .ch-callout { margin: 1.4em 0; padding: 16px 20px 6px; border: 1px solid #c9d0f0; border-top: 5px solid var(--c-navy);
+  border-radius: 10px; background: var(--c-mist); }
+.pkp_structure_main .page:not(.page_archives):not(.page_issue):not(.page_article):not(.page_search):not(.page_login):not(.page_register):not(.page_user):not(.page_lostPassword):not(.page_submissions) .ch-callout > strong:first-child { display: block; margin-bottom: 6px; font-family: 'Montserrat','Inter',Arial,sans-serif; }
+
+/* ==========================================================================
+   CHEESA: halaman detail artikel (1 kolom)
+   Urutan: judul > kartu penulis (nama, afiliasi, Published/Issue/Section/DOI, tombol) > cover > tab isi
+   Butuh script cheesa-article-tabs (menyusun ulang halaman + tab + pop up Cite Article).
+   Tanpa script, isi tetap tampil berurutan seperti bawaan tema.
+   ========================================================================== */
+.obj_article_details {
+  --a-navy:#030271; --a-navy2:#1a1a9e; --a-amber:#ed991f; --a-green:#1a7f37; --a-line:#e3e8f2; --a-mist:#f3f5fb; --a-ink:#22304f; --a-muted:#5d6784;
+  color: var(--a-ink);
+}
+.obj_article_details > .row { display: block !important; margin: 0 !important; }
+.obj_article_details .main_entry,
+.obj_article_details .entry_details { float: none !important; width: auto !important; max-width: none !important; margin: 0 !important; padding: 0 !important; min-width: 0; }
+.ch-hide { display: none !important; }
+
+/* ---- Kartu kepala artikel ---- */
+.ch-art-head {
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; align-items: start;
+  margin: 18px 0 0; padding: 22px 24px; background: #fff; border: 1px solid var(--a-line); border-radius: 14px;
+  box-shadow: 0 10px 28px -20px rgba(3,2,113,.5);
+}
+.ch-art-head.has-cover { grid-template-columns: minmax(0, 1fr) 190px; }
+.ch-head-cover:empty { display: none; }
+@media (max-width: 767px) { .ch-art-head.has-cover { grid-template-columns: 1fr; } .ch-head-cover { order: -1; max-width: 200px; } }
+
+/* Nama penulis seperti contoh: nama + nomor afiliasi + bendera + ORCID */
+.ch-authors { font-family: 'Montserrat','Inter',Arial,sans-serif; font-size: 1.05rem; font-weight: 600; line-height: 2; color: #14143a; }
+.ch-authors > .ch-ico { width: 22px; height: 22px; margin-right: 8px; vertical-align: -4px; color: var(--a-navy); }
+.ch-au { white-space: nowrap; }
+.ch-au-name { color: var(--a-navy); }
+.ch-au sup { margin-left: 2px; color: var(--a-green); font-size: .62em; font-weight: 800; }
+.ch-au-flag { width: 20px; height: 14px; margin-left: 5px; border-radius: 2px; object-fit: cover; vertical-align: -1px; box-shadow: 0 0 0 1px rgba(0,0,0,.12); }
+.ch-au-orcid {
+  display: inline-block; width: 16px; height: 16px; margin-left: 5px; border-radius: 50%; background: #a6ce39; color: #fff !important;
+  font: 700 8px/16px 'Montserrat',Arial,sans-serif; text-align: center; text-decoration: none !important; vertical-align: 1px; border: 0 !important;
+}
+.ch-au-orcid:hover { background: #8cb326; }
+.ch-affs { list-style: none; margin: 8px 0 0; padding: 0; font-size: .88rem; line-height: 1.5; color: var(--a-muted); }
+.ch-affs li { margin: 0 0 4px; padding: 0; }
+.ch-affs b { margin-right: 7px; color: var(--a-green); font-weight: 800; }
+.ch-ror { display: inline-block; margin-left: 4px; border: 0 !important; vertical-align: -2px; }
+.ch-ror svg { height: 12px; width: auto; }
+
+/* CHEESA: penanda corresponding author (ikon email di samping nomor afiliasi + catatan di bawah afiliasi)
+   Tempel di styleSheet_cheesa_3_kolom_new3.css, di bagian "halaman detail artikel". */
+
+.ch-au-mail {
+  display: inline-flex; align-items: center; justify-content: center;
+  margin: 0 3px 0 2px; color: #0b8f5a;            /* ganti sesuai warna tema */
+  vertical-align: super; line-height: 1; text-decoration: none;
+}
+.ch-au-mail .ch-ico { width: .78em; height: .78em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ch-au-mail:hover, .ch-au-mail:focus-visible { color: #00007a; }
+.ch-au-mail:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; border-radius: 3px; }
+
+/* catatan "Corresponding author" di bawah daftar afiliasi */
+.ch-corr-note {
+  display: flex; align-items: center; gap: .45em; flex-wrap: wrap;
+  margin: .7rem 0 0; padding-top: .7rem; border-top: 1px dashed #d6d9e4;
+  font-size: .9rem; color: #444;
+}
+.ch-corr-note .ch-ico { width: 1.05em; height: 1.05em; flex: none; fill: none; stroke: #0b8f5a; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ch-corr-note a { color: #00007a; font-weight: 600; word-break: break-all; }
+
+/* penanda data dari OJS tidak untuk ditampilkan */
+.ch-corr { display: none; }
+
+/* Baris meta: Published | Issue | Section | DOI */
+.ch-meta { display: flex; flex-wrap: wrap; margin: 18px 0 0; padding: 14px 0; border-top: 1px dotted #aab3cc; border-bottom: 1px dotted #aab3cc; }
+.ch-meta-item { display: flex; align-items: center; gap: 10px; flex: 1 1 160px; min-width: 0; padding: 4px 16px; }
+.ch-meta-item:first-child { padding-left: 0; }
+@media (min-width: 768px) { .ch-meta-item + .ch-meta-item { border-left: 1px dotted #aab3cc; } }
+.ch-meta-item > .ch-ico { width: 30px; height: 30px; flex: none; color: var(--a-navy); }
+.ch-meta-label { display: block; color: var(--a-muted); font-size: .78rem; line-height: 1.3; }
+.ch-meta-val { display: block; color: #0b3a9e; font-size: .88rem; font-weight: 700; line-height: 1.35; word-break: break-word; }
+.ch-meta-val a { color: inherit; text-decoration: none; border: 0; }
+.ch-meta-val a:hover { text-decoration: underline; }
+
+/* Tombol aksi */
+.ch-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 16px; }
+.ch-actions .obj_galley_link, .ch-cite-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: auto; margin: 0; padding: 12px 20px;
+  border-radius: 8px; font: 700 .9rem 'Montserrat','Inter',Arial,sans-serif; line-height: 1.2; text-decoration: none; cursor: pointer; transition: background .2s, transform .2s, border-color .2s;
+}
+.ch-actions .obj_galley_link { border: 1.5px solid var(--a-navy); background: var(--a-navy); color: #fff !important; }
+.ch-actions .obj_galley_link:hover, .ch-actions .obj_galley_link:focus-visible { background: var(--a-navy2); border-color: var(--a-navy2); transform: translateY(-1px); }
+.ch-cite-btn { border: 1.5px solid #c3cae3; background: #f8f9fd; color: var(--a-navy); }
+.ch-cite-btn:hover, .ch-cite-btn:focus-visible { background: #fff; border-color: var(--a-navy2); transform: translateY(-1px); }
+.ch-cite-btn .ch-ico { width: 17px; height: 17px; }
+
+/* Cover image */
+.ch-cover-holder:empty { display: none; }
+.ch-cover { margin: 0; }
+.ch-cover a { display: block; border: 0 !important; line-height: 0; }
+.ch-cover img { display: block; width: 100%; height: auto; border-radius: 10px; box-shadow: 0 12px 28px -14px rgba(3,2,113,.55); transition: transform .25s ease, box-shadow .25s ease; }
+.ch-cover a:hover img { transform: translateY(-2px); box-shadow: 0 18px 34px -14px rgba(3,2,113,.6); }
+.ch-cover-holder .ch-cover { max-width: 100%; margin: 18px 0 0; padding: 10px; background: #fff; border: 1px solid var(--a-line); border-radius: 14px; box-shadow: 0 10px 28px -20px rgba(3,2,113,.5); }
+.ch-cover-holder .ch-cover img { margin: 0 auto; max-height: 420px; width: auto; max-width: 100%; box-shadow: none; }
+.ch-head-cover .ch-cover img { border-radius: 8px; }
+
+/* ---- Tab ---- */
+.ch-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 0; padding-bottom: 14px; border-bottom: 3px solid var(--a-line); }
+.ch-tab {
+  display: inline-flex; align-items: center; gap: 7px; margin: 0; padding: 9px 16px; cursor: pointer;
+  border: 1.5px solid #c9d0f0; border-radius: 999px; background: #fff; color: var(--a-navy);
+  font: 700 .82rem 'Montserrat','Inter',Arial,sans-serif; line-height: 1.2; transition: background .2s, color .2s, border-color .2s, box-shadow .2s;
+}
+.ch-tab:hover { background: var(--a-mist); border-color: var(--a-navy2); }
+.ch-tab:focus-visible { outline: 3px solid rgba(26,26,158,.35); outline-offset: 2px; }
+.ch-tab[aria-selected="true"] { background: var(--a-navy); border-color: var(--a-navy); color: #fff; box-shadow: 0 8px 16px -10px rgba(3,2,113,.7); }
+.ch-tab .ch-count { padding: 1px 7px; border-radius: 999px; background: rgba(3,2,113,.1); font-size: .72rem; }
+.ch-tab[aria-selected="true"] .ch-count { background: rgba(255,255,255,.22); }
+.ch-panels { padding-top: 20px; }
+.ch-panel[hidden] { display: none; }
+.ch-panel { animation: chFade .25s ease; }
+@keyframes chFade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.ch-panel > .item { margin: 0 !important; padding: 0 !important; border: 0 !important; background: none !important; }
+.ch-panel > .item > h2.label { display: none; }
+.ch-panel p { line-height: 1.8; margin: 0 0 1em; }
+.ch-panel .item.abstract p { text-align: justify; }
+.ch-chip { display: inline-block; margin: 0 8px 10px 0; padding: 6px 14px; border-radius: 999px; background: rgba(3,2,113,.08); border: 1px solid rgba(3,2,113,.12); color: var(--a-navy); font: 600 .84rem 'Montserrat','Inter',Arial,sans-serif; }
+.ch-panel .item.author_bios .sub_item { margin: 0 0 12px; padding: 14px 16px; background: #fff; border: 1px solid var(--a-line); border-left: 4px solid var(--a-amber); border-radius: 10px; }
+.ch-panel .item.author_bios .sub_item h3.label { margin: 0 0 6px; color: var(--a-navy); font: 700 .98rem 'Montserrat','Inter',Arial,sans-serif; }
+.ch-panel .item.author_bios .sub_item h3.label .affiliation { color: var(--a-muted); font-weight: 500; }
+.ch-panel .item.author_bios .sub_item p { margin: 0; font-size: .9rem; }
+.ch-panel .item.references .value p { margin: 0; padding: 12px 4px 12px 0; border-bottom: 1px solid var(--a-line); font-size: .9rem; line-height: 1.65; word-break: break-word; }
+.ch-panel .item.references .value p:last-child { border-bottom: 0; }
+.ch-panel .item.references a { color: var(--a-navy2); font-weight: 600; }
+.ch-panel .item.copyright img { max-width: 88px; margin: 6px 0 10px; }
+.ch-panel .item.copyright ul { padding-left: 1.2em; }
+.ch-panel .item.copyright a { color: var(--a-navy2); font-weight: 600; }
+
+/* Sisa kolom kanan (grafik unduhan, sitasi Crossref/Scopus) tampil sebagai kartu di bagian bawah */
+.obj_article_details .entry_details { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 26px !important; }
+.obj_article_details .entry_details > .item { margin: 0; padding: 14px 16px; background: #fff; border: 1px solid var(--a-line); border-radius: 12px; }
+.obj_article_details .entry_details .label { margin: 0 0 8px; color: var(--a-navy); font: 700 .72rem 'Montserrat','Inter',Arial,sans-serif; letter-spacing: .09em; text-transform: uppercase; }
+
+/* ---- Pop up Cite Article ---- */
+html.ch-modal-open { overflow: hidden; }
+.ch-modal {
+  --a-navy:#030271; --a-navy2:#1a1a9e; --a-line:#e3e8f2;
+  position: fixed; inset: 0; z-index: 99999; display: flex; align-items: center; justify-content: center;
+  padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom)); background: rgba(10,12,40,.55); backdrop-filter: blur(2px);
+}
+.ch-modal[hidden] { display: none; }
+.ch-modal-box {
+  position: relative; width: 100%; max-width: 760px; max-height: 90vh; overflow: auto; padding: 24px 28px 26px;
+  background: #fff; border-radius: 14px; box-shadow: 0 30px 70px -20px rgba(0,0,0,.5); color: #22304f; animation: chPop .22s ease;
+}
+@keyframes chPop { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: none; } }
+.ch-modal-head { display: flex; align-items: center; justify-content: space-between; margin: 0 0 18px; padding-bottom: 14px; border-bottom: 1px solid var(--a-line); }
+.ch-modal-head h2 { margin: 0; color: #0e1b3d; font: 800 1.45rem 'Montserrat','Inter',Arial,sans-serif; }
+.ch-modal-x { width: 36px; height: 36px; margin: 0; padding: 0; border: 0; border-radius: 50%; background: none; color: #64748b; font-size: 28px; line-height: 36px; cursor: pointer; }
+.ch-modal-x:hover { background: #f1f3f9; color: #0e1b3d; }
+.ch-modal .citation_display > .label { display: none; }
+.ch-modal .item.citation, .ch-modal .citation_display, .ch-modal .citation_display .value { margin: 0; padding: 0; border: 0; background: none; }
+.ch-modal #citationOutput { margin: 0 0 14px; padding: 16px 18px; background: #f7f9ff; border: 1px solid var(--a-line); border-radius: 10px; font-size: .95rem; line-height: 1.85; word-break: break-word; }
+.ch-modal #citationOutput a { color: #1a7f37; }
+.ch-modal .csl-entry { margin: 0; }
+.ch-modal .citation_formats_button {
+  display: block; width: 100%; margin: 0; padding: 12px 14px; border: 1.5px solid #9aa3bd; border-radius: 6px; background: #fff; color: #0e1b3d;
+  font: 700 .9rem 'Montserrat','Inter',Arial,sans-serif; text-align: left; cursor: pointer;
+}
+.ch-modal .citation_formats_button:hover { border-color: var(--a-navy2); }
+.ch-modal .citation_formats_list .label { margin: 14px 0 6px; color: #64748b; font: 700 .72rem 'Montserrat','Inter',Arial,sans-serif; letter-spacing: .08em; text-transform: uppercase; }
+.ch-modal .citation_formats_styles { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.ch-modal .citation_formats_styles li { margin: 0; padding: 0; }
+.ch-modal .citation_formats_styles a { display: inline-block; padding: 6px 14px; border: 1px solid #c9d0f0; border-radius: 999px; background: #fff; color: var(--a-navy); font: 600 .82rem 'Montserrat','Inter',Arial,sans-serif; text-decoration: none; }
+.ch-modal .citation_formats_styles a:hover { background: var(--a-navy); color: #fff; }
+.ch-modal-foot { display: flex; justify-content: flex-end; margin-top: 16px; }
+.ch-copy-btn { margin: 0; padding: 10px 18px; border: 0; border-radius: 8px; background: var(--a-navy); color: #fff; font: 700 .85rem 'Montserrat','Inter',Arial,sans-serif; cursor: pointer; }
+.ch-copy-btn:hover { background: var(--a-navy2); }
+.ch-ico { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ===== CHEESA — Layar loading awal =====
+   PASANG: tempel di akhir Journal Style Sheet (Settings > Website > Appearance > Advanced).
+   Murni CSS: muncul seketika saat stylesheet terbaca, lalu dihilangkan oleh skrip footer
+   (cheesa-loader-footer.html). Cadangan: bila skrip tidak jalan, otomatis hilang setelah 25 detik. */
+
+html::before{
+  content:"Halaman memuat lebih lama dari biasanya.\A Coba muat ulang (Ctrl + F5), ganti jaringan (Wi-Fi/data seluler),\A atau buka lagi beberapa menit lagi.";
+  white-space:pre-line;
+  position:fixed;inset:0;z-index:2147483000;
+  display:flex;align-items:flex-end;justify-content:center;
+  padding:0 24px 12vh;text-align:center;
+  background:#fff;color:transparent;
+  font:14px/1.7 "Segoe UI",Roboto,Arial,sans-serif;
+  pointer-events:none;
+  animation:chl-tip .5s ease 7s forwards,chl-out .4s ease 25s forwards;
+}
+html::after{
+  content:"";
+  position:fixed;z-index:2147483001;top:50%;left:50%;
+  width:74px;height:74px;margin:-37px 0 0 -37px;border-radius:50%;
+  background:radial-gradient(circle,#030271 0 6px,rgba(3,2,113,.42) 7px);
+  pointer-events:none;
+  animation:chl-pulse 1.4s ease-in-out infinite,chl-out .4s ease 25s forwards;
+}
+html.chl-done::before,html.chl-done::after{
+  animation:chl-out .35s ease forwards;
+}
+@keyframes chl-pulse{0%,100%{transform:scale(.82);opacity:.65}50%{transform:scale(1.08);opacity:1}}
+@keyframes chl-tip{to{color:#030271}}
+@keyframes chl-out{to{opacity:0;visibility:hidden}}
+@media(prefers-reduced-motion:reduce){
+  html::after{animation:chl-out .4s ease 25s forwards}
+  html.chl-done::after{animation:chl-out .35s ease forwards}
+}
+
+/* ==========================================================================
+   CHEESA: SUBMENU (anak menu) DI SISI KANAN - blok "Additional Information"
+   Struktur: <li class="has-child"><a>Journal Policy</a><ul class="submenu">...</ul></li>
+   ========================================================================== */
+
+/* Lepaskan pemotongan (overflow:hidden bawaan kartu blok) supaya submenu bisa keluar */
+.ch-sb-left,
+.pkp_structure_sidebar .pkp_block#customblock-menu-tema-child,
+#customblock-menu-tema-child .content,
+#customblock-menu-tema-child .menu-info {
+  overflow: visible !important;
+}
+
+/* Naikkan lapisan blok menu di atas blok lain dan konten tengah */
+.ch-sb-left { position: relative; z-index: 30; }
+#customblock-menu-tema-child { position: relative; z-index: 40; }
+
+#customblock-menu-tema-child .menu-info li { position: relative; }
+
+/* Panah penanda di kanan menu yang punya anak */
+#customblock-menu-tema-child .menu-info li.has-child > a::after {
+  content: "\203A";
+  margin-left: auto;
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* Kotak anak menu */
+#customblock-menu-tema-child .menu-info .submenu {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: calc(100% + 14px);          /* 14px = padding kiri-kanan .content, jadi menempel di tepi kartu */
+  min-width: 230px;
+  padding: 4px 10px !important;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 4px 14px rgba(3,2,113,.18);
+  z-index: 9999;
+}
+#customblock-menu-tema-child .menu-info .submenu a { white-space: nowrap; }
+
+/* Jembatan tak terlihat agar hover tidak putus saat mouse melintasi celah ke submenu */
+#customblock-menu-tema-child .menu-info .submenu::before {
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0; left: -16px;
+  width: 16px;
+}
+
+#customblock-menu-tema-child .menu-info li:hover > .submenu,
+#customblock-menu-tema-child .menu-info li:focus-within > .submenu,
+#customblock-menu-tema-child .menu-info li.open > .submenu { display: block; }
+
+/* Layar kecil: submenu tampil ke bawah (dibuka dengan ketukan), bukan ke kanan */
+@media (max-width: 1099px) {
+  #customblock-menu-tema-child .menu-info .submenu {
+    position: static;
+    min-width: 0;
+    padding: 0 0 0 16px !important;
+    box-shadow: none;
+    border-radius: 0;
+  }
+  #customblock-menu-tema-child .menu-info .submenu::before { display: none; }
+  #customblock-menu-tema-child .menu-info li:hover > .submenu,
+  #customblock-menu-tema-child .menu-info li:focus-within > .submenu { display: none; }
+  #customblock-menu-tema-child .menu-info li.open > .submenu { display: block; }
+}
+
+/* ==========================================================================
+   CHEESA: DUA GRAFIK BERDAMPINGAN (Additional Content beranda)
+   Struktur: <div class="ch-charts-row"><div class="ch-chart-item">embed + tombol</div> x2</div>
+   ========================================================================== */
+.ch-charts-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));   /* 2 grafik berdampingan */
+  gap: 16px;
+  align-items: start;
+  margin-bottom: 8px;
+}
+.ch-charts-row .ch-chart-item { min-width: 0; }
+.ch-charts-row .ch-chart-item p { margin: 8px 0 0; }
+
+/* Di dalam baris berdampingan, grafik mengisi kotaknya apa adanya (tanpa skala 600px),
+   supaya tidak terpotong ketika kolomnya lebih sempit dari 600px. */
+.ch-charts-row .ch-embed { max-width: none; margin: 0; }
+.ch-charts-row .ch-embed iframe {
+  width: 100% !important;
+  height: 100% !important;
+  transform: none !important;
+}
+
+/* Selebar kolom konten: hilangkan jarak samping dan batas lebar pada area Additional Content */
+.additional_content,
+.page_index_journal .additional_content {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  max-width: none !important;
+}
+.ch-charts-row,
+.journal-stats-grid {
+  box-sizing: border-box;
+  width: 100% !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+.ch-charts-row { gap: 12px; }
+.journal-stats-grid { gap: 12px !important; }
+
+/* Grafik memenuhi kotaknya (selector diperkuat supaya menang dari pengaturan bawaan) */
+.ch-charts-row .ch-chart-item > .ch-embed { width: 100%; max-width: none; margin: 0; }
+.ch-charts-row .ch-chart-item > .ch-embed > iframe {
+  position: absolute; top: 0; left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  transform: none !important;
+}
+
+/* Layar kecil: grafik tersusun ke bawah, statistik jadi 2 kolom lalu 1 kolom */
+@media (max-width: 768px) {
+  .ch-charts-row { grid-template-columns: 1fr; }
+  .journal-stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+}
+@media (max-width: 480px) {
+  .journal-stats-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ==========================================================================
+   CHEESA: Additional Content selebar halaman (di atas layout 3 kolom)
+   Butuh script additional-content-top (memindahkan grafik dan statistik
+   ke baris sendiri tepat setelah .pkp_structure_content, di atas footer).
+   ========================================================================== */
+.ch-addl-row { display: block; clear: both; }
+.ch-addl-row .ch-charts-row { margin: 0 0 16px; }
+.ch-addl-row .journal-stats-grid { margin: 0 !important; }
+
+/* ==========================================================================
+   CHEESA: Current Issue di beranda hanya sampai tanggal "Published"
+   (daftar artikel / Research Articles disembunyikan, diganti tombol See Current Issue)
+   ========================================================================== */
+.page_index_journal .current_issue .sections,
+.page_index_journal .current_issue .section,
+.page_index_journal .current_issue .cmp_article_list,
+.page_index_journal .current_issue .obj_article_summary,
+.page_index_journal .current_issue .galleys,
+.page_index_journal .obj_issue_toc .sections,
+.page_index_journal .obj_issue_toc .galleys {
+  display: none !important;
+}
+.ch-current-btn { margin: 18px 0 0 !important; }
+.ch-current-btn .ch-btn { display: block; max-width: 100%; text-align: center; }
+
+/* ==========================================================================
+   CHEESA: SEMUA HALAMAN KECUALI BERANDA = 2 kolom: sidebar kiri | konten
+   Sidebar kiri berisi Additional Information, Submission Menu (diberi class .ch-keep oleh script
+   cheesa-layout-3col) lalu Journal Archive. Sidebar kanan dan blok lain disembunyikan.
+   Di halaman artikel Submission Menu tidak dipindah, jadi tampilannya tetap (Article Info + Journal Archive).
+   Beranda tetap 3 kolom. Beranda dikenali dari body.pkp_page_index (bawaan OJS)
+   atau body.ch-home (ditambahkan script archive-page-flag bila ada .page_index_journal).
+   ========================================================================== */
+body:not(.pkp_page_index):not(.ch-home) .ch-sb-right,
+body:not(.pkp_page_index):not(.ch-home) .ch-sb-left > .pkp_block:not(#customblock-menu-tema-child):not(#customblock-archive):not(.ch-keep) {
+  display: none !important;
+}
+@media (min-width: 1100px) {
+  body:not(.pkp_page_index):not(.ch-home) .pkp_structure_content.ch-3col {
+    grid-template-columns: 250px minmax(0, 1fr);   /* 2 kolom: sidebar kiri | konten */
+  }
+}
+
+/* ==========================================================================
+   CHEESA: halaman ARTIKEL = panel "Article Info" menggantikan Additional Information
+   di sidebar kiri, dan ikut menempel (sticky) saat halaman di-scroll.
+   Butuh script article-info-sticky (memindah Published/Issue/Section/DOI dan tombol
+   Download/Cite dari kartu kepala artikel ke sidebar kiri). Tanpa script, tampilan artikel biasa.
+   Penanda: body.pkp_page_article (bawaan OJS) atau body.ch-article-page (dari script archive-page-flag).
+   ========================================================================== */
+
+/* Additional Information disembunyikan di halaman artikel (Journal Archive tetap ada) */
+body.pkp_page_article #customblock-menu-tema-child,
+body.ch-article-page #customblock-menu-tema-child { display: none !important; }
+
+/* Induk sticky tidak boleh memotong (overflow) */
+.pkp_structure_main,
+.pkp_structure_main .page,
+.obj_article_details { overflow: visible !important; }
+
+.ch-art-info {
+  /* variabel warna artikel (aslinya hanya ada di .obj_article_details, hilang setelah panel dipindah) */
+  --a-navy:#030271; --a-navy2:#1a1a9e; --a-amber:#ed991f; --a-green:#1a7f37; --a-line:#e3e8f2; --a-mist:#f3f5fb; --a-ink:#22304f; --a-muted:#5d6784;
+  color: var(--a-ink);
+  margin: 0 0 12px; background: #fff; border: 1px solid #e3e8f2; border-radius: 12px; overflow: hidden;
+  box-shadow: 0 10px 28px -20px rgba(3,2,113,.5);
+}
+.ch-art-info-title {
+  padding: 12px 16px; background: linear-gradient(180deg, #1a1a9e, #030271); color: #fff;
+  font: 700 .85rem 'Montserrat','Inter',Arial,sans-serif; letter-spacing: .04em; text-transform: uppercase;
+}
+.ch-art-info-body { padding: 6px 16px 16px; }
+.ch-art-info .ch-meta { display: block; margin: 0; padding: 0; border: 0; }
+.ch-art-info .ch-meta-item { flex: none; padding: 12px 0; border: 0 !important; border-bottom: 1px dotted #aab3cc !important; }
+.ch-art-info .ch-meta-item:first-child { padding-left: 0; }
+.ch-art-info .ch-actions { flex-direction: column; align-items: stretch; margin-top: 14px; }
+.ch-art-info .ch-actions .obj_galley_link,
+.ch-art-info .ch-cite-btn { width: 100%; box-sizing: border-box; }
+.ch-art-info .ch-actions .obj_galley_link {
+  border: 1.5px solid #030271; background: #030271; color: #fff !important;
+}
+.ch-art-info .ch-actions .obj_galley_link:hover,
+.ch-art-info .ch-actions .obj_galley_link:focus-visible { background: #1a1a9e; border-color: #1a1a9e; }
+
+@media (min-width: 1100px) {
+  /* kolom kiri dibuat setinggi konten supaya panel bisa menempel sepanjang artikel */
+  body.pkp_page_article .pkp_structure_content.ch-3col .ch-sb-left,
+  body.ch-article-page .pkp_structure_content.ch-3col .ch-sb-left { align-self: stretch; }
+  .ch-art-info { position: sticky; top: 16px; z-index: 40; }   /* Journal Archive menggulung di bawahnya */
+}
+
+/* ==========================================================================
+   CHEESA: dropdown menu header (User/Login, For Author, Issue, Editorial Board, About)
+   harus tampil di ATAS sidebar. Sidebar memakai z-index 30-40 (agar submenu Journal Policy
+   dan panel Article Info bisa tampil), jadi baris menu header dinaikkan lebih tinggi.
+   ========================================================================== */
+.pkp_navigation_primary_row { position: relative; z-index: 200; }
+.pkp_navigation_primary_row .ch-nav-left,
+.pkp_navigation_user_wrapper,
+.pkp_navigation_primary_wrapper { z-index: 210; }
+
+/* ==========================================================================
+   CHEESA: ISSN yang bisa diklik di bagian atas header (di atas menu Search)
+   Butuh script issn-badge. Tampil di layar >= 992px. Tautan menuju portal.issn.org.
+   ========================================================================== */
+#headerNavigationContainer { position: relative; }
+.ch-issn { display: none; }
+@media (min-width: 992px) {
+  .ch-issn {
+    display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end;
+    position: absolute; top: 20px; right: 28px; z-index: 20;
+  }
+  .ch-issn a {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.4); background: rgba(255,255,255,.1);
+    color: #fff !important; text-decoration: none !important;
+    font: 600 13px/1 'Montserrat','Inter',Arial,sans-serif; letter-spacing: .02em; white-space: nowrap;
+    transition: background .2s ease, color .2s ease, border-color .2s ease;
+  }
+  .ch-issn a b { font-weight: 800; }
+  .ch-issn a:hover,
+  .ch-issn a:focus-visible { background: #ed991f; border-color: #ed991f; color: #030271 !important; }
+}
+
+/* ==========================================================================
+   CHEESA: HEADER MODE HP / LAYAR KECIL (< 992px)
+   Banner (logo + ISSN) tampil utuh dan otomatis mengecil mengikuti lebar layar,
+   lalu di bawahnya bar menu dengan tombol hamburger, baru konten.
+   Isi halaman tidak lagi menutupi banner.
+   ========================================================================== */
+@media (max-width: 991px) {
+  /* pembungkus header ikut tinggi isinya (banner), bukan tinggi tetap */
+  .pkp_structure_head .pkp_head_wrapper {
+    position: relative !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+  .pkp_structure_head .pkp_site_name_wrapper {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column;            /* banner di atas, tombol hamburger di bawahnya */
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* banner: masuk alur halaman (tidak melayang) dan skala otomatis sesuai lebar */
+  .pkp_structure_head .pkp_site_name {
+    order: 1;
+    position: relative !important;
+    top: auto !important; left: auto !important; right: auto !important;
+    transform: none !important;
+    float: none !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .pkp_structure_head .pkp_site_name > a,
+  .pkp_structure_head .pkp_site_name .is_img {
+    display: block !important;
+    width: 100% !important;
+  }
+  .pkp_structure_head .pkp_site_name .is_img img,
+  .pkp_structure_head .pkp_site_name img {
+    display: block;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: none !important;       /* lepas batas tinggi 200px bawaan */
+  }
+
+  /* bar hamburger di bawah banner, selebar layar */
+  .pkp_structure_head .pkp_site_nav_toggle {
+    order: 2;
+    position: relative !important;
+    top: auto !important; left: auto !important;
+    width: 100% !important;
+    height: 52px;
+    margin: 0 !important;
+    background: #030271;
+    border-radius: 0;
+  }
+
+  /* konten selalu mulai di bawah header */
+  .pkp_structure_content { position: relative; clear: both; }
+}
+
+/* CHEESA - Current Issue highlight v2 (Appearance > Advanced > Custom CSS) */
+body .current_issue{position:relative!important;margin:28px 0!important;padding:34px 34px 30px!important;border-radius:18px!important;color:#dfe3ff!important;overflow:hidden!important;
+ background:radial-gradient(110% 80% at 100% 0%,rgba(60,60,200,.55) 0%,transparent 60%),linear-gradient(160deg,#00003f,#000066 62%,#06067a)!important;
+ box-shadow:0 24px 48px -20px rgba(0,0,90,.6),inset 0 0 0 1px rgba(227,195,116,.38)!important}
+body .current_issue::before{content:""!important;position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg,#b8923c,#f1d98f,#b8923c)}
+body .current_issue>h2{display:inline-flex!important;align-items:center;gap:9px;width:auto!important;margin:0 0 18px!important;padding:6px 15px 6px 12px!important;
+ border:1px solid rgba(227,195,116,.55)!important;border-radius:999px!important;background:rgba(255,255,255,.05)!important;
+ font:600 .82rem/1 Montserrat,sans-serif!important;letter-spacing:.04em!important;text-transform:none!important;color:#f1d98f!important}
+body .current_issue>h2::after{content:none!important;display:none!important}
+body .current_issue>h2::before{content:""!important;display:inline-block!important;flex:none;position:static!important;width:8px!important;height:8px!important;margin:0!important;padding:0!important;border:0!important;
+ border-radius:50%!important;background:#f1d98f!important;animation:ch-pulse 2s ease-out infinite}
+@keyframes ch-pulse{0%{box-shadow:0 0 0 0 rgba(241,217,143,.7)}100%{box-shadow:0 0 0 10px rgba(241,217,143,0)}}
+body .current_issue .heading,body .current_issue .heading a,body .current_issue .heading h1,body .current_issue .heading h2,body .current_issue .heading h3,body .current_issue .heading h4,body .current_issue .heading .title{
+ font:700 clamp(1.5rem,3.2vw,2.15rem)/1.25 "Noto Serif",Georgia,serif!important;color:#fff!important;text-decoration:none!important;text-transform:none!important;letter-spacing:0!important}
+body .current_issue .heading{margin:0 0 6px!important}
+body .current_issue .description,body .current_issue .description p{color:#c9cffc!important;text-align:left!important;font-size:.95rem!important;line-height:1.7!important;max-width:62ch}
+body .current_issue .description{margin:12px 0 18px!important}
+body .current_issue .description strong,body .current_issue .description b{color:#f1d98f!important}
+body .current_issue .flags{display:flex;gap:8px;margin-bottom:20px}
+body .current_issue .flags span,body .current_issue .flags img{width:36px;height:24px;border-radius:4px;box-shadow:0 0 0 1px rgba(255,255,255,.35)}
+body .current_issue .published{display:inline-flex!important;gap:10px;padding:8px 15px!important;border-radius:8px!important;background:rgba(255,255,255,.09)!important}
+body .current_issue .published,body .current_issue .published *{color:#fff!important;text-transform:none!important;letter-spacing:0!important;font-size:.85rem!important}
+body .current_issue .published .label,body .current_issue .published strong{color:#f1d98f!important;font-weight:600!important}
+body .current_issue .ch-current-btn{margin:24px 0 0!important}
+body .current_issue .ch-btn,body .current_issue .ch-btn:visited{display:block!important;padding:14px 20px!important;border-radius:10px!important;text-align:center!important;font:700 .95rem "Noto Serif",Georgia,serif!important;
+ color:#00003f!important;background:linear-gradient(180deg,#f6e3a4,#d9b45c)!important;box-shadow:0 8px 20px -8px rgba(217,180,92,.7);text-decoration:none!important;transition:transform .2s,box-shadow .2s}
+body .current_issue .ch-btn:hover{transform:translateY(-2px);box-shadow:0 14px 26px -10px rgba(217,180,92,.9)}
+body .current_issue .ch-btn:focus-visible{outline:3px solid #fff;outline-offset:3px}
+body .current_issue .read_more,body .current_issue .read_more:visited,body .current_issue a.read_more,body .current_issue .read_more *{color:#f1d98f!important;fill:#f1d98f!important}
+body .current_issue .read_more:hover{color:#fff!important}
+@media(max-width:600px){body .current_issue{padding:28px 20px 24px!important}}
+@media(prefers-reduced-motion:reduce){body .current_issue>h2::before{animation:none}body .current_issue .ch-btn{transition:none}}
+
+/* CHEESA - Footer (Appearance > Advanced > Custom CSS). Tidak perlu mengubah HTML footer. */
+body .pkp_footer_content:has(>.footer){position:relative!important;margin:32px 0 14px!important;padding:44px 44px 26px!important;border-radius:18px!important;overflow:hidden!important;color:#c9cffc!important;font-size:.92rem!important;line-height:1.7!important;
+ background:radial-gradient(90% 70% at 0% 0%,rgba(60,60,200,.45),transparent 60%),linear-gradient(160deg,#00003f,#000066 65%,#06067a)!important;
+ box-shadow:0 24px 48px -22px rgba(0,0,90,.6),inset 0 0 0 1px rgba(227,195,116,.3)!important}
+body .pkp_footer_content:has(>.footer)::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg,#b8923c,#f1d98f,#b8923c)}
+body .pkp_footer_content .footer{display:grid!important;grid-template-columns:clamp(260px,26vw,380px) 1.3fr 1fr!important;grid-template-areas:"logo about contact" "logo addr contact"!important;column-gap:44px!important;row-gap:16px!important;margin:0 0 28px!important;align-items:start}
+body .pkp_footer_content .footer>div:nth-child(1){grid-area:about}
+body .pkp_footer_content .footer>div:nth-child(2){grid-area:addr;padding-left:14px;border-left:2px solid #d9b45c}
+body .pkp_footer_content .footer>div:nth-child(2),body .pkp_footer_content .footer>div:nth-child(2) *{color:#fff!important;font-size:.88rem!important}
+body .pkp_footer_content .footer>div:nth-child(3){grid-area:contact}
+body .pkp_footer_content .footer>div:nth-child(4){grid-area:logo}
+body .pkp_footer_content .logo{padding:18px 16px;border-radius:14px;background:#fff;box-shadow:0 12px 26px -14px rgba(0,0,0,.6)}
+body .pkp_footer_content .logo img{display:block;width:100%!important;height:auto!important;margin:0!important}
+body .pkp_footer_content a{color:#f1d98f!important;text-decoration:underline!important;text-decoration-color:rgba(241,217,143,.4)!important;text-underline-offset:3px}
+body .pkp_footer_content a:hover{color:#fff!important;text-decoration-color:#fff!important}
+body .pkp_footer_content .logo a{text-decoration:none!important}
+body .pkp_footer_content h4{display:inline-block;margin:0 0 12px!important;padding-bottom:8px;border-bottom:2px solid #d9b45c;font:600 1rem Montserrat,sans-serif!important;color:#fff!important}
+body .pkp_footer_content ul{list-style:none!important;margin:0!important;padding:0!important}
+body .pkp_footer_content li{position:relative;margin:0 0 7px!important;padding-left:20px!important;color:#fff!important}
+body .pkp_footer_content li::before{content:"";position:absolute;left:0;top:.82em;width:10px;height:2px;background:#d9b45c}
+body .pkp_footer_content .copyright{max-width:none!important;margin:0!important;text-align:center!important;font-size:.82rem!important;line-height:1.75!important;color:#aab2e6!important}
+body .pkp_footer_content .footer+.copyright{padding-top:22px;margin-bottom:6px!important;border-top:1px solid rgba(227,195,116,.3)}
+body .pkp_footer_content .copyright strong{color:#fff!important}
+body .pkp_footer_content .copyright img{display:inline-block;vertical-align:middle;border-radius:3px}
+body .pkp_footer_content+p{margin:0 0 32px!important;text-align:center!important}
+body .pkp_footer_content+p a{display:inline-flex!important;align-items:center;gap:10px;padding:6px 10px 6px 16px;border:1px solid rgba(0,0,102,.25);border-radius:999px;
+ background:#fff!important;color:#000066!important;font:600 .85rem Montserrat,sans-serif!important;text-decoration:none!important}
+body .pkp_footer_content+p a:hover{border-color:#d9b45c;box-shadow:0 6px 16px -8px rgba(0,0,102,.5)}
+@media(max-width:900px){body .pkp_footer_content:has(>.footer){padding:34px 22px 22px!important}body .pkp_footer_content .footer{grid-template-columns:1fr!important;grid-template-areas:"logo" "about" "addr" "contact"!important;row-gap:22px!important}body .pkp_footer_content .footer>div:nth-child(4){max-width:320px}}
+
+/* kartu hanya di elemen yang langsung membungkus .footer; pembungkus luar (jika ada) dinetralkan */
+body .pkp_footer_content:not(:has(>.footer)){margin:0!important;padding:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;overflow:visible!important;font-size:1rem!important;line-height:inherit!important;color:inherit!important}
+body .pkp_footer_content:not(:has(>.footer))::before{display:none!important}
+/* View Statistic: dua link digabung jadi satu kapsul */
+body .pkp_footer_content+p strong{display:inline-flex!important;align-items:stretch}
+body .pkp_footer_content+p br{display:none}
+body .pkp_footer_content+p a{border-radius:0!important;border-right:0!important}
+body .pkp_footer_content+p a:first-child{border-radius:999px 0 0 999px!important;padding:7px 12px 7px 18px!important}
+body .pkp_footer_content+p a:last-child{border-radius:0 999px 999px 0!important;border-right:1px solid rgba(0,0,102,.25)!important;border-left:0!important;padding:7px 16px 7px 6px!important}
+
+
+/* wadah harus relatif dan tidak memotong flyout */
+.menu-info,
+.menu-info li.has-child { position: relative; }
+
+.content:has(> .menu-info) { overflow: visible !important; }
+
+/* panah › di kanan */
+.menu-info li.has-child > a { position: relative; padding-right: 30px; }
+.menu-info li.has-child > a::after {
+  content: "›";
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+}
+
+/* submenu: tersembunyi, muncul di kanan */
+.menu-info li.has-child > ul.submenu {
+  display: none !important;
+  position: absolute !important;
+  left: 100% !important;
+  top: 0 !important;
+  margin: 0 0 0 8px !important;
+  min-width: 230px;
+  padding: 6px 0 !important;
+  list-style: none;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(3, 2, 113, .18);
+  z-index: 99999;
+}
+
+.menu-info li.has-child.open > ul.submenu { display: block !important; }
+
+/* item induk jadi navy saat terbuka */
+.menu-info li.has-child.open > a {
+  background: #030271 !important;
+  color: #fff !important;
+  border-radius: 8px;
+}
+
+/* HP: pakai akordeon ke bawah, bukan flyout */
+@media (max-width: 768px) {
+  .menu-info li.has-child > ul.submenu {
+    position: static !important;
+    margin: 4px 0 0 12px !important;
+    box-shadow: none;
+    min-width: 0;
+  }
+}
+/* kolom kiri (yang berisi menu-info) naik di atas kolom tengah */
+.menu-info { z-index: 100; }
+
+.content:has(.menu-info),
+:has(> .content > .menu-info) {
+  position: relative !important;
+  z-index: 100 !important;
+  overflow: visible !important;
+}
+
+/* buka submenu saat kursor di atas item induk ATAU di atas submenunya */
+.menu-info li.has-child:hover > ul.submenu,
+.menu-info li.has-child:focus-within > ul.submenu {
+  display: block !important;
+}
+
+/* item induk ikut navy saat hover */
+.menu-info li.has-child:hover > a,
+.menu-info li.has-child:focus-within > a {
+  background: #030271 !important;
+  color: #fff !important;
+  border-radius: 8px;
+}
+
+/* jembatan tak terlihat agar submenu tidak menutup saat kursor menyeberang celah 8px */
+.menu-info li.has-child > ul.submenu::before {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: 0;
+  width: 12px;
+  height: 100%;
+}
+
+
+/* ==========================================================================
+   CHEESA: PERBAIKAN TERBARU (font seragam, submenu HP, kartu artikel)
+   ========================================================================== */
+
+/* ----- Font seragam serif (Noto Serif, bawaan tema OJS) ----- */
+:root { --ch-serif: "Noto Serif", Georgia, serif; }
+
+.menu-info,
+.menu-info a,
+.pkp_block .content li,
+.pkp_block .content li a,
+.cmp_announcements,
+.cmp_announcements p,
+.cmp_announcements li,
+.obj_announcement_summary,
+.obj_announcement_summary p,
+.obj_announcement_summary li {
+  font-family: var(--ch-serif) !important;
+}
+
+/* ----- Submenu HP / layar sempit = akordeon ke bawah ----- */
+@media (max-width: 1099px), (hover: none) {
+  #customblock-menu-tema-child .menu-info li.has-child > ul.submenu,
+  .menu-info li.has-child > ul.submenu {
+    display: none !important;
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    margin: 0 !important;
+    padding: 0 0 0 16px !important;
+    min-width: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+  .menu-info li.has-child > ul.submenu::before { display: none !important; }
+
+  #customblock-menu-tema-child .menu-info li.has-child:hover > ul.submenu,
+  #customblock-menu-tema-child .menu-info li.has-child:focus-within > ul.submenu,
+  .menu-info li.has-child:hover > ul.submenu,
+  .menu-info li.has-child:focus-within > ul.submenu { display: none !important; }
+
+  #customblock-menu-tema-child .menu-info li.has-child.open > ul.submenu,
+  .menu-info li.has-child.open > ul.submenu { display: block !important; }
+
+  .menu-info li.has-child:hover > a,
+  .menu-info li.has-child:focus-within > a,
+  .menu-info li.has-child.open > a {
+    background: transparent !important;
+    color: inherit !important;
+  }
+  #customblock-menu-tema-child .menu-info .submenu a { white-space: normal !important; }
+}
+
+/* ----- Label seksi di pojok kartu artikel (diisi oleh cheesa-label-seksi.js) ----- */
+.section.ch-pilled > h2 { display: none !important; }
+
+.obj_article_summary.ch-has-pill { padding-top: 2.7rem !important; }
+.obj_article_summary > .ch-pill {
+  position: absolute; top: 0; left: 0; z-index: 2;
+  padding: 6px 16px 6px 14px;
+  border-radius: 0 0 12px 0;
+  background: #fff4e0; color: #9a5b00;
+  font: 700 .68rem/1.4 "Montserrat", Arial, sans-serif;
+  letter-spacing: .05em; text-transform: uppercase;
+  pointer-events: none;
+}
+
+
+/* ==========================================================================
+   CHEESA: TICKER INFORMASI (bawah layar) — pasangan HTML ticker di Footer.
+   Id/class: #newsTicker .tk-label .tk-content .tk-text .tk-close (dan .off saat ditutup).
+   z-index 9000: di bawah menu/flyout (99999), pop-up Cite (99999) dan loading (2147483000).
+   ========================================================================== */
+#newsTicker{position:fixed;left:0;bottom:0;width:100%;height:40px;box-sizing:border-box;display:flex;align-items:center;overflow:hidden;
+  background:#030271;border-bottom:3px solid #e50914;box-shadow:0 -4px 15px rgba(0,0,0,.35);
+  font:bold 16px 'Arial Black',Gadget,sans-serif;color:#fff;z-index:9000;transition:opacity .4s,visibility .4s}
+#newsTicker.off{opacity:0;visibility:hidden;pointer-events:none}
+#newsTicker .tk-label{height:100%;padding:0 20px;display:flex;align-items:center;white-space:nowrap;z-index:2;
+  background:#e50914;font-size:14px;letter-spacing:1px;box-shadow:5px 0 15px rgba(0,0,0,.5)}
+#newsTicker .tk-content{flex:1;min-width:0;padding-right:50px;overflow:hidden;white-space:nowrap}
+#newsTicker .tk-text{display:inline-block;margin:0;padding-left:100%;animation:tkRun 60s linear infinite}
+#newsTicker:hover .tk-text{animation-play-state:paused;cursor:pointer}
+#newsTicker a,#newsTicker i{color:#ffeb3b!important}
+#newsTicker a{text-decoration:none!important;border-bottom:2px dashed}
+#newsTicker a:hover{color:#25d366!important}
+#newsTicker i{margin:0 25px;font-style:normal}
+#newsTicker .tk-close{position:absolute;right:10px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;
+  border:0;border-radius:4px;background:rgba(255,255,255,.2);color:#fff;font:bold 24px/1 Arial,sans-serif;cursor:pointer;z-index:3;transition:background .2s}
+#newsTicker .tk-close:hover{background:#e50914}
+@keyframes tkRun{to{transform:translateX(-100%)}}
+/* ruang di dasar halaman supaya footer situs tidak tertutup ticker (hilang saat ticker ditutup) */
+body:has(#newsTicker:not(.off)){padding-bottom:43px}
+@media(max-width:600px){#newsTicker .tk-label{padding:0 10px;font-size:12px}#newsTicker .tk-text{font-size:14px}}
+@media(prefers-reduced-motion:reduce){#newsTicker .tk-content{overflow-x:auto}#newsTicker .tk-text{animation:none;padding-left:12px}}
+
+/* ==========================================================================
+   CHEESA: baris statistik pada kartu artikel (Views | Download | Published)
+   yang ditambahkan script "lengkapi kartu artikel" di Footer.
+   ========================================================================== */
+.obj_article_summary .ch-stats{margin:0}
+
+/* ==========================================================================
+   CHEESA: kotak Search di header (gaya pill + tombol biru CHEESA)
+   Ubah warna tombol lewat dua variabel ini:
+   Dibuat oleh cheesa-header-nav.js (menu user kiri, menu utama tepat di tengah)
+   ========================================================================== */
+:root { --ch-search-blue: #1a1a9e; --ch-search-blue-hover: #2d2dc8; }
+.ch-nav-right.ch-has-form .pkp_navigation_search_wrapper { display: none !important; }
+
+.ch-search {
+  display: flex; align-items: center;
+  width: 100%; max-width: 240px; height: 36px; margin: 0;
+  padding: 0 0 0 14px; overflow: hidden;
+  background: rgba(255, 255, 255, .12);
+  border: 1px solid rgba(255, 255, 255, .3);
+  border-radius: 999px;
+  transition: background .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+.ch-search:focus-within {
+  background: rgba(255, 255, 255, .2);
+  border-color: #8f9bff;
+  box-shadow: 0 0 0 3px rgba(143, 155, 255, .3);
+}
+.ch-search input[type="search"] {
+  flex: 1 1 auto; min-width: 0; height: 100% !important; margin: 0 !important;
+  padding: 0 8px 0 0 !important;
+  background: transparent !important; border: 0 !important; border-radius: 0 !important;
+  box-shadow: none !important; outline: 0 !important;
+  color: #fff !important;
+  font: 500 .78rem "Montserrat", Arial, sans-serif !important;
+  -webkit-appearance: none; appearance: none;
+}
+.ch-search input[type="search"]::placeholder { color: rgba(255, 255, 255, .72); opacity: 1; }
+.ch-search input[type="search"]::-webkit-search-cancel-button,
+.ch-search input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; display: none; }
+.ch-search button {
+  flex: 0 0 auto; display: inline-flex; align-items: center; gap: 6px;
+  height: 100%; margin: 0; padding: 0 14px;
+  background: var(--ch-search-blue, #1a1a9e); color: #fff;
+  border: 0; border-left: 1px solid rgba(255, 255, 255, .3); border-radius: 0; cursor: pointer;
+  font: 700 .78rem "Montserrat", Arial, sans-serif; line-height: 1;
+  transition: background .2s ease;
+}
+.ch-search button:hover, .ch-search button:focus-visible { background: var(--ch-search-blue-hover, #2d2dc8); outline: 0; }
+
+/* 992-1199px: tombol hanya ikon agar kolom kanan tidak sempit */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .ch-search { max-width: 190px; }
+  .ch-search button span { display: none; }
+  .ch-search button { padding: 0 12px; }
+}
+/* HP/tablet: search penuh di dalam menu */
+@media (max-width: 991px) {
+  .ch-nav-right.ch-has-form { padding: 10px 16px; }
+  .ch-search { max-width: none; }
+}
+
+/* kolom kiri & kanan harus selalu sama lebar agar menu utama tepat di tengah */
+@media (min-width: 992px) {
+  .pkp_navigation_primary_row.ch-nav-row { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) !important; }
+  .ch-nav-row .ch-nav-left, .ch-nav-row .ch-nav-right { min-width: 0; }
+  .ch-nav-row .ch-nav-right { justify-content: flex-end; }
+  .ch-nav-right .ch-search { width: 100%; min-width: 0; }
+  .ch-search input[type="search"] { width: 0; }
+}
+@media (min-width: 992px) {
+  .ch-nav-row .ch-nav-right { justify-self: stretch !important; width: 100%; }
+}
+
+/* menu utama: pastikan pembungkusnya tidak membawa padding/lebar tambahan dari tema (agar benar-benar di tengah) */
+@media (min-width: 992px) {
+  .ch-nav-row .pkp_navigation_primary_wrapper { padding: 0 !important; max-width: none !important; min-width: 0 !important; }
+  .ch-nav-row .pkp_navigation_primary_wrapper > ul { margin: 0 !important; padding: 0 !important; }
+}
+
+/* ==========================================================================
+   CHEESA: ARCHIVES TANPA COVER - daftar terbitan ringkas (BARU)
+   Menimpa pengaturan "OJS ARCHIVES - MODERN CARD GRID" di atas.
+   Cover issue disembunyikan di halaman Archive; tiap terbitan tampil sebagai kartu kecil berisi teks.
+   Catatan: browser tetap mengunduh gambar yang disembunyikan dengan CSS. Agar halaman benar-benar ringan,
+   kompres file cover di OJS (lebar 600-800 px, di bawah 200 KB) atau hapus cover dari pengaturan issue.
+   ========================================================================== */
+.issues_archive,
+.obj_issue_summary_list {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
+  gap: 12px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+.issues_archive > li,
+.obj_issue_summary_list > li {
+  margin: 0 !important;
+  padding: 0 !important;
+  min-width: 0;
+  /* gaya "daftar bullet" halaman statis (kotak + tanda centang) juga mengenai halaman Archive: dinetralkan */
+  border: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+.issues_archive > li::before,
+.obj_issue_summary_list > li::before { content: none !important; display: none !important; }
+
+/* sembunyikan cover */
+.issues_archive .obj_issue_summary .cover,
+.obj_issue_summary_list .obj_issue_summary .cover { display: none !important; }
+
+/* kartu ringkas */
+.issues_archive .obj_issue_summary,
+.obj_issue_summary_list .obj_issue_summary {
+  position: relative;
+  height: 100%;
+  min-height: 0;
+  padding: 14px 16px 14px 58px !important;
+  border: 1px solid #dfe5ee !important;
+  border-left: 4px solid #030271 !important;
+  border-radius: 10px !important;
+  background: #fff !important;
+  box-shadow: 0 2px 8px rgba(3, 2, 113, .06) !important;
+  box-sizing: border-box;
+  justify-content: center !important;
+}
+.issues_archive .obj_issue_summary:hover,
+.obj_issue_summary_list .obj_issue_summary:hover {
+  transform: translateY(-2px) !important;
+  border-color: #c6cdea !important;
+  border-left-color: #ed991f !important;
+  box-shadow: 0 10px 20px -10px rgba(3, 2, 113, .35) !important;
+}
+/* ikon buku kecil sebagai pengganti cover (SVG, tanpa unduhan tambahan) */
+.issues_archive .obj_issue_summary::before,
+.obj_issue_summary_list .obj_issue_summary::before {
+  content: "";
+  position: absolute; left: 14px; top: 50%;
+  width: 30px; height: 30px; margin-top: -15px;
+  border-radius: 8px;
+  background: rgba(3, 2, 113, .08) no-repeat center / 16px url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23030271'%3E%3Cpath d='M5 3h13a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H6a1 1 0 0 0 0 2h12a1 1 0 0 1 0 2H6a3 3 0 0 1-3-3V5a2 2 0 0 1 2-2zm3 4v2h8V7H8zm0 4v2h6v-2H8z'/%3E%3C/svg%3E");
+}
+.issues_archive .obj_issue_summary .title,
+.issues_archive .obj_issue_summary h2,
+.obj_issue_summary_list .obj_issue_summary .title,
+.obj_issue_summary_list .obj_issue_summary h2 {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: none !important;
+  font-size: .95rem !important;
+  line-height: 1.35 !important;
+}
+.issues_archive .obj_issue_summary .title a,
+.obj_issue_summary_list .obj_issue_summary .title a { color: #030271 !important; border: 0 !important; background: none !important; }
+.issues_archive .obj_issue_summary .title a::after,
+.obj_issue_summary_list .obj_issue_summary .title a::after {
+  content: ""; position: absolute; inset: 0;   /* seluruh kartu bisa diklik */
+}
+.issues_archive .obj_issue_summary .series,
+.obj_issue_summary_list .obj_issue_summary .series { font-size: .78rem !important; color: #5d6784 !important; }
+/* deskripsi terbitan tetap tampil (teks + bendera) */
+.issues_archive .obj_issue_summary .description,
+.obj_issue_summary_list .obj_issue_summary .description {
+  position: relative; z-index: 1;            /* tautan di deskripsi tetap bisa diklik */
+  display: block !important;
+  margin: 8px 0 0 !important;
+  font-size: .8rem !important;
+  line-height: 1.6 !important;
+  color: #22304f !important;
+  text-align: left !important;
+}
+.issues_archive .obj_issue_summary .description p,
+.obj_issue_summary_list .obj_issue_summary .description p { margin: 0 0 6px !important; text-align: left !important; }
+.issues_archive .obj_issue_summary .description img,
+.obj_issue_summary_list .obj_issue_summary .description img {
+  width: 30px !important; max-width: 30px !important; height: 20px !important; max-height: 20px !important;
+  margin: 2px 3px 0 0 !important; object-fit: cover !important; border-radius: 3px; vertical-align: middle;
+}
+/* kartu yang punya deskripsi: ikon di atas, bukan di tengah */
+.issues_archive .obj_issue_summary:has(.description)::before,
+.obj_issue_summary_list .obj_issue_summary:has(.description)::before { top: 14px; margin-top: 0; }
+.issues_archive .obj_issue_summary:has(.description),
+.obj_issue_summary_list .obj_issue_summary:has(.description) { justify-content: flex-start !important; }
+
+@media (max-width: 640px) {
+  .issues_archive,
+  .obj_issue_summary_list { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px !important; }
+  .issues_archive .obj_issue_summary,
+  .obj_issue_summary_list .obj_issue_summary { padding: 12px 10px 12px 48px !important; }
+  .issues_archive .obj_issue_summary::before,
+  .obj_issue_summary_list .obj_issue_summary::before { left: 10px; width: 28px; height: 28px; margin-top: -14px; }
+  .issues_archive .obj_issue_summary .title,
+  .issues_archive .obj_issue_summary h2 { font-size: .85rem !important; }
+}
+
+/* Archive dengan deskripsi: kartu lebih lebar dan teks deskripsi memakai lebar penuh kartu */
+.issues_archive:has(.description),
+.obj_issue_summary_list:has(.description) { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important; }
+.issues_archive .obj_issue_summary .description,
+.obj_issue_summary_list .obj_issue_summary .description { margin-left: -42px !important; margin-top: 12px !important; }
+@media (max-width: 640px) {
+  .issues_archive:has(.description),
+  .obj_issue_summary_list:has(.description) { grid-template-columns: 1fr !important; }
+  .issues_archive .obj_issue_summary .description,
+  .obj_issue_summary_list .obj_issue_summary .description { margin-left: -38px !important; }
+}
+
+/* ==========================================================================
+   CHEESA: tombol "Download" di halaman baca PDF (plugin PDF.js viewer)
+   Bawaan tema berwarna putih; dibuat biru CHEESA, kuning saat disorot.
+   ========================================================================== */
+.header_view a.download,
+.header_view .download {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 6px;
+  background: #1a1a9e !important;
+  color: #fff !important;
+  border: 0 !important;
+  border-left: 1px solid rgba(255, 255, 255, .25) !important;
+  font-family: 'Montserrat', 'Inter', Arial, sans-serif !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+  transition: background .2s ease, color .2s ease;
+}
+.header_view a.download *,
+.header_view .download * { color: inherit !important; }
+.header_view a.download:hover,
+.header_view a.download:focus-visible,
+.header_view .download:hover,
+.header_view .download:focus-visible {
+  background: #ed991f !important;
+  color: #030271 !important;
+  outline: 0;
+}
+
+
+/* ---- dari Header/Footer Content ---- */
+
+  .cmp_announcements.ch-sl-on .more { display: none !important; }
+  ul.cmp_announcements.ch-sl-on { display: none !important; }
+  .ch-sl { position: relative; z-index: 0; margin: 12px 0 8px; }
+  .ch-sl-vp { overflow: hidden; border-radius: 12px; border: 1px solid rgba(3,2,113,.18); box-shadow: 0 2px 8px rgba(3,2,113,.08); }
+  .ch-sl-tr { display: flex; transition: transform .8s ease; }
+  .ch-sl-slide { flex: 0 0 100%; box-sizing: border-box; padding: 22px 64px 44px; min-height: 170px; }
+  .ch-sl-slide .obj_announcement_summary { margin: 0; padding: 0; border: 0; }
+  .ch-sl-slide h2, .ch-sl-slide h3, .ch-sl-slide h4 { margin: 0 0 6px; font-size: 1.25em; line-height: 1.35; }
+  .ch-sl-slide h2 a, .ch-sl-slide h3 a, .ch-sl-slide h4 a { color: #030271; text-decoration: none; }
+  .ch-sl-slide .date { display: inline-block; margin-bottom: 10px; padding: 2px 10px; border-radius: 999px;
+    background: rgba(3,2,113,.08); color: #030271; font-size: .8em; }
+  .ch-sl-slide .summary p { margin: 0 0 10px; }
+  .ch-sl-slide img { max-width: 100%; height: auto; }
+  .ch-sl-slide ul { margin: 8px 0 8px 1.2em; padding: 0; }
+  .ch-sl-slide li { list-style: disc; margin: 2px 0; }
+  .ch-sl-slide .read_more { display: inline-block; padding: 6px 14px; border-radius: 6px; background: #030271;
+    color: #fff !important; text-decoration: none; font-size: .85em; }
+  .ch-sl-btn { position: absolute; top: 50%; transform: translateY(-50%); width: 38px; height: 38px; border: 0;
+    border-radius: 50%; background: #030271; color: #fff; font-size: 20px; line-height: 1; cursor: pointer; opacity: .85; }
+  .ch-sl-btn:hover, .ch-sl-btn:focus-visible { opacity: 1; }
+  .ch-sl-prev { left: 12px; } .ch-sl-next { right: 12px; }
+  .ch-sl-dots { position: absolute; left: 0; right: 0; bottom: 12px; display: flex; justify-content: center; gap: 8px; }
+  .ch-sl-dot { width: 10px; height: 10px; padding: 0; border: 0; border-radius: 50%; background: rgba(3,2,113,.25); cursor: pointer; }
+  .ch-sl-dot.on { background: #030271; transform: scale(1.25); }
+  .ch-sl-slide h2, .ch-sl-slide h3, .ch-sl-slide h4 { display: none !important; }
+  .ch-sl-title { margin: 0 0 10px; font-size: 1.35em; font-weight: 700; line-height: 1.35; }
+  .ch-sl-title a { color: #030271 !important; text-decoration: none; }
+  .ch-sl-title a:hover { text-decoration: underline; }
+  .ch-sl-slide .read_more { padding-right: 34px !important; }
+  .ch-sl-all { text-align: right; font-size: .9em; margin: 6px 2px 0; }
+  .ch-sl-all a { color: #030271; }
+  @media (max-width: 900px) { .ch-sl-slide { padding-left: 56px; padding-right: 56px; } }
+  @media (max-width: 600px) {
+    .ch-sl-slide { padding: 16px 16px 40px; min-height: 0; }
+    .ch-sl-title { font-size: 1.15em; }
+    .ch-sl-slide .summary { font-size: .95em; }
+    .ch-sl-btn { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .ch-sl-tr { transition: none; } }
+
+
+  .ch-ar { background: #fff; border-radius: 6px; box-shadow: 0 2px 12px rgba(3,2,113,.12); overflow: hidden; margin: 0 0 20px; width: 100%; max-width: 100%; box-sizing: border-box; }
+  .ch-ar-head { display: flex; align-items: center; gap: 8px; padding: 8px 14px; color: #fff; font-weight: 700;
+    font-size: .85em; line-height: 1.2; text-transform: uppercase; letter-spacing: .2px; background: linear-gradient(100deg, #030271, #1a1a9e); }
+  .ch-ar-head svg { width: 16px; height: 16px; flex: none; fill: #fff; }
+  .ch-ar-body { padding: 2px 14px 8px; }
+  .ch-ar-year { border-bottom: 1px solid #eceff5; }
+  .ch-ar-year:last-child { border-bottom: 0; }
+  .ch-ar-btn { display: flex; width: 100%; align-items: center; justify-content: space-between; padding: 10px 0 6px;
+    margin: 0; background: none; border: 0; cursor: pointer; font: inherit; font-size: 1.05em; font-weight: 600;
+    color: #030271; text-align: left; }
+  .ch-ar-count { margin-left: 8px; font-size: .8em; font-weight: 400; color: #94a0b8; }
+  .ch-ar-chev { width: 16px; height: 16px; flex: none; fill: none; stroke: #8795b0; stroke-width: 2.4;
+    stroke-linecap: round; stroke-linejoin: round; transition: transform .25s ease; }
+  .ch-ar-year.closed .ch-ar-chev { transform: rotate(180deg); }
+  .ch-ar-list { list-style: none !important; margin: 0 !important; padding: 0 0 6px !important; }
+  .ch-ar-list li { list-style: none !important; margin: 0 !important; padding: 0 !important; }
+  .ch-ar-list a { display: flex; align-items: center; gap: 10px; padding: 6px 0 6px 14px; color: #22304f;
+    text-decoration: none; font-size: 1em; }
+  .ch-ar-list a:hover { color: #030271; text-decoration: underline; }
+  .ch-ar-list a.on { color: #030271; font-weight: 700; }
+  .ch-ar-book { width: 14px; height: 14px; flex: none; fill: #8d9ab4; }
+  .ch-ar-tag { padding: 2px 8px; border-radius: 999px; background: rgba(3,2,113,.10); color: #030271; font-size: .65em; font-weight: 600; }
+  .ch-ar-year.closed .ch-ar-list { display: none; }
+  .ch-ar-all { display: block; margin: 8px 0 10px; padding: 8px 14px; border-radius: 6px; background: #030271;
+    color: #fff !important; text-align: center; text-decoration: none !important; font-weight: 600; font-size: .9em; }
+  .ch-ar-all:hover, .ch-ar-all:focus-visible { background: #1a1a9e; }
+
+
+  .ch-cs { width: 100%; box-sizing: border-box; }
+  .ch-cs-note { margin: 6px 0 8px; text-align: center; font-style: italic; font-size: .9em; color: #5b6783; }
+  .ch-cs table { width: 100%; border-collapse: collapse; border: 0; margin: 0; font-size: .95em; }
+  .ch-cs th, .ch-cs td { border: 0; background: none; text-align: left; vertical-align: middle; }
+  .ch-cs th { padding: 4px 4px 6px; font-size: .75em; font-weight: 700; color: #94a0b8; text-transform: uppercase; letter-spacing: .3px; border-bottom: 1px solid #eceff5; }
+  .ch-cs td { padding: 7px 4px; border-bottom: 1px solid #eceff5; color: #22304f; }
+  .ch-cs tr:last-child td { border-bottom: 0; }
+  .ch-cs .ch-cs-n { width: 20px; font-size: .85em; color: #94a0b8; }
+  .ch-cs .ch-cs-v { width: 30px; text-align: right; font-weight: 700; color: #030271; }
+  .ch-cs .ch-cs-b { width: 56px; padding-left: 8px; }
+  .ch-cs-track { height: 6px; border-radius: 999px; background: #eceff5; overflow: hidden; }
+  .ch-cs-fill { height: 100%; border-radius: 999px; background: linear-gradient(100deg, #030271, #1a1a9e); }
+  .ch-cs-all { display: block; margin: 10px 0 6px; padding: 8px 14px; border-radius: 6px; background: #030271;
+    color: #fff !important; text-align: center; text-decoration: none !important; font-weight: 600; font-size: .9em; }
+  .ch-cs-all:hover, .ch-cs-all:focus-visible { background: #1a1a9e; }
+
+
+  [data-country]::after { content: none !important; display: none !important; }
+  /* hilangkan garis bawah "_" antara bendera dan ORCID */
+  a[href*="orcid"], a[href*="orcid"] *, .ch-flag-one + a, .ch-flag-one + * a { text-decoration: none !important; border: 0 !important; }
+  .ch-flag-one {
+    display: inline-block; width: 22px; height: 15px; margin: 0 4px 2px 6px;
+    vertical-align: middle; object-fit: cover; border-radius: 2px;
+    border: 1px solid rgba(3,2,113,.18); box-shadow: 0 1px 2px rgba(3,2,113,.15);
+  }

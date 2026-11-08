@@ -1,0 +1,20 @@
+LISENSI PENGGUNAAN — PLUGIN CHEESA
+==================================
+
+Hak cipta (c) 2026 Pengelola Jurnal CHEESA (Chemical Engineering Research Articles),
+Universitas PGRI Madiun (UNIPMA). Seluruh hak dilindungi.
+
+Plugin ini (CHEESA Theme, Journal Portal Widgets, Crossmark Button, CHEESA Control Panel)
+dibuat khusus untuk jurnal CHEESA di journal-ft.unipma.ac.id dan hanya boleh digunakan
+pada jurnal yang tercantum dalam berkas lisensi (cheesa.lic) yang diterbitkan pengelola.
+
+Tanpa izin tertulis dari pengelola, tidak diperkenankan:
+  - memasang atau menggunakan plugin ini pada jurnal atau domain lain;
+  - menyalin, mendistribusikan, menjual, atau menyewakan plugin ini;
+  - menghapus atau mengubah pemeriksaan lisensi maupun keterangan hak cipta ini.
+
+Plugin ini dijalankan di atas Open Journal Systems (OJS) yang berlisensi GNU GPL v3.
+Komponen pihak ketiga (widget Crossref Crossmark, ikon ORCID, Dimensions, Creative Commons,
+bendera flagcdn) tetap mengikuti ketentuan masing-masing penyedia.
+
+Permohonan izin: hubungi pengelola jurnal CHEESA melalui situs journal-ft.unipma.ac.id.
