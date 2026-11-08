@@ -369,10 +369,79 @@
 
   /* ---------- 10. Menu Login / pengguna di kanan atas header (di samping ISSN) ----------
      Tautan dibuat dari data server (CFG.user), jadi selalu tampil walau menu pengguna bawaan OJS tersembunyi. */
+  /* Tautan dari menu pengguna OJS (Settings > Website > Setup > Navigation Menus > User Navigation Menu),
+     supaya perubahan di menu itu (mis. Register ke URL lain, item tambahan) ikut tampil. */
+  function ojsUserLinks(loggedIn) {
+    var nav = D.getElementById('navigationUser') || D.querySelector('.pkp_navigation_user');
+    if (!nav) return null;
+    var out = [];
+    function item(a) {
+      var t = (a.textContent || '').replace(/\s+/g, ' ').trim();
+      var h = a.getAttribute('href') || '';
+      return t ? [t.replace(/\s*\d+\s*$/, '') || t, /^javascript:/i.test(h) ? '' : a.href] : null;
+    }
+    try {
+      if (loggedIn) {
+        nav.querySelectorAll('li ul a').forEach(function (a) { var x = item(a); if (x && x[1]) out.push(x); });
+      } else {
+        // item utama + sub-item (mis. Register > Author, Editor/Reviewer) dari User Navigation Menu
+        nav.querySelectorAll(':scope > li').forEach(function (li) {
+          var a = li.querySelector(':scope > a'); if (!a) return;
+          var x = item(a); if (!x) return;
+          var kids = [];
+          li.querySelectorAll(':scope > ul a').forEach(function (c) { var k = item(c); if (k && k[1]) kids.push(k); });
+          if (kids.length) x[2] = kids;
+          if (x[1] || kids.length) out.push(x);
+        });
+      }
+    } catch (e) { return null; }
+    return out.length ? out : null;
+  }
+  function userIcon(text, href) {
+    var s = (text + ' ' + href).toLowerCase();
+    if (/logout|sign ?out|signout|keluar/.test(s)) return 'fa-sign-out';
+    if (/login|sign ?in|masuk/.test(s)) return 'fa-sign-in';
+    var t = String(text).toLowerCase();
+    if (/review|editor/.test(t)) return 'fa-users';
+    if (/author|penulis/.test(t)) return 'fa-pencil-square-o';
+    if (/regist|daftar|auth-reg|sign ?up/.test(s)) return 'fa-user-plus';
+    if (/dashboard|submissions/.test(s)) return 'fa-tachometer';
+    if (/profile|profil/.test(s)) return 'fa-id-card-o';
+    if (/admin/.test(s)) return 'fa-cogs';
+    return 'fa-angle-right';
+  }
+
+  /* daftar turun untuk tombol pengguna: klik untuk buka/tutup, Esc / klik di luar untuk menutup */
+  function userDrop(li, btn, links) {
+    var sub = el('ul', 'ch-user-sub'); sub.hidden = true;
+    links.forEach(function (l) {
+      var a = el('a'); a.href = l[1]; a.appendChild(icon(userIcon(l[0], l[1]))); a.appendChild(D.createTextNode(' ' + l[0]));
+      var x = el('li'); x.appendChild(a); sub.appendChild(x);
+    });
+    function set(open) { sub.hidden = !open; btn.setAttribute('aria-expanded', open ? 'true' : 'false'); li.classList.toggle('is-open', open); }
+    var hoverAt = 0;
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (!sub.hidden && Date.now() - hoverAt < 600) return;   // baru dibuka oleh hover: klik jangan menutupnya
+      set(sub.hidden);
+    });
+    D.addEventListener('click', function (e) { if (!li.contains(e.target)) set(false); });
+    D.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+    if (window.matchMedia && window.matchMedia('(hover: hover) and (min-width: 992px)').matches) {
+      var t; li.addEventListener('mouseenter', function () { clearTimeout(t); if (sub.hidden) { hoverAt = Date.now(); set(true); } });
+      li.addEventListener('mouseleave', function () { t = setTimeout(function () { set(false); }, 220); });
+    }
+    return sub;
+  }
+
   function userBar() {
     var head = D.getElementById('headerNavigationContainer') || D.querySelector('.pkp_structure_head');
     if (!head || D.querySelector('.ch-userbar')) return;
     var u = CFG.user;
+    if (u) {
+      var fromMenu = ojsUserLinks(!!u.name);
+      if (fromMenu) u = { name: u.name, links: fromMenu };
+    }
     var bar = el('div', 'ch-userbar');
     if (u && u.links && u.links.length) {
       var ul = el('ul', 'ch-user-menu');
@@ -381,16 +450,19 @@
         var li = el('li', 'ch-user-drop');
         var btn = el('button', 'ch-user-btn'); btn.type = 'button'; btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-haspopup', 'true');
         btn.appendChild(icon('fa-user-circle')); btn.appendChild(D.createTextNode(' ' + u.name + ' ')); btn.appendChild(icon('fa-caret-down'));
-        var sub = el('ul', 'ch-user-sub'); sub.hidden = true;
-        u.links.forEach(function (l) { var a = el('a', null, l[0]); a.href = l[1]; var x = el('li'); x.appendChild(a); sub.appendChild(x); });
-        btn.addEventListener('click', function (e) { e.stopPropagation(); sub.hidden = !sub.hidden; btn.setAttribute('aria-expanded', sub.hidden ? 'false' : 'true'); });
-        D.addEventListener('click', function (e) { if (!li.contains(e.target)) { sub.hidden = true; btn.setAttribute('aria-expanded', 'false'); } });
-        D.addEventListener('keydown', function (e) { if (e.key === 'Escape') { sub.hidden = true; btn.setAttribute('aria-expanded', 'false'); } });
-        li.appendChild(btn); li.appendChild(sub); ul.appendChild(li);
+        li.appendChild(btn); li.appendChild(userDrop(li, btn, u.links)); ul.appendChild(li);
       } else {
         u.links.forEach(function (l) {
-          var li2 = el('li'), a = el('a', /login/i.test(l[0]) ? 'ch-user-login' : 'ch-user-reg');
-          a.href = l[1]; a.appendChild(icon(/login/i.test(l[0]) ? 'fa-sign-in' : 'fa-user-plus')); a.appendChild(D.createTextNode(' ' + l[0]));
+          if (l[2] && l[2].length) {
+            var g = el('li', 'ch-user-drop ch-user-group');
+            var gb = el('button', 'ch-user-grp'); gb.type = 'button'; gb.setAttribute('aria-expanded', 'false'); gb.setAttribute('aria-haspopup', 'true');
+            gb.appendChild(icon(userIcon(l[0], l[1]))); gb.appendChild(D.createTextNode(' ' + l[0] + ' ')); gb.appendChild(icon('fa-caret-down'));
+            g.appendChild(gb); g.appendChild(userDrop(g, gb, l[2])); ul.appendChild(g);
+            return;
+          }
+          var ic = userIcon(l[0], l[1]);
+          var li2 = el('li'), a = el('a', ic === 'fa-sign-in' ? 'ch-user-login' : 'ch-user-reg');
+          a.href = l[1]; a.appendChild(icon(ic)); a.appendChild(D.createTextNode(' ' + l[0]));
           li2.appendChild(a); ul.appendChild(li2);
         });
       }
