@@ -1,0 +1,49 @@
+# CHEESA — rilis otomatis.
+# Setiap ada perubahan di plugins/ atau incoming/, GitHub membuat paket .tar.gz,
+# menandatangani manifest.json dengan kunci rahasia (Secret CHEESA_PRIVATE_KEY),
+# lalu menyimpannya di repo. CHEESA Control Panel di OJS akan langsung mendeteksinya.
+name: Rilis otomatis CHEESA
+
+on:
+  push:
+    branches: [main]
+    paths: ['plugins/**', 'incoming/**', 'tools/**']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rilis-cheesa
+  cancel-in-progress: false
+
+jobs:
+  rilis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Periksa PHP
+        run: php -v && php -m | grep -iE 'phar|openssl|zlib'
+
+      - name: Bongkar plugin di incoming/
+        run: php -d phar.readonly=0 tools/unpack-incoming.php incoming plugins
+
+      - name: Buat paket & tanda tangani manifest
+        env:
+          CHEESA_PRIVATE_KEY: ${{ secrets.CHEESA_PRIVATE_KEY }}
+        run: |
+          if [ -z "$CHEESA_PRIVATE_KEY" ]; then echo "Secret CHEESA_PRIVATE_KEY belum diisi (Settings > Secrets and variables > Actions)."; exit 1; fi
+          umask 077
+          printf '%s\n' "$CHEESA_PRIVATE_KEY" > "$RUNNER_TEMP/key.pem"
+          php -d phar.readonly=0 tools/cheesa-release.php plugins "$RUNNER_TEMP/key.pem" . tools/cheesa.lic
+          rm -f "$RUNNER_TEMP/key.pem"
+
+      - name: Simpan hasil ke repo
+        run: |
+          git config user.name "cheesa-rilis-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A .
+          if git diff --cached --quiet; then echo "Tidak ada perubahan."; exit 0; fi
+          git commit -m "Rilis otomatis: perbarui paket & manifest"
+          git push
