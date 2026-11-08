@@ -118,7 +118,7 @@
 :root body .ch-search button {
   border-radius: 0 6px 6px 0 !important;
   background: var(--nv-accent) !important;
-  color: #1a1300 !important;
+  color: var(--nv-on-accent, #1a1300) !important;
   font-weight: 700 !important;
 }
 
@@ -240,7 +240,7 @@
 }
 :root body .ch-q-btn:first-child { background: var(--nv-navy); color: #fff !important; }
 :root body .ch-q-btn:hover,
-:root body .ch-q-btn:focus-visible { background: var(--nv-accent); border-color: var(--nv-accent); color: #1a1300 !important; transform: translateY(-1px); }
+:root body .ch-q-btn:focus-visible { background: var(--nv-accent); border-color: var(--nv-accent); color: var(--nv-on-accent, #1a1300) !important; transform: translateY(-1px); }
 :root body .ch-q-social { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; padding-top: 4px; }
 :root body .ch-q-social a {
   display: inline-flex; align-items: center; justify-content: center;
@@ -334,7 +334,7 @@
   background: var(--nv-navy); color: #fff;
   font: 800 .9rem var(--nv-sans);
 }
-:root body .ch-idx-item:nth-child(3n+2) .ch-idx-mark { background: var(--nv-accent); color: #1a1300; }
+:root body .ch-idx-item:nth-child(3n+2) .ch-idx-mark { background: var(--nv-accent); color: var(--nv-on-accent, #1a1300); }
 :root body .ch-idx-item:nth-child(3n) .ch-idx-mark { background: #2f6fd6; }
 :root body .ch-idx-name { font: 700 .98rem var(--nv-sans); color: var(--nv-ink); white-space: nowrap; }
 @media (prefers-reduced-motion: reduce) {
@@ -428,7 +428,7 @@
   background: var(--nv-navy) !important; color: #fff !important;
   font: 700 .92rem var(--nv-sans) !important; border-radius: 6px !important; box-shadow: none !important;
 }
-:root body .page_index_journal .current_issue .ch-btn:hover { background: var(--nv-accent) !important; color: #1a1300 !important; }
+:root body .page_index_journal .current_issue .ch-btn:hover { background: var(--nv-accent) !important; color: var(--nv-on-accent, #1a1300) !important; }
 :root body .page_index_journal .current_issue .read_more,
 :root body .page_index_journal .current_issue .read_more * { color: var(--nv-navy) !important; fill: var(--nv-navy) !important; }
 
@@ -541,7 +541,7 @@
 :root body .ch-up-h { margin: 0 0 12px; font: 700 1.1rem var(--nv-sans); color: var(--nv-ink); }
 :root body .ch-up-list { list-style: none; margin: 0; padding: 0; }
 :root body .ch-up-item { margin: 0 0 12px; padding: 14px 16px; border: 1px dashed color-mix(in srgb, var(--nv-navy) 30%, #fff); border-radius: var(--nv-radius); }
-:root body .ch-up-sec { display: inline-block; margin-bottom: 6px; padding: 2px 8px; border-radius: 4px; background: var(--nv-accent); color: #1a1300; font: 600 .7rem var(--nv-sans); }
+:root body .ch-up-sec { display: inline-block; margin-bottom: 6px; padding: 2px 8px; border-radius: 4px; background: var(--nv-accent); color: var(--nv-on-accent, #1a1300); font: 600 .7rem var(--nv-sans); }
 :root body .ch-up-art { font: 600 1rem/1.4 var(--nv-sans); color: var(--nv-navy); }
 :root body .ch-up-au { margin-top: 4px; font-size: .84rem; color: var(--nv-muted); }
 :root body .ch-up-empty { padding: 18px; text-align: center; color: var(--nv-muted); background: var(--nv-head); border-radius: var(--nv-radius); }
@@ -595,7 +595,7 @@
 :root body .ch-userbar #navigationUser > li > a {
   display: inline-flex !important; align-items: center; gap: 7px; padding: 6px 14px !important; line-height: 1.4 !important;
   border: 1px solid rgba(255, 255, 255, .38) !important; border-radius: 999px !important;
-  background: var(--nv-accent) !important; color: #1a1300 !important; font: 700 .85rem var(--nv-sans) !important;
+  background: var(--nv-accent) !important; color: var(--nv-on-accent, #1a1300) !important; font: 700 .85rem var(--nv-sans) !important;
   text-decoration: none !important; visibility: visible !important; opacity: 1 !important;
 }
 :root body .ch-userbar #navigationUser > li > a:hover { background: #fff !important; color: var(--nv-navy) !important; }
@@ -671,7 +671,7 @@
 :root body .ch-art-hero > * { position: relative; z-index: 1; }
 :root body .ch-hero-kick { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
 :root body .ch-hero-kick span { padding: 4px 12px; border-radius: 999px; font: 700 .74rem var(--nv-sans); letter-spacing: .04em; text-transform: uppercase; }
-:root body .ch-hero-sec { background: var(--nv-accent); color: #1a1300; }
+:root body .ch-hero-sec { background: var(--nv-accent); color: var(--nv-on-accent, #1a1300); }
 :root body .ch-hero-iss { background: rgba(255, 255, 255, .12); border: 1px solid rgba(255, 255, 255, .3); color: #fff; }
 :root body .ch-art-hero .page_title {
   margin: 0 0 16px !important; padding: 0 !important; background: none !important; box-shadow: none !important; border-radius: 0 !important;
@@ -689,7 +689,7 @@
 :root body .ch-art-hero .ch-affs li { display: flex; gap: 8px; align-items: baseline; margin: 3px 0; color: #cdd2f5 !important; }
 :root body .ch-art-hero .ch-affs b {
   flex: none; display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 20px;
-  background: var(--nv-accent); color: #1a1300 !important; font-size: .7rem;
+  background: var(--nv-accent); color: var(--nv-on-accent, #1a1300) !important; font-size: .7rem;
   clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
 }
 :root body .ch-art-hero .ch-corr-note, :root body .ch-art-hero .ch-corr-note a { color: #fff !important; }
@@ -797,7 +797,7 @@
 :root body .ch-static .ch-sec-h strong, :root body .ch-static .ch-sec-h b { font-weight: inherit; color: inherit; }
 :root body .ch-static p { text-align: justify; }
 :root body .ch-static a { color: var(--nv-navy); text-decoration: none; background: linear-gradient(var(--nv-accent), var(--nv-accent)) 0 100% / 100% 2px no-repeat; }
-:root body .ch-static a:hover { background-size: 100% 100%; color: #1a1300; }
+:root body .ch-static a:hover { background-size: 100% 100%; color: var(--nv-on-accent, #1a1300); }
 :root body .ch-static ul, :root body .ch-static ol { padding-left: 0; list-style: none; }
 :root body .ch-static ul > li, :root body .ch-static ol > li {
   position: relative; margin: 0 0 10px; padding: 12px 16px 12px 48px; border: 1px solid var(--nv-line); border-radius: 12px; background: #fff;
@@ -813,7 +813,7 @@
 :root body .ch-static ol > li { counter-increment: chol; }
 :root body .ch-static ol > li::before {
   content: counter(chol); position: absolute; left: 14px; top: 13px; width: 22px; height: 24px;
-  display: flex; align-items: center; justify-content: center; background: var(--nv-accent); color: #1a1300; font: 800 .72rem var(--nv-sans);
+  display: flex; align-items: center; justify-content: center; background: var(--nv-accent); color: var(--nv-on-accent, #1a1300); font: 800 .72rem var(--nv-sans);
   clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
 }
 :root body .ch-static table { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid var(--nv-line); border-radius: 12px; overflow: hidden; }
@@ -856,7 +856,7 @@
   display: inline-flex; align-items: center; gap: 7px; height: 40px; padding: 0 18px; border-radius: 999px; cursor: pointer;
   font: 700 .95rem var(--nv-sans); text-decoration: none !important; white-space: nowrap; transition: background .18s, color .18s;
 }
-:root body .ch-user-menu a.ch-user-login, :root body .ch-user-btn { background: var(--nv-accent); border: 1px solid var(--nv-accent); color: #1a1300 !important; }
+:root body .ch-user-menu a.ch-user-login, :root body .ch-user-btn { background: var(--nv-accent); border: 1px solid var(--nv-accent); color: var(--nv-on-accent, #1a1300) !important; }
 :root body .ch-user-menu a.ch-user-reg { background: transparent; border: 1px solid rgba(255, 255, 255, .45); color: #fff !important; }
 :root body .ch-user-menu a.ch-user-login:hover, :root body .ch-user-btn:hover { background: #fff; border-color: #fff; color: var(--nv-navy) !important; }
 :root body .ch-user-menu a.ch-user-reg:hover { background: rgba(255, 255, 255, .14); }
@@ -956,7 +956,7 @@
   background: color-mix(in srgb, var(--nv-accent) 12%, #fff) !important; color: var(--nv-navy) !important; transform: translateX(3px);
 }
 :root body #navigationPrimary > li > ul > li > a:hover .ch-sub-ico,
-:root body #navigationPrimary > li > ul > li > a:focus-visible .ch-sub-ico { background: var(--nv-accent); color: #1a1300; }
+:root body #navigationPrimary > li > ul > li > a:focus-visible .ch-sub-ico { background: var(--nv-accent); color: var(--nv-on-accent, #1a1300); }
 :root body #navigationPrimary > li > ul > li > a.ch-active-sub,
 :root body #navigationPrimary > li > ul > li > a[aria-current="page"] { color: var(--nv-navy) !important; background: color-mix(in srgb, var(--nv-navy) 6%, #fff) !important; }
 @keyframes ch-drop { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
@@ -1011,7 +1011,7 @@
 /* v1.3 — penulis korespondensi, statistik Article Info, Crossmark di kepala artikel */
 :root body .ch-corr-mark {
   display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; margin-left: 5px; border-radius: 50%;
-  background: var(--nv-accent); color: #1a1300 !important; font-size: 10px; text-decoration: none !important; vertical-align: 1px;
+  background: var(--nv-accent); color: var(--nv-on-accent, #1a1300) !important; font-size: 10px; text-decoration: none !important; vertical-align: 1px;
 }
 :root body .ch-corr-mark:hover { background: #fff; }
 :root body .ch-art-hero .ch-corr-note { margin-top: 10px; padding-top: 10px; border-top: 1px dashed rgba(255,255,255,.25); font-size: .84rem; color: #dfe3ff !important; }
@@ -1080,7 +1080,7 @@
 }
 :root body .ch-user-menu .ch-user-grp .fa-caret-down { transition: transform .18s; }
 :root body .ch-user-group.is-open .ch-user-grp .fa-caret-down { transform: rotate(180deg); }
-:root body .ch-user-menu .ch-user-grp:hover, :root body .ch-user-group.is-open .ch-user-grp { background: var(--nv-accent); border-color: var(--nv-accent); color: #1a1300 !important; }
+:root body .ch-user-menu .ch-user-grp:hover, :root body .ch-user-group.is-open .ch-user-grp { background: var(--nv-accent); border-color: var(--nv-accent); color: var(--nv-on-accent, #1a1300) !important; }
 :root body .ch-user-menu .ch-user-grp:focus-visible { outline: 3px solid var(--nv-accent); outline-offset: 2px; }
 /* daftar turun gaya navy seperti contoh (Author / Editor-Reviewer) */
 :root body .ch-user-group .ch-user-sub {
@@ -1133,3 +1133,21 @@
 }
 :root body .obj_article_summary svg.ch-ico path { fill: currentColor !important; }
 :root body .obj_article_summary svg.ch-ico path { fill-rule: evenodd !important; clip-rule: evenodd !important; stroke: none !important; }
+
+/* v1.6.0 — warna sorotan terpisah untuk area navy (header, menu, pita judul, footer).
+   Di dalam area ini --nv-accent diganti --nv-hl, sehingga aksen gelap tidak membuat teks/ikon header hilang. */
+:root body .pkp_structure_head,
+:root body .ch-art-hero,
+:root body .ch-page-hero,
+:root body .obj_article_details .page_title,
+:root body .pkp_structure_footer_wrapper,
+:root body .ch-user-group .ch-user-sub {
+  --nv-accent: var(--nv-hl, #ed991f);
+  --nv-on-accent: var(--nv-on-hl, #1a1300);
+}
+/* dropdown berlatar putih di dalam header kembali memakai aksen biasa */
+:root body #navigationPrimary ul ul,
+:root body .ch-user-drop:not(.ch-user-group) .ch-user-sub {
+  --nv-accent: var(--nv-accent-base, #ed991f);
+  --nv-on-accent: var(--nv-on-accent-base, #1a1300);
+}

@@ -45,8 +45,13 @@ class CheesaNoveltyThemePlugin extends ThemePlugin {
 			'default' => '#030271',
 		]);
 		$this->addOption('chAccent', 'FieldColor', [
-			'label' => 'Warna aksen (amber)',
-			'description' => 'Warna garis aktif menu, penanda, dan sorotan.',
+			'label' => 'Warna aksen (area putih)',
+			'description' => 'Ikon kartu artikel, garis aktif, penanda, dan sorotan pada area berlatar putih. Warna teks di atas aksen dipilih otomatis (putih/gelap).',
+			'default' => '#ed991f',
+		]);
+		$this->addOption('chHeaderAccent', 'FieldColor', [
+			'label' => 'Warna sorotan header & menu (di atas navy)',
+			'description' => 'Angka ISSN, ikon menu, hover menu, tombol Login/pengguna, tombol Search, dan pita judul artikel. Bila terlalu mirip warna navy, tema otomatis memakai warna yang terbaca.',
 			'default' => '#ed991f',
 		]);
 		$this->addOption('chLeftBlocks', 'FieldText', [
@@ -150,7 +155,9 @@ class CheesaNoveltyThemePlugin extends ThemePlugin {
 
 		$navy = $this->_color($this->getOption('chNavy'), '#030271');
 		$accent = $this->_color($this->getOption('chAccent'), '#ed991f');
-		$this->addStyle('cheesa-vars', ':root{--nv-navy:' . $navy . ';--nv-accent:' . $accent . ';}', ['inline' => true]);
+		$hl = $this->_readable($this->_color($this->getOption('chHeaderAccent'), '#ed991f'), $navy);
+		$this->addStyle('cheesa-vars', ':root{--nv-navy:' . $navy . ';--nv-accent:' . $accent . ';--nv-on-accent:' . $this->_onColor($accent)
+			. ';--nv-accent-base:' . $accent . ';--nv-on-accent-base:' . $this->_onColor($accent) . ';--nv-hl:' . $hl . ';--nv-on-hl:' . $this->_onColor($hl) . ';}', ['inline' => true]);
 		if ($this->getOption('chHomeArticles') === 'off') {
 			$this->addStyle('cheesa-hide-home-articles', ':root body .page_index_journal .current_issue .sections{display:none!important}', ['inline' => true]);
 		}
@@ -459,6 +466,30 @@ class CheesaNoveltyThemePlugin extends ThemePlugin {
 	}
 
 	/* ---------------- helper ---------------- */
+	/* ---------- kontras warna (WCAG) ---------- */
+	private function _rgb($hex) {
+		$h = ltrim($hex, '#');
+		if (strlen($h) === 3 || strlen($h) === 4) $h = $h[0] . $h[0] . $h[1] . $h[1] . $h[2] . $h[2];
+		return [hexdec(substr($h, 0, 2)), hexdec(substr($h, 2, 2)), hexdec(substr($h, 4, 2))];
+	}
+	private function _lum($hex) {
+		$l = array_map(function ($c) { $c /= 255; return $c <= 0.03928 ? $c / 12.92 : pow(($c + 0.055) / 1.055, 2.4); }, $this->_rgb($hex));
+		return 0.2126 * $l[0] + 0.7152 * $l[1] + 0.0722 * $l[2];
+	}
+	private function _contrast($a, $b) {
+		$x = $this->_lum($a); $y = $this->_lum($b);
+		return (max($x, $y) + 0.05) / (min($x, $y) + 0.05);
+	}
+	/** Warna teks di atas latar $bg: gelap atau putih, mana yang lebih kontras. */
+	private function _onColor($bg) {
+		return $this->_contrast($bg, '#1a1300') >= $this->_contrast($bg, '#ffffff') ? '#1a1300' : '#ffffff';
+	}
+	/** $c bila cukup terbaca di atas $bg (kontras >= 3), jika tidak amber CHEESA / putih. */
+	private function _readable($c, $bg) {
+		foreach ([$c, '#ed991f', '#ffd27a', '#ffffff'] as $x) if ($this->_contrast($x, $bg) >= 3) return $x;
+		return '#ffffff';
+	}
+
 	private function _color($v, $fallback) {
 		return (is_string($v) && preg_match('/^#[0-9a-f]{3,8}$/i', trim($v))) ? trim($v) : $fallback;
 	}
