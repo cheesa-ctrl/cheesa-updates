@@ -51,7 +51,7 @@ class CheesaNoveltyThemePlugin extends ThemePlugin {
 		]);
 		$this->addOption('chHeaderAccent', 'FieldColor', [
 			'label' => 'Warna sorotan header & menu (di atas navy)',
-			'description' => 'Angka ISSN, ikon menu, hover menu, tombol Login/pengguna, tombol Search, dan pita judul artikel. Bila terlalu mirip warna navy, tema otomatis memakai warna yang terbaca.',
+			'description' => 'Angka ISSN, ikon menu, hover menu, tombol Login/pengguna, tombol Search, dan pita judul artikel. Hindari warna yang terlalu mirip warna utama (navy), karena teks/ikon di header akan sulit terlihat.',
 			'default' => '#ed991f',
 		]);
 		$this->addOption('chLeftBlocks', 'FieldText', [
@@ -155,7 +155,8 @@ class CheesaNoveltyThemePlugin extends ThemePlugin {
 
 		$navy = $this->_color($this->getOption('chNavy'), '#030271');
 		$accent = $this->_color($this->getOption('chAccent'), '#ed991f');
-		$hl = $this->_readable($this->_color($this->getOption('chHeaderAccent'), '#ed991f'), $navy);
+		// warna pilihan pengelola dipakai apa adanya (tidak diganti otomatis)
+		$hl = $this->_color($this->getOption('chHeaderAccent'), '#ed991f');
 		$this->addStyle('cheesa-vars', ':root{--nv-navy:' . $navy . ';--nv-accent:' . $accent . ';--nv-on-accent:' . $this->_onColor($accent)
 			. ';--nv-accent-base:' . $accent . ';--nv-on-accent-base:' . $this->_onColor($accent) . ';--nv-hl:' . $hl . ';--nv-on-hl:' . $this->_onColor($hl) . ';}', ['inline' => true]);
 		if ($this->getOption('chHomeArticles') === 'off') {
