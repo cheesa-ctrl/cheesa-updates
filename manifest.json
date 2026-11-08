@@ -2,36 +2,40 @@
     "packages": {
         "cheesaControlPanel": {
             "category": "generic",
-            "version": "1.0.0.0",
-            "file": "cheesaControlPanel-1.0.0.0.tar.gz",
-            "sha256": "5a35c9cb6478bd6e3df03d99c61b340a4c6d656a9e65bc0803109ced8b8ae74f",
-            "size": 8759,
+            "label": "CHEESA Control Panel",
+            "version": "1.1.0.0",
+            "file": "cheesaControlPanel-1.1.0.0.tar.gz",
+            "sha256": "078f28d5bfaa233fdbce16abf72deb95ed0ee4ab2c0135bbe2deba671a944c2b",
+            "size": 14744,
             "released": "2026-11-08"
         },
         "cheesaNovelty": {
             "category": "themes",
-            "version": "1.4.1.0",
-            "file": "cheesaNovelty-1.4.1.0.tar.gz",
-            "sha256": "9ddaf529b563858ab7d17bf2660c45edfeaea07b69ad81ade21e7b056815f6a7",
-            "size": 84106,
+            "label": "CHEESA Theme",
+            "version": "1.5.0.0",
+            "file": "cheesaNovelty-1.5.0.0.tar.gz",
+            "sha256": "1c73ac5e3bc851f31395835337286525d18ecb40a008c626d81f07054b1eb6c3",
+            "size": 87767,
             "released": "2026-11-08"
         },
         "crossmarkButton": {
             "category": "generic",
-            "version": "1.0.1.0",
-            "file": "crossmarkButton-1.0.1.0.tar.gz",
-            "sha256": "b998747fd406439f02bac5798178bdb2aebdca024afb2fdff03c99be16ca785d",
-            "size": 4336,
+            "label": "Crossmark Button",
+            "version": "1.0.2.0",
+            "file": "crossmarkButton-1.0.2.0.tar.gz",
+            "sha256": "2d170ff9021f827a2e8f660c9ade4c9fdabc65552e56c3857335a4a34f878b50",
+            "size": 7587,
             "released": "2026-11-08"
         },
         "journalWidgets": {
             "category": "generic",
-            "version": "1.1.0.0",
-            "file": "journalWidgets-1.1.0.0.tar.gz",
-            "sha256": "5329faf453a3126c94de903adde48748378a181269275e2d105b46e3dda92d81",
-            "size": 17710,
+            "label": "Journal Portal Widgets",
+            "version": "1.2.0.0",
+            "file": "journalWidgets-1.2.0.0.tar.gz",
+            "sha256": "5690413eeced0acd2775f355a998fe3adef7d1f07afed1e99dc0ea2a9411c4e3",
+            "size": 21050,
             "released": "2026-11-08"
         }
     },
-    "generated": "2026-11-08T04:53:14+00:00"
+    "generated": "2026-11-08T07:11:09+00:00"
 }
