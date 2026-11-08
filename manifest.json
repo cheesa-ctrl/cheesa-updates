@@ -1,0 +1,37 @@
+{
+    "packages": {
+        "cheesaControlPanel": {
+            "category": "generic",
+            "version": "1.0.0.0",
+            "file": "cheesaControlPanel-1.0.0.0.tar.gz",
+            "sha256": "5a35c9cb6478bd6e3df03d99c61b340a4c6d656a9e65bc0803109ced8b8ae74f",
+            "size": 8759,
+            "released": "2026-11-08"
+        },
+        "cheesaNovelty": {
+            "category": "themes",
+            "version": "1.4.1.0",
+            "file": "cheesaNovelty-1.4.1.0.tar.gz",
+            "sha256": "9ddaf529b563858ab7d17bf2660c45edfeaea07b69ad81ade21e7b056815f6a7",
+            "size": 84106,
+            "released": "2026-11-08"
+        },
+        "crossmarkButton": {
+            "category": "generic",
+            "version": "1.0.1.0",
+            "file": "crossmarkButton-1.0.1.0.tar.gz",
+            "sha256": "b998747fd406439f02bac5798178bdb2aebdca024afb2fdff03c99be16ca785d",
+            "size": 4336,
+            "released": "2026-11-08"
+        },
+        "journalWidgets": {
+            "category": "generic",
+            "version": "1.1.0.0",
+            "file": "journalWidgets-1.1.0.0.tar.gz",
+            "sha256": "5329faf453a3126c94de903adde48748378a181269275e2d105b46e3dda92d81",
+            "size": 17710,
+            "released": "2026-11-08"
+        }
+    },
+    "generated": "2026-11-08T04:53:14+00:00"
+}
