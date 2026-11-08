@@ -1125,3 +1125,11 @@
   display: inline-block !important; font: normal normal normal 14px/1 FontAwesome !important; font-size: .95em !important;
   text-shadow: none !important; background: none !important;
 }
+
+/* v1.5.5 — ikon SVG kartu artikel */
+:root body .obj_article_summary svg.ch-ico {
+  display: inline-block !important; flex: none; width: 14px !important; height: 14px !important; vertical-align: -2px;
+  color: var(--nv-accent, #ed991f) !important; fill: currentColor !important; opacity: 1 !important; visibility: visible !important;
+}
+:root body .obj_article_summary svg.ch-ico path { fill: currentColor !important; }
+:root body .obj_article_summary svg.ch-ico path { fill-rule: evenodd !important; clip-rule: evenodd !important; stroke: none !important; }

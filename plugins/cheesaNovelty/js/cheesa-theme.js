@@ -298,6 +298,25 @@
   }
 
 
+
+  /* Ikon SVG untuk kartu artikel: tidak bergantung pada font FontAwesome / CSS lain di situs */
+  var SVG_ICONS = {
+    eye: 'M12 5C6.5 5 2.7 9.1 1.5 12c1.2 2.9 5 7 10.5 7s9.3-4.1 10.5-7C21.3 9.1 17.5 5 12 5zm0 11.5a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9zm0-7a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z',
+    download: 'M11 3h2v9.2l3.3-3.3 1.4 1.4L12 16l-5.7-5.7 1.4-1.4 3.3 3.3V3zM4 18h16v2.5H4z',
+    file: 'M6 2h8l5 5v15H6V2zm7 1.5V8h4.5L13 3.5zM8.5 11.5h8v1.6h-8zm0 3.5h8v1.6h-8zm0 3.5h5v1.6h-5z',
+    calendar: 'M7 2h2v2h6V2h2v2h3v17H4V4h3V2zM6 9v10h12V9H6zm4.2 7.6L7.6 14l1.1-1.1 1.5 1.5 3.9-3.9 1.1 1.1-5 5z'
+  };
+  function svgIcon(name) {
+    var ns = 'http://www.w3.org/2000/svg';
+    var svg = D.createElementNS(ns, 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('width', '14'); svg.setAttribute('height', '14');
+    svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('focusable', 'false'); svg.setAttribute('class', 'ch-ico');
+    var path = D.createElementNS(ns, 'path');
+    path.setAttribute('d', SVG_ICONS[name]); path.setAttribute('fill', 'currentColor'); path.setAttribute('fill-rule', 'evenodd');
+    svg.appendChild(path);
+    return svg;
+  }
+
   /* ---------- 8. Kartu artikel: negara & statistik dari server ---------- */
   function richCards() {
     [].forEach.call(D.querySelectorAll('.obj_article_summary'), function (card) {
@@ -325,9 +344,9 @@
         card.insertBefore(list, title ? title.nextSibling : card.firstChild);
       }
       var st = el('div', 'ch-cstats');
-      function item(ico, label, val) { var x = el('span'); x.appendChild(icon(ico)); x.appendChild(D.createTextNode(' ' + label + ' ')); x.appendChild(el('b', null, String(val))); st.appendChild(x); }
-      item('fa-eye', 'Views', d.views || 0);
-      item('fa-download', 'Downloads', d.downloads || 0);
+      function item(ico, label, val) { var x = el('span'); x.appendChild(svgIcon(ico)); x.appendChild(D.createTextNode(' ' + label + ' ')); x.appendChild(el('b', null, String(val))); st.appendChild(x); }
+      item('eye', 'Views', d.views || 0);
+      item('download', 'Downloads', d.downloads || 0);
       // Pages tampil di samping label seksi (baris paling atas kartu); bila tidak ada seksi, tetap di deretan statistik
       var pg = pages && pages.textContent.trim();
       var secH = card.closest('.section') && card.closest('.section').querySelector(':scope > h2');
@@ -337,11 +356,11 @@
       if (secName && !card.querySelector(':scope > .ch-card-top')) {
         var top = el('div', 'ch-card-top');
         top.appendChild(el('span', 'ch-sec-badge', secName));
-        if (pg) { var pb = el('span', 'ch-pages-badge'); pb.appendChild(icon('fa-file-text-o')); pb.appendChild(D.createTextNode(' Pages ')); pb.appendChild(el('b', null, pg)); top.appendChild(pb); }
+        if (pg) { var pb = el('span', 'ch-pages-badge'); pb.appendChild(svgIcon('file')); pb.appendChild(D.createTextNode(' Pages ')); pb.appendChild(el('b', null, pg)); top.appendChild(pb); }
         card.insertBefore(top, title || card.firstChild);
         card.classList.add('ch-has-top');
-      } else if (pg) item('fa-file-text-o', 'Pages', pg);
-      if (d.date) item('fa-calendar-check-o', 'Published', d.date);
+      } else if (pg) item('file', 'Pages', pg);
+      if (d.date) item('calendar', 'Published', d.date);
       if (d.doi) {
         var a = el('a', 'ch-cdoi'); a.href = 'https://doi.org/' + d.doi; a.target = '_blank'; a.rel = 'noopener';
         a.appendChild(el('span', 'ch-doi-ico', 'doi')); a.appendChild(D.createTextNode(' ' + d.doi)); st.appendChild(a);
