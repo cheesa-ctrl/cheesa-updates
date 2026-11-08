@@ -328,7 +328,19 @@
       function item(ico, label, val) { var x = el('span'); x.appendChild(icon(ico)); x.appendChild(D.createTextNode(' ' + label + ' ')); x.appendChild(el('b', null, String(val))); st.appendChild(x); }
       item('fa-eye', 'Views', d.views || 0);
       item('fa-download', 'Downloads', d.downloads || 0);
-      if (pages && pages.textContent.trim()) item('fa-file-text-o', 'Pages', pages.textContent.trim());
+      // Pages tampil di samping label seksi (baris paling atas kartu); bila tidak ada seksi, tetap di deretan statistik
+      var pg = pages && pages.textContent.trim();
+      var secH = card.closest('.section') && card.closest('.section').querySelector(':scope > h2');
+      var secName = secH ? secH.textContent.replace(/\s+/g, ' ').trim() : '';
+      var oldPill = card.querySelector(':scope > .ch-pill');
+      if (!secName && oldPill) secName = oldPill.textContent.trim();
+      if (secName && !card.querySelector(':scope > .ch-card-top')) {
+        var top = el('div', 'ch-card-top');
+        top.appendChild(el('span', 'ch-sec-badge', secName));
+        if (pg) { var pb = el('span', 'ch-pages-badge'); pb.appendChild(icon('fa-file-text-o')); pb.appendChild(D.createTextNode(' Pages ')); pb.appendChild(el('b', null, pg)); top.appendChild(pb); }
+        card.insertBefore(top, title || card.firstChild);
+        card.classList.add('ch-has-top');
+      } else if (pg) item('fa-file-text-o', 'Pages', pg);
       if (d.date) item('fa-calendar-check-o', 'Published', d.date);
       if (d.doi) {
         var a = el('a', 'ch-cdoi'); a.href = 'https://doi.org/' + d.doi; a.target = '_blank'; a.rel = 'noopener';
