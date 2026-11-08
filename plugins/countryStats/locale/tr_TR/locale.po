@@ -1,0 +1,226 @@
+# Country Statistics Plugin - Turkish
+# Copyright (c) 2024 Country Statistics Plugin
+# Distributed under the GNU GPL v3.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: countryStats\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: tr_TR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# General
+msgid "plugins.generic.countryStats.displayName"
+msgstr "Country Statistics (Authors and Articles by Country)"
+
+msgid "plugins.generic.countryStats.description"
+msgstr "Yazar ve makalelerin ülkelere göre dağılımını interaktif panolar ve grafiklerle görüntüler. — <a href=\"https://ojs-services.com/\" target=\"_blank\">OJS Services</a>"
+
+msgid "plugins.generic.countryStats.menuTitle"
+msgstr "Ülke İstatistikleri"
+
+msgid "plugins.generic.countryStats.dashboard"
+msgstr "İstatistikleri Gör"
+
+# Dashboard
+msgid "plugins.generic.countryStats.dashboard.title"
+msgstr "Küresel Katkı Panosu"
+
+msgid "plugins.generic.countryStats.dashboard.publishedArticles"
+msgstr "Yayınlanan Makaleler"
+
+msgid "plugins.generic.countryStats.dashboard.uniqueAuthors"
+msgstr "Tekil Yazarlar"
+
+msgid "plugins.generic.countryStats.dashboard.countries"
+msgstr "Ülkeler"
+
+msgid "plugins.generic.countryStats.dashboard.topCountryShare"
+msgstr "En Yüksek Ülke Payı"
+
+msgid "plugins.generic.countryStats.dashboard.authorsByCountry"
+msgstr "Ülkelere Göre Yazarlar"
+
+msgid "plugins.generic.countryStats.dashboard.articlesByCountry"
+msgstr "Ülkelere Göre Makaleler"
+
+msgid "plugins.generic.countryStats.dashboard.topCountries"
+msgstr "Yazar Sayısına Göre İlk {$count} Ülke"
+
+msgid "plugins.generic.countryStats.dashboard.authorDistribution"
+msgstr "Yazar Dağılımı"
+
+msgid "plugins.generic.countryStats.dashboard.searchCountry"
+msgstr "Ülke ara..."
+
+msgid "plugins.generic.countryStats.dashboard.exportCSV"
+msgstr "CSV"
+
+msgid "plugins.generic.countryStats.dashboard.exportExcel"
+msgstr "Excel"
+
+msgid "plugins.generic.countryStats.dashboard.exportJSON"
+msgstr "JSON"
+
+msgid "plugins.generic.countryStats.dashboard.rank"
+msgstr "Sıra"
+
+msgid "plugins.generic.countryStats.dashboard.country"
+msgstr "Ülke"
+
+msgid "plugins.generic.countryStats.dashboard.authors"
+msgstr "Yazarlar"
+
+msgid "plugins.generic.countryStats.dashboard.articles"
+msgstr "Makaleler"
+
+msgid "plugins.generic.countryStats.dashboard.distribution"
+msgstr "Dağılım"
+
+msgid "plugins.generic.countryStats.dashboard.share"
+msgstr "Pay"
+
+msgid "plugins.generic.countryStats.dashboard.noData"
+msgstr "Seçilen filtreler için veri bulunamadı."
+
+# Data Notes
+msgid "plugins.generic.countryStats.note.uniqueBy"
+msgstr "Tekil yazarlar: {$strategy} ile belirlendi"
+
+msgid "plugins.generic.countryStats.note.publishedOnly"
+msgstr "Yalnızca yayınlanmış makaleler"
+
+msgid "plugins.generic.countryStats.note.articleCounting"
+msgstr "Bir makale, yazar listesindeki her ülke için +1 sayılır"
+
+# Filters
+msgid "plugins.generic.countryStats.filter.timeRange"
+msgstr "Zaman Aralığı"
+
+msgid "plugins.generic.countryStats.filter.allTime"
+msgstr "Tüm Zamanlar"
+
+msgid "plugins.generic.countryStats.filter.last12"
+msgstr "Son 12 Ay"
+
+msgid "plugins.generic.countryStats.filter.last24"
+msgstr "Son 24 Ay"
+
+msgid "plugins.generic.countryStats.filter.uniqueBy"
+msgstr "Tekillik"
+
+msgid "plugins.generic.countryStats.filter.orcid"
+msgstr "ORCID"
+
+msgid "plugins.generic.countryStats.filter.email"
+msgstr "E-posta"
+
+msgid "plugins.generic.countryStats.filter.fullName"
+msgstr "Ad Soyad"
+
+# Settings
+msgid "plugins.generic.countryStats.settings.scope"
+msgstr "Kapsam"
+
+msgid "plugins.generic.countryStats.settings.uniqueStrategy"
+msgstr "Tekil Yazar Stratejisi"
+
+msgid "plugins.generic.countryStats.settings.uniqueStrategy.desc"
+msgstr "Yazarları tekilleştirmek için kullanılacak yöntemi seçin."
+
+msgid "plugins.generic.countryStats.settings.orcidFallback"
+msgstr "ORCID Yedek Yöntemi"
+
+msgid "plugins.generic.countryStats.settings.orcidFallback.desc"
+msgstr "ORCID seçili iken ORCID'si olmayan yazarlar için yedek yöntem:"
+
+msgid "plugins.generic.countryStats.settings.orcidFallback.emailName"
+msgstr "E-posta, sonra Ad Soyad"
+
+msgid "plugins.generic.countryStats.settings.orcidFallback.email"
+msgstr "Yalnızca E-posta"
+
+msgid "plugins.generic.countryStats.settings.orcidFallback.name"
+msgstr "Yalnızca Ad Soyad"
+
+msgid "plugins.generic.countryStats.settings.orcidFallback.none"
+msgstr "Yoksay (ORCID'siz yazarları hariç tut)"
+
+msgid "plugins.generic.countryStats.settings.appearance"
+msgstr "Görünüm"
+
+msgid "plugins.generic.countryStats.settings.countryDisplay"
+msgstr "Ülke Gösterim Biçimi"
+
+msgid "plugins.generic.countryStats.settings.countryDisplay.code"
+msgstr "Yalnızca kod (TR)"
+
+msgid "plugins.generic.countryStats.settings.countryDisplay.name"
+msgstr "Yalnızca ad (Turkey)"
+
+msgid "plugins.generic.countryStats.settings.countryDisplay.both"
+msgstr "Her ikisi (TR \u2014 Turkey)"
+
+msgid "plugins.generic.countryStats.settings.sortOrder"
+msgstr "Varsayılan Sıralama"
+
+msgid "plugins.generic.countryStats.settings.sortOrder.countDesc"
+msgstr "Sayıya göre (büyükten küçüğe)"
+
+msgid "plugins.generic.countryStats.settings.sortOrder.nameAsc"
+msgstr "Ülke adına göre (A\u2192Z)"
+
+msgid "plugins.generic.countryStats.settings.minThreshold"
+msgstr "Minimum Eşik"
+
+msgid "plugins.generic.countryStats.settings.minThreshold.desc"
+msgstr "N'den az yazar/makaleye sahip ülkeleri gizle."
+
+msgid "plugins.generic.countryStats.settings.includeUnknown"
+msgstr "Bilinmeyen Ülkeyi Dahil Et"
+
+msgid "plugins.generic.countryStats.settings.includeUnknown.desc"
+msgstr "Ülke bilgisi olmayan yazarları/makaleleri \"Bilinmeyen\" olarak göster."
+
+msgid "plugins.generic.countryStats.settings.showAuthorsTab"
+msgstr "Yazarlar Sekmesini Göster"
+
+msgid "plugins.generic.countryStats.settings.showArticlesTab"
+msgstr "Makaleler Sekmesini Göster"
+
+msgid "plugins.generic.countryStats.settings.publicPage"
+msgstr "Herkese Açık Sayfa"
+
+msgid "plugins.generic.countryStats.settings.enablePublicPage"
+msgstr "Herkese Açık Sayfayı Etkinleştir"
+
+msgid "plugins.generic.countryStats.settings.enablePublicPage.desc"
+msgstr "Ziyaretçilere salt-okunur bir istatistik sayfası sun."
+
+msgid "plugins.generic.countryStats.settings.publicPageTitle"
+msgstr "Sayfa Başlığı"
+
+# Navigation Menu Item
+msgid "plugins.generic.countryStats.navMenuItem.title"
+msgstr "Ülke İstatistikleri"
+
+msgid "plugins.generic.countryStats.navMenuItem.description"
+msgstr "Yazar ve makalelerin coğrafi dağılımını gösteren herkese açık istatistik sayfasına bağlantı."
+
+# Settings - Public URL info
+msgid "plugins.generic.countryStats.settings.publicPageUrl"
+msgstr "Herkese Açık Sayfa URL"
+
+msgid "plugins.generic.countryStats.settings.publicPageUrl.desc"
+msgstr "Bu sayfayı önyüz navigasyonuna eklemek için: Website > Navigasyon Menüleri bölümünü kullanın."
+
+# Public Page
+msgid "plugins.generic.countryStats.public.defaultTitle"
+msgstr "Uluslararası Erişim"
+
+msgid "plugins.generic.countryStats.public.subtitle"
+msgstr "Yayınlanmış araştırma katkılarının coğrafi dağılımı"

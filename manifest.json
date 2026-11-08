@@ -18,6 +18,15 @@
             "size": 87767,
             "released": "2026-11-08"
         },
+        "countryStats": {
+            "category": "generic",
+            "label": "Country Stats",
+            "version": "1.0.0.0",
+            "file": "countryStats-1.0.0.0.tar.gz",
+            "sha256": "ea0d875305f91b1bbccff9151e976aca7adee6c09a317a0e18f7aa4dbee3c8cd",
+            "size": 273154,
+            "released": "2026-11-08"
+        },
         "crossmarkButton": {
             "category": "generic",
             "label": "Crossmark Button",
@@ -37,5 +46,5 @@
             "released": "2026-11-08"
         }
     },
-    "generated": "2026-11-08T07:11:09+00:00"
+    "generated": "2026-11-08T07:48:30+00:00"
 }

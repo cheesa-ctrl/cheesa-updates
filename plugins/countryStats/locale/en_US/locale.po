@@ -1,0 +1,226 @@
+# Country Statistics Plugin - English (US)
+# Copyright (c) 2024 Country Statistics Plugin
+# Distributed under the GNU GPL v3.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: countryStats\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# General
+msgid "plugins.generic.countryStats.displayName"
+msgstr "Country Statistics (Authors and Articles by Country)"
+
+msgid "plugins.generic.countryStats.description"
+msgstr "Displays geographic distribution of authors and articles across countries with interactive dashboards and charts. — <a href=\"https://ojs-services.com/\" target=\"_blank\">OJS Services</a>"
+
+msgid "plugins.generic.countryStats.menuTitle"
+msgstr "Country Statistics"
+
+msgid "plugins.generic.countryStats.dashboard"
+msgstr "View Statistics"
+
+# Dashboard
+msgid "plugins.generic.countryStats.dashboard.title"
+msgstr "Global Contribution Dashboard"
+
+msgid "plugins.generic.countryStats.dashboard.publishedArticles"
+msgstr "Published Articles"
+
+msgid "plugins.generic.countryStats.dashboard.uniqueAuthors"
+msgstr "Unique Authors"
+
+msgid "plugins.generic.countryStats.dashboard.countries"
+msgstr "Countries"
+
+msgid "plugins.generic.countryStats.dashboard.topCountryShare"
+msgstr "Top Country Share"
+
+msgid "plugins.generic.countryStats.dashboard.authorsByCountry"
+msgstr "Authors by Country"
+
+msgid "plugins.generic.countryStats.dashboard.articlesByCountry"
+msgstr "Articles by Country"
+
+msgid "plugins.generic.countryStats.dashboard.topCountries"
+msgstr "Top {$count} Countries by Authors"
+
+msgid "plugins.generic.countryStats.dashboard.authorDistribution"
+msgstr "Author Distribution"
+
+msgid "plugins.generic.countryStats.dashboard.searchCountry"
+msgstr "Search country..."
+
+msgid "plugins.generic.countryStats.dashboard.exportCSV"
+msgstr "CSV"
+
+msgid "plugins.generic.countryStats.dashboard.exportExcel"
+msgstr "Excel"
+
+msgid "plugins.generic.countryStats.dashboard.exportJSON"
+msgstr "JSON"
+
+msgid "plugins.generic.countryStats.dashboard.rank"
+msgstr "Rank"
+
+msgid "plugins.generic.countryStats.dashboard.country"
+msgstr "Country"
+
+msgid "plugins.generic.countryStats.dashboard.authors"
+msgstr "Authors"
+
+msgid "plugins.generic.countryStats.dashboard.articles"
+msgstr "Articles"
+
+msgid "plugins.generic.countryStats.dashboard.distribution"
+msgstr "Distribution"
+
+msgid "plugins.generic.countryStats.dashboard.share"
+msgstr "Share"
+
+msgid "plugins.generic.countryStats.dashboard.noData"
+msgstr "No data available for the selected filters."
+
+# Data Notes
+msgid "plugins.generic.countryStats.note.uniqueBy"
+msgstr "Unique authors by {$strategy}"
+
+msgid "plugins.generic.countryStats.note.publishedOnly"
+msgstr "Published articles only"
+
+msgid "plugins.generic.countryStats.note.articleCounting"
+msgstr "An article counts +1 per represented country"
+
+# Filters
+msgid "plugins.generic.countryStats.filter.timeRange"
+msgstr "Time Range"
+
+msgid "plugins.generic.countryStats.filter.allTime"
+msgstr "All Time"
+
+msgid "plugins.generic.countryStats.filter.last12"
+msgstr "Last 12 Months"
+
+msgid "plugins.generic.countryStats.filter.last24"
+msgstr "Last 24 Months"
+
+msgid "plugins.generic.countryStats.filter.uniqueBy"
+msgstr "Unique by"
+
+msgid "plugins.generic.countryStats.filter.orcid"
+msgstr "ORCID"
+
+msgid "plugins.generic.countryStats.filter.email"
+msgstr "Email"
+
+msgid "plugins.generic.countryStats.filter.fullName"
+msgstr "Full Name"
+
+# Settings
+msgid "plugins.generic.countryStats.settings.scope"
+msgstr "Scope"
+
+msgid "plugins.generic.countryStats.settings.uniqueStrategy"
+msgstr "Unique Author Strategy"
+
+msgid "plugins.generic.countryStats.settings.uniqueStrategy.desc"
+msgstr "Choose how to identify unique authors for deduplication."
+
+msgid "plugins.generic.countryStats.settings.orcidFallback"
+msgstr "ORCID Fallback"
+
+msgid "plugins.generic.countryStats.settings.orcidFallback.desc"
+msgstr "When ORCID is selected but an author has no ORCID, fall back to:"
+
+msgid "plugins.generic.countryStats.settings.orcidFallback.emailName"
+msgstr "Email, then Name"
+
+msgid "plugins.generic.countryStats.settings.orcidFallback.email"
+msgstr "Email only"
+
+msgid "plugins.generic.countryStats.settings.orcidFallback.name"
+msgstr "Name only"
+
+msgid "plugins.generic.countryStats.settings.orcidFallback.none"
+msgstr "Ignore (exclude authors without ORCID)"
+
+msgid "plugins.generic.countryStats.settings.appearance"
+msgstr "Appearance"
+
+msgid "plugins.generic.countryStats.settings.countryDisplay"
+msgstr "Country Display Format"
+
+msgid "plugins.generic.countryStats.settings.countryDisplay.code"
+msgstr "Code only (TR)"
+
+msgid "plugins.generic.countryStats.settings.countryDisplay.name"
+msgstr "Name only (Turkey)"
+
+msgid "plugins.generic.countryStats.settings.countryDisplay.both"
+msgstr "Both (TR \u2014 Turkey)"
+
+msgid "plugins.generic.countryStats.settings.sortOrder"
+msgstr "Default Sort Order"
+
+msgid "plugins.generic.countryStats.settings.sortOrder.countDesc"
+msgstr "Count (high to low)"
+
+msgid "plugins.generic.countryStats.settings.sortOrder.nameAsc"
+msgstr "Country name (A\u2192Z)"
+
+msgid "plugins.generic.countryStats.settings.minThreshold"
+msgstr "Minimum Threshold"
+
+msgid "plugins.generic.countryStats.settings.minThreshold.desc"
+msgstr "Hide countries with fewer than N authors/articles."
+
+msgid "plugins.generic.countryStats.settings.includeUnknown"
+msgstr "Include Unknown Country"
+
+msgid "plugins.generic.countryStats.settings.includeUnknown.desc"
+msgstr "Show authors/articles with no country data as \"Unknown\"."
+
+msgid "plugins.generic.countryStats.settings.showAuthorsTab"
+msgstr "Show Authors Tab"
+
+msgid "plugins.generic.countryStats.settings.showArticlesTab"
+msgstr "Show Articles Tab"
+
+msgid "plugins.generic.countryStats.settings.publicPage"
+msgstr "Public Page"
+
+msgid "plugins.generic.countryStats.settings.enablePublicPage"
+msgstr "Enable Public Page"
+
+msgid "plugins.generic.countryStats.settings.enablePublicPage.desc"
+msgstr "Make a read-only statistics page available to site visitors."
+
+msgid "plugins.generic.countryStats.settings.publicPageTitle"
+msgstr "Public Page Title"
+
+# Navigation Menu Item
+msgid "plugins.generic.countryStats.navMenuItem.title"
+msgstr "Country Statistics"
+
+msgid "plugins.generic.countryStats.navMenuItem.description"
+msgstr "Link to the public Country Statistics page showing geographic distribution of authors and articles."
+
+# Settings - Public URL info
+msgid "plugins.generic.countryStats.settings.publicPageUrl"
+msgstr "Public Page URL"
+
+msgid "plugins.generic.countryStats.settings.publicPageUrl.desc"
+msgstr "Add this page to the frontend navigation via Website > Navigation Menus."
+
+# Public Page
+msgid "plugins.generic.countryStats.public.defaultTitle"
+msgstr "International Reach"
+
+msgid "plugins.generic.countryStats.public.subtitle"
+msgstr "Geographic distribution of published research contributions"
