@@ -1151,3 +1151,20 @@
   --nv-accent: var(--nv-accent-base, #ed991f);
   --nv-on-accent: var(--nv-on-accent-base, #1a1300);
 }
+
+/* v1.7.0 — warna bagian header dari Appearance > Theme (masing-masing bisa dipilih sendiri) */
+:root body .ch-issn a b, :root body .ch-issn > a b { color: var(--nv-issn, #fff) !important; }
+:root body .pkp_navigation_primary_row .pkp_navigation_primary_wrapper > ul > li > a .ch-nav-ico,
+:root body .pkp_navigation_primary_row .pkp_navigation_primary_wrapper > ul > li > a > .fa:first-child { color: var(--nv-mico, #fff) !important; }
+:root body .ch-user-menu a.ch-user-login,
+:root body .ch-user-btn {
+  background: var(--nv-login-bg, #fff) !important; border-color: var(--nv-login-bg, #fff) !important; color: var(--nv-login-fg, #111) !important;
+}
+:root body .ch-user-menu a.ch-user-login .fa, :root body .ch-user-btn .fa { color: var(--nv-login-fg, #111) !important; }
+:root body .ch-user-menu a.ch-user-login:hover, :root body .ch-user-btn:hover,
+:root body .ch-user-drop.is-open > .ch-user-btn { filter: brightness(.9); }
+:root body .ch-search button { background: var(--nv-search-bg, #1e88e5) !important; border-color: var(--nv-search-bg, #1e88e5) !important; color: var(--nv-search-fg, #fff) !important; }
+:root body .ch-search button .fa { color: var(--nv-search-fg, #fff) !important; }
+:root body .ch-search button:hover { filter: brightness(1.1); }
+:root body .pkp_navigation_primary_row { border-bottom-color: var(--nv-menu-line, #1e88e5) !important; }
+:root body .pkp_navigation_primary_row .pkp_navigation_primary_wrapper > ul > li > a::after { background: var(--nv-menu-line, #1e88e5) !important; }

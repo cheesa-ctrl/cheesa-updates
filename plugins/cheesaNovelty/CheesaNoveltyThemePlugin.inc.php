@@ -51,8 +51,36 @@ class CheesaNoveltyThemePlugin extends ThemePlugin {
 		]);
 		$this->addOption('chHeaderAccent', 'FieldColor', [
 			'label' => 'Warna sorotan header & menu (di atas navy)',
-			'description' => 'Angka ISSN, ikon menu, hover menu, tombol Login/pengguna, tombol Search, dan pita judul artikel. Bila warnanya terlalu gelap di atas warna utama, otomatis dipakai versi lebih terang dari warna yang sama agar tetap terlihat.',
+			'description' => 'Sorotan lain di atas latar navy: pita judul artikel & halaman, footer, tombol Register (dropdown), dan hover. Bila terlalu gelap di atas warna utama, otomatis dipakai versi lebih terang dari warna yang sama.',
 			'default' => '#ed991f',
+		]);
+		/* --- warna bagian header (masing-masing bisa dipilih sendiri) --- */
+		$this->addOption('chIssnColor', 'FieldColor', [
+			'label' => 'Header: angka ISSN',
+			'description' => 'Warna angka pada kapsul Online ISSN / Print ISSN di kanan atas.',
+			'default' => '#ffffff',
+		]);
+		$this->addOption('chMenuIconColor', 'FieldColor', [
+			'label' => 'Header: ikon menu',
+			'description' => 'Warna ikon di depan Home, Issue, Editorial Team, dan menu lainnya.',
+			'default' => '#ffffff',
+		]);
+		$this->addOption('chLoginBg', 'FieldColor', [
+			'label' => 'Header: tombol Login / nama pengguna (latar)',
+			'default' => '#ffffff',
+		]);
+		$this->addOption('chLoginText', 'FieldColor', [
+			'label' => 'Header: tombol Login / nama pengguna (tulisan & ikon)',
+			'default' => '#111111',
+		]);
+		$this->addOption('chSearchBg', 'FieldColor', [
+			'label' => 'Header: tombol Search',
+			'description' => 'Warna tulisan tombol dipilih otomatis (putih/gelap) supaya terbaca.',
+			'default' => '#1e88e5',
+		]);
+		$this->addOption('chMenuLine', 'FieldColor', [
+			'label' => 'Header: garis bawah menu & penanda menu aktif',
+			'default' => '#1e88e5',
 		]);
 		$this->addOption('chLeftBlocks', 'FieldText', [
 			'label' => 'Blok kolom KIRI (beranda)',
@@ -159,7 +187,14 @@ class CheesaNoveltyThemePlugin extends ThemePlugin {
 		// dipakai versi lebih terang dari warna yang SAMA (mis. biru -> biru muda) supaya ISSN, ikon & tombol terlihat
 		$hl = $this->_lighten($this->_color($this->getOption('chHeaderAccent'), '#ed991f'), $navy, 4.5);
 		$this->addStyle('cheesa-vars', ':root{--nv-navy:' . $navy . ';--nv-accent:' . $accent . ';--nv-on-accent:' . $this->_onColor($accent)
-			. ';--nv-accent-base:' . $accent . ';--nv-on-accent-base:' . $this->_onColor($accent) . ';--nv-hl:' . $hl . ';--nv-on-hl:' . $this->_onColor($hl) . ';}', ['inline' => true]);
+			. ';--nv-accent-base:' . $accent . ';--nv-on-accent-base:' . $this->_onColor($accent) . ';--nv-issn:' . $this->_color($this->getOption('chIssnColor'), '#ffffff')
+			. ';--nv-mico:' . $this->_color($this->getOption('chMenuIconColor'), '#ffffff')
+			. ';--nv-login-bg:' . $this->_color($this->getOption('chLoginBg'), '#ffffff')
+			. ';--nv-login-fg:' . $this->_color($this->getOption('chLoginText'), '#111111')
+			. ';--nv-search-bg:' . ($sb = $this->_color($this->getOption('chSearchBg'), '#1e88e5'))
+			. ';--nv-search-fg:' . $this->_onColor($sb)
+			. ';--nv-menu-line:' . $this->_color($this->getOption('chMenuLine'), '#1e88e5')
+			. ';--nv-hl:' . $hl . ';--nv-on-hl:' . $this->_onColor($hl) . ';}', ['inline' => true]);
 		if ($this->getOption('chHomeArticles') === 'off') {
 			$this->addStyle('cheesa-hide-home-articles', ':root body .page_index_journal .current_issue .sections{display:none!important}', ['inline' => true]);
 		}
