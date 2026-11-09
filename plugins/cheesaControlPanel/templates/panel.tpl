@@ -22,7 +22,7 @@
 {if $cpMsg}<div class="cp-msg">{$cpMsg|escape}</div>{/if}
 {if $cpErr}<div class="cp-err">{$cpErr|escape}</div>{/if}
 {if $cpProblems}<div class="cp-warn"><strong>Update belum bisa dijalankan:</strong><br>{foreach from=$cpProblems item=p}{$p|escape}<br>{/foreach}</div>{/if}
-{if !$cpAdmin}<div class="cp-warn">Anda bisa melihat versi, tetapi hanya Site Administrator yang dapat memasang update.</div>{/if}
+{if !$cpAdmin}<div class="cp-warn">Anda bisa melihat versi, tetapi hanya Site Administrator atau Journal Manager/Editor yang dapat memasang update.</div>{/if}
 
 <table>
 	<thead><tr><th>Paket</th><th>Terpasang</th><th>Tersedia</th><th></th></tr></thead>

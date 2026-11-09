@@ -7,7 +7,8 @@
  * Memperbarui CHEESA Theme, Journal Widgets, Crossmark Button, dan panel ini sendiri langsung dari OJS,
  * tanpa mengunggah ulang plugin. Paket diambil dari manifest bertanda tangan digital (mis. di GitHub).
  *
- * Melihat daftar: Journal Manager & Site Admin. Menjalankan update / rollback: hanya Site Admin
+ * Melihat daftar, memasang update / plugin baru, dan rollback: Site Admin serta Journal Manager / Journal Editor
+ * jurnal ini. Hanya paket bertanda tangan kunci CHEESA yang bisa dipasang. Link pemulihan darurat: hanya Site Admin.
  * (karena mengganti kode di server).
  */
 
@@ -168,7 +169,10 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 		}
 
 		$cid = $this->contextId($request);
-		$isAdmin = Validation::isSiteAdmin();
+		$siteAdmin = Validation::isSiteAdmin();
+		$user = $request->getUser();
+		// boleh memasang: Site Admin, atau Journal Manager / Journal Editor (peran manager) di jurnal ini
+		$isAdmin = $siteAdmin || ($user && $cid && $user->hasRole([ROLE_ID_MANAGER], $cid));
 		$msg = ''; $err = '';
 
 		if ($verb !== 'panel') {
@@ -182,7 +186,7 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 					elseif ($tok !== '') $this->updateSetting($cid, 'githubToken', $tok, 'string');
 					$this->updateSetting($cid, 'manifestUrl', $url === self::DEFAULT_MANIFEST ? '' : $url, 'string'); $msg = $url === '' ? 'Alamat update dikembalikan ke bawaan.' : 'Alamat update disimpan.'; }
 			} elseif (!$isAdmin) {
-				$err = 'Hanya Site Administrator yang boleh memasang update.';
+				$err = 'Hanya Site Administrator atau Journal Manager/Editor jurnal ini yang boleh memasang update.';
 			}
 		}
 
@@ -237,7 +241,7 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 			'cpErr' => $err,
 			'cpAdmin' => $isAdmin,
 			'cpProblems' => $problems,
-			'cpRecovery' => $isAdmin ? $this->recoveryUrl($request) : '',
+			'cpRecovery' => $siteAdmin ? $this->recoveryUrl($request) : '',
 			'cpGenerated' => $manifest && isset($manifest['generated']) ? $manifest['generated'] : '',
 			'cpAction' => $request->getRouter()->url($request, null, null, 'manage', null, ['plugin' => $this->getName(), 'category' => 'generic']),
 		]);
