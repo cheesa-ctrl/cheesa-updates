@@ -1020,7 +1020,7 @@
 :root body .ch-hero-kick { align-items: center; }
 :root body .ch-hero-kick .ch-cmk { margin: 0 0 0 auto !important; }
 :root body .ch-hero-kick .ch-cmk .cmk-button { display: inline-block; padding: 4px 8px; border-radius: 8px; background: #fff; line-height: 0; }
-:root body .ch-hero-kick .ch-cmk img { width: 140px; height: auto; }
+:root body .ch-hero-kick .ch-cmk img { width: auto !important; height: 30px !important; max-width: 170px !important; object-fit: contain; }
 :root body .ch-meta-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 0 10px; border-top: 1px solid var(--nv-line); margin-top: 4px; padding-top: 4px; }
 :root body .ch-meta-stats .ch-m-cite { grid-column: 1 / -1; }
 :root body .ch-meta-stats .ch-meta-item > .fa { width: 28px; text-align: center; font-size: 18px; color: var(--nv-navy); }
@@ -1188,3 +1188,7 @@
   :root body .ch-sl-slide { padding: 18px 18px 62px !important; }
 }
 
+
+/* v1.8.2 — tombol Crossmark tetap kecil di mana pun posisinya (logo horizontal maupun kotak) */
+:root body .obj_article_details .cmk-wrap img { width: auto !important; height: 30px !important; max-width: 170px !important; object-fit: contain; }
+:root body .obj_article_details .cmk-wrap .cmk-button { display: inline-block; line-height: 0; }

@@ -35,6 +35,15 @@ class CheesaNoveltyThemePlugin extends ThemePlugin {
 
 	public function init() {
 		$this->setParent('defaultthemeplugin');
+		// Bila "Default Theme" dinonaktifkan di daftar plugin, OJS diam-diam tidak memuat tema induk
+		// (gaya dasar, ikon, menu hilang). Muat langsung supaya tampilan tidak rusak.
+		if (empty($this->parent)) {
+			$default = PluginRegistry::loadPlugin('themes', 'default');
+			if (is_a($default, 'ThemePlugin')) {
+				$this->parent = $default;
+				$default->init();
+			}
+		}
 		// Lisensi: di domain/jurnal lain tema ini tampil seperti tema bawaan OJS (tanpa gaya & fitur CHEESA).
 		if ($this->license()) return;
 
