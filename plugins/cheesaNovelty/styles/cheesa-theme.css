@@ -1168,3 +1168,22 @@
 :root body .ch-search button:hover { filter: brightness(1.1); }
 :root body .pkp_navigation_primary_row { border-bottom-color: var(--nv-menu-line, #1e88e5) !important; }
 :root body .pkp_navigation_primary_row .pkp_navigation_primary_wrapper > ul > li > a::after { background: var(--nv-menu-line, #1e88e5) !important; }
+
+/* v1.8.0 — slider pengumuman: tidak melebar keluar kartu, tombol di baris bawah (tidak menutupi teks) */
+:root body .page_index_journal .cmp_announcements.ch-sl-on {
+  margin-left: 0 !important; margin-right: 0 !important; padding: 0 !important; border: 0 !important; background: transparent !important;
+}
+:root body .ch-sl { margin: 0 0 8px !important; width: auto !important; max-width: 100% !important; }
+:root body .ch-sl-slide { padding: 26px 34px 66px !important; }
+:root body .ch-sl-btn {
+  top: auto !important; bottom: 12px !important; transform: none !important; display: inline-flex !important; align-items: center; justify-content: center;
+  width: 34px !important; height: 34px !important; font-size: 18px !important; z-index: 2;
+  background: var(--nv-navy) !important; color: #fff !important; opacity: .9;
+}
+:root body .ch-sl-prev { left: 18px !important; right: auto !important; }
+:root body .ch-sl-next { right: 18px !important; left: auto !important; }
+:root body .ch-sl-dots { bottom: 24px !important; }
+:root body .ch-sl-dot.on { background: var(--nv-navy) !important; }
+@media (max-width: 600px) {
+  :root body .ch-sl-slide { padding: 18px 18px 62px !important; }
+}

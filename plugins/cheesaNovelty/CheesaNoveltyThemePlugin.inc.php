@@ -54,6 +54,15 @@ class CheesaNoveltyThemePlugin extends ThemePlugin {
 			'description' => 'Sorotan lain di atas latar navy: pita judul artikel & halaman, footer, tombol Register (dropdown), dan hover. Bila terlalu gelap di atas warna utama, otomatis dipakai versi lebih terang dari warna yang sama.',
 			'default' => '#ed991f',
 		]);
+		$this->addOption('chLayout', 'FieldOptions', [
+			'type' => 'radio',
+			'label' => 'Lebar halaman',
+			'options' => [
+				['value' => 'full', 'label' => 'Penuh (header & isi selebar layar)'],
+				['value' => 'boxed', 'label' => 'Kotak (maksimal 1160px, bawaan OJS)'],
+			],
+			'default' => 'full',
+		]);
 		/* --- warna bagian header (masing-masing bisa dipilih sendiri) --- */
 		$this->addOption('chIssnColor', 'FieldColor', [
 			'label' => 'Header: angka ISSN',
@@ -186,6 +195,9 @@ class CheesaNoveltyThemePlugin extends ThemePlugin {
 		// warna pilihan pengelola tetap dipakai; bila terlalu gelap di atas warna utama,
 		// dipakai versi lebih terang dari warna yang SAMA (mis. biru -> biru muda) supaya ISSN, ikon & tombol terlihat
 		$hl = $this->_lighten($this->_color($this->getOption('chHeaderAccent'), '#ed991f'), $navy, 4.5);
+		if ($this->getOption('chLayout') !== 'boxed') {
+			$this->addStyle('cheesa-full', ':root body .pkp_structure_page{max-width:none!important;width:100%!important}', ['inline' => true]);
+		}
 		$this->addStyle('cheesa-vars', ':root{--nv-navy:' . $navy . ';--nv-accent:' . $accent . ';--nv-on-accent:' . $this->_onColor($accent)
 			. ';--nv-accent-base:' . $accent . ';--nv-on-accent-base:' . $this->_onColor($accent) . ';--nv-issn:' . $this->_color($this->getOption('chIssnColor'), '#ffffff')
 			. ';--nv-mico:' . $this->_color($this->getOption('chMenuIconColor'), '#ffffff')
