@@ -3,11 +3,11 @@
         "cheesaControlPanel": {
             "category": "generic",
             "label": "CHEESA Control Panel",
-            "version": "1.1.0.0",
-            "file": "cheesaControlPanel-1.1.0.0.tar.gz",
-            "sha256": "078f28d5bfaa233fdbce16abf72deb95ed0ee4ab2c0135bbe2deba671a944c2b",
-            "size": 14744,
-            "released": "2026-11-08"
+            "version": "1.2.0.0",
+            "file": "cheesaControlPanel-1.2.0.0.tar.gz",
+            "sha256": "cb894a624471f79fa9ff6f36d5be5bb57d1665dc9bc9303433403913311a43af",
+            "size": 15287,
+            "released": "2026-11-09"
         },
         "cheesaNovelty": {
             "category": "themes",
@@ -46,5 +46,5 @@
             "released": "2026-11-08"
         }
     },
-    "generated": "2026-11-08T21:47:05+00:00"
+    "generated": "2026-11-09T03:35:37+00:00"
 }
