@@ -144,6 +144,11 @@ class CheesaNoveltyThemePlugin extends ThemePlugin {
 			'description' => 'Kosongkan untuk memakai halaman /rolereg.',
 			'default' => '',
 		]);
+		$this->addOption('chRegisterMenu', 'FieldTextarea', [
+			'label' => 'Tombol Register di header (untuk pengunjung yang belum login)',
+			'description' => 'Baris pertama: Teks|URL tombol. Baris berikutnya yang diawali tanda minus (-) menjadi isi dropdown, mis. "- Author|https://..." dan "- Editor/Reviewer|https://...". Kosongkan untuk memakai menu pengguna OJS saja. Bila menu pengguna OJS sudah punya item Register, isian ini tidak dipakai (tidak dobel).',
+			'default' => "Register|https://journal-ft.unipma.ac.id/cheesa/auth-reg",
+		]);
 		$this->addOption('chSocial', 'FieldTextarea', [
 			'label' => 'Media sosial (panel tombol cepat)',
 			'description' => 'Satu baris per akun: Nama|URL. Nama yang dikenali: Instagram, Whatsapp, Facebook, Twitter, X, Youtube, Linkedin, Telegram, Email.',
@@ -196,7 +201,8 @@ class CheesaNoveltyThemePlugin extends ThemePlugin {
 		// dipakai versi lebih terang dari warna yang SAMA (mis. biru -> biru muda) supaya ISSN, ikon & tombol terlihat
 		$hl = $this->_lighten($this->_color($this->getOption('chHeaderAccent'), '#ed991f'), $navy, 4.5);
 		if ($this->getOption('chLayout') !== 'boxed') {
-			$this->addStyle('cheesa-full', ':root body .pkp_structure_page{max-width:none!important;width:100%!important}', ['inline' => true]);
+			$this->addStyle('cheesa-full', ':root body .pkp_structure_page{max-width:none!important;width:100%!important}'
+				. '@media (min-width:992px){:root body .pkp_structure_head .pkp_head_wrapper,:root body .pkp_structure_content,:root body .pkp_structure_footer{width:auto!important;max-width:none!important;margin-left:clamp(16px,4vw,80px)!important;margin-right:clamp(16px,4vw,80px)!important}}', ['inline' => true]);
 		}
 		$this->addStyle('cheesa-vars', ':root{--nv-navy:' . $navy . ';--nv-accent:' . $accent . ';--nv-on-accent:' . $this->_onColor($accent)
 			. ';--nv-accent-base:' . $accent . ';--nv-on-accent-base:' . $this->_onColor($accent) . ';--nv-issn:' . $this->_color($this->getOption('chIssnColor'), '#ffffff')
@@ -218,6 +224,7 @@ class CheesaNoveltyThemePlugin extends ThemePlugin {
 			'submitUrl' => trim((string) $this->getOption('chSubmitUrl')),
 			'reviewerUrl' => trim((string) $this->getOption('chReviewerUrl')),
 			'social' => $this->_lines($this->getOption('chSocial'), 2),
+			'regMenu' => $this->_regMenu($this->getOption('chRegisterMenu')),
 			'indexing' => $this->_lines($this->getOption('chIndexing'), 3),
 			'upcoming' => $this->getOption('chUpcoming') !== 'off',
 			'sidebarPages' => $this->_rules($this->getOption('chSidebarPages')),
@@ -547,6 +554,23 @@ class CheesaNoveltyThemePlugin extends ThemePlugin {
 	private function _readable($c, $bg) {
 		foreach ([$c, '#ed991f', '#ffd27a', '#ffffff'] as $x) if ($this->_contrast($x, $bg) >= 3) return $x;
 		return '#ffffff';
+	}
+
+	/** "Teks|URL" + baris "- Sub|URL" -> [teks, url, [[sub, url], ...]] */
+	private function _regMenu($v) {
+		$main = null; $kids = [];
+		foreach (preg_split('/\r\n|\r|\n/', (string) $v) as $line) {
+			$line = trim($line);
+			if ($line === '' || strpos($line, '|') === false) continue;
+			$isKid = $line[0] === '-';
+			list($t, $u) = array_map('trim', explode('|', ltrim($line, "- \t"), 2));
+			if ($t === '' || !preg_match('#^(https?://|/)#i', $u)) continue;
+			if ($isKid && $main) $kids[] = [$t, $u];
+			elseif (!$isKid && !$main) $main = [$t, $u];
+		}
+		if (!$main) return null;
+		if ($kids) $main[] = $kids;
+		return $main;
 	}
 
 	private function _color($v, $fallback) {

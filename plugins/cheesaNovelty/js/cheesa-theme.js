@@ -472,6 +472,13 @@
     if (u) {
       var fromMenu = ojsUserLinks(!!u.name);
       if (fromMenu) u = { name: u.name, links: fromMenu };
+      // Tombol Register dari pengaturan tema (Appearance > Theme), bila menu OJS belum punya item Register
+      if (!u.name && CFG.regMenu) {
+        var isReg = function (l) { return /regist|daftar|auth-reg|sign ?up/i.test(l[0] + ' ' + l[1]); };
+        var links = (u.links || []).filter(function (l) { return !(isReg(l) && !l[2] && /\/user\/register\b/.test(l[1])); }); // buang Register bawaan OJS (pendaftaran ditutup)
+        if (!links.some(isReg)) links.unshift(CFG.regMenu);
+        u = { name: '', links: links };
+      }
     }
     var bar = el('div', 'ch-userbar');
     if (u && u.links && u.links.length) {
