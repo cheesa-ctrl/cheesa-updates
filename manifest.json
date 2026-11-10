@@ -9,13 +9,22 @@
             "size": 15287,
             "released": "2026-11-09"
         },
+        "cheesaFullText": {
+            "category": "generic",
+            "label": "Cheesa Full Text",
+            "version": "1.0.1.0",
+            "file": "cheesaFullText-1.0.1.0.tar.gz",
+            "sha256": "3ec5d7c84a883da0d1b3705ffcbe50bacdf58882394edfb48b471c31703f4f26",
+            "size": 18720,
+            "released": "2026-11-10"
+        },
         "cheesaNovelty": {
             "category": "themes",
             "label": "CHEESA Theme",
-            "version": "1.9.2.0",
-            "file": "cheesaNovelty-1.9.2.0.tar.gz",
-            "sha256": "79fe658b7839282b511a87b91eb4ff08ecf01ac67319badaae328d0f9983582a",
-            "size": 93865,
+            "version": "1.9.3.0",
+            "file": "cheesaNovelty-1.9.3.0.tar.gz",
+            "sha256": "a072ca49e712813dd1a91cb8045987f2c815ac309b6b719c331fb1e9fc061a1d",
+            "size": 94014,
             "released": "2026-11-10"
         },
         "countryStats": {
@@ -30,21 +39,21 @@
         "crossmarkButton": {
             "category": "generic",
             "label": "Crossmark Button",
-            "version": "1.0.2.0",
-            "file": "crossmarkButton-1.0.2.0.tar.gz",
-            "sha256": "2d170ff9021f827a2e8f660c9ade4c9fdabc65552e56c3857335a4a34f878b50",
-            "size": 7587,
-            "released": "2026-11-08"
+            "version": "1.0.3.0",
+            "file": "crossmarkButton-1.0.3.0.tar.gz",
+            "sha256": "611c50753e97c4ff2f6c5bee7721cf68e9ce2e635a9731f1c2cac3c3673863c4",
+            "size": 7642,
+            "released": "2026-11-10"
         },
         "journalWidgets": {
             "category": "generic",
             "label": "Journal Portal Widgets",
-            "version": "1.2.0.0",
-            "file": "journalWidgets-1.2.0.0.tar.gz",
-            "sha256": "5690413eeced0acd2775f355a998fe3adef7d1f07afed1e99dc0ea2a9411c4e3",
-            "size": 21050,
-            "released": "2026-11-08"
+            "version": "1.2.1.0",
+            "file": "journalWidgets-1.2.1.0.tar.gz",
+            "sha256": "213966e120c302b66e168ee0d9ebd101caf5384f0f2f38d1e4f26fc1711af947",
+            "size": 21135,
+            "released": "2026-11-10"
         }
     },
-    "generated": "2026-11-10T03:37:42+00:00"
+    "generated": "2026-11-10T03:52:57+00:00"
 }
