@@ -12,10 +12,10 @@
         "cheesaNovelty": {
             "category": "themes",
             "label": "CHEESA Theme",
-            "version": "1.9.1.0",
-            "file": "cheesaNovelty-1.9.1.0.tar.gz",
-            "sha256": "a9fd0e75e778e49ea8da3daf0d07748d49fb205ac5b095d36f383db61b9ec59e",
-            "size": 93358,
+            "version": "1.9.2.0",
+            "file": "cheesaNovelty-1.9.2.0.tar.gz",
+            "sha256": "79fe658b7839282b511a87b91eb4ff08ecf01ac67319badaae328d0f9983582a",
+            "size": 93865,
             "released": "2026-11-10"
         },
         "countryStats": {
@@ -46,5 +46,5 @@
             "released": "2026-11-08"
         }
     },
-    "generated": "2026-11-10T03:32:00+00:00"
+    "generated": "2026-11-10T03:37:42+00:00"
 }
