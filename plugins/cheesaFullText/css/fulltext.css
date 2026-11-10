@@ -1,0 +1,124 @@
+/* __________________________________________________________________________
+   CHEESA Full Text — teks lengkap dari JATS XML
+   Warna mengikuti CHEESA Theme (--nv-navy, --nv-accent-base); tetap rapi di tema lain.
+   __________________________________________________________________________ */
+
+.cft {
+  --cft-navy: var(--nv-navy, #030271);
+  --cft-accent: var(--nv-accent-base, var(--nv-accent, #ed991f));
+  --cft-line: #e3e6ef;
+  --cft-muted: #5b6178;
+  --cft-size: 1rem;
+  font-size: var(--cft-size);
+  color: #1d2140;
+}
+
+/* ---------- alat: statistik, ukuran huruf, buka tampilan baca ---------- */
+.cft-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 14px;
+  margin: 0 0 14px; padding: 8px 12px; border: 1px solid var(--cft-line); border-radius: 10px; background: #f7f8fc; font: 500 .82rem/1.4 Inter, system-ui, sans-serif; }
+.cft-stats { color: var(--cft-muted); }
+.cft-tools-r { display: inline-flex; align-items: center; gap: 6px; }
+.cft-size { min-width: 34px; height: 30px; padding: 0 8px; border: 1px solid var(--cft-line); border-radius: 6px; background: #fff; color: var(--cft-navy); font: 700 .8rem Inter, system-ui, sans-serif; cursor: pointer; }
+.cft-size:hover, .cft-size:focus-visible { border-color: var(--cft-navy); }
+.cft-open { margin-left: 4px; padding: 6px 10px; border-radius: 6px; background: var(--cft-navy); color: #fff !important; text-decoration: none !important; font-weight: 700; }
+.cft-open:hover { filter: brightness(1.15); }
+
+/* ---------- daftar isi ---------- */
+.cft-toc { margin: 0 0 18px; padding: 12px 16px; border: 1px solid var(--cft-line); border-left: 4px solid var(--cft-accent); border-radius: 10px; background: #fff; }
+.cft-toc-h { margin: 0 0 6px !important; font: 800 .78rem Inter, system-ui, sans-serif; letter-spacing: .06em; text-transform: uppercase; color: var(--cft-navy); }
+.cft-toc ol { margin: 0; padding: 0; list-style: none; columns: 2 220px; column-gap: 24px; }
+.cft-toc li { margin: 0; padding: 3px 0; break-inside: avoid; font: 500 .86rem/1.4 Inter, system-ui, sans-serif; }
+.cft-toc li.cft-toc-l3 { padding-left: 14px; font-size: .8rem; }
+.cft-toc a { color: #2a2f4d !important; text-decoration: none !important; border-bottom: 1px solid transparent; }
+.cft-toc a:hover, .cft-toc a.is-active { color: var(--cft-navy) !important; border-bottom-color: var(--cft-accent); }
+.cft-toc a.is-active { font-weight: 700; }
+
+/* ---------- teks ---------- */
+.cft-text { line-height: 1.75; text-align: justify; hyphens: auto; }
+.cft-text h2, .cft-text h3, .cft-text h4, .cft-text h5 { font-family: Inter, system-ui, sans-serif; color: var(--cft-navy); text-align: left; line-height: 1.3; scroll-margin-top: 90px; }
+.cft-text h2 { margin: 1.8em 0 .6em; padding-bottom: .3em; font-size: 1.3em; border-bottom: 2px solid var(--cft-line); }
+.cft-text h3 { margin: 1.4em 0 .5em; font-size: 1.12em; }
+.cft-text h4, .cft-text h5 { margin: 1.2em 0 .4em; font-size: 1em; }
+.cft-text section:first-child > h2 { margin-top: .4em; }
+.cft-num { color: var(--cft-accent); margin-right: .2em; }
+.cft-text p { margin: 0 0 .9em; }
+.cft-text ul, .cft-text ol { margin: 0 0 1em 1.4em; padding: 0; }
+.cft-text li { margin: .2em 0; }
+.cft-text a { color: var(--cft-navy); }
+.cft-text blockquote { margin: 1em 0; padding: .6em 1em; border-left: 4px solid var(--cft-accent); background: #f7f8fc; }
+.cft-box { margin: 1.2em 0; padding: 1em 1.2em; border: 1px solid var(--cft-line); border-radius: 10px; background: #f7f8fc; }
+.cft-pre { overflow: auto; padding: .8em 1em; border-radius: 8px; background: #0f1330; color: #e8ebff; font-size: .85em; text-align: left; }
+.cft-sc { font-variant: small-caps; }
+.cft-over { text-decoration: overline; }
+.cft-dl dt { font-weight: 700; color: var(--cft-navy); }
+.cft-dl dd { margin: 0 0 .6em 1.2em; }
+
+/* rujukan di dalam teks */
+.cft-xref { text-decoration: none !important; border-bottom: 1px dotted currentColor; }
+.cft-xref-bibr { color: var(--cft-navy) !important; font-weight: 600; }
+.cft-flash { animation: cftFlash 1.6s ease; }
+@keyframes cftFlash { 0%, 40% { background: color-mix(in srgb, var(--cft-accent) 28%, #fff); } 100% { background: transparent; } }
+.cft-tip .cft-ref-label { position: static; margin-right: 4px; }
+.cft-tip { position: absolute; z-index: 9999; max-width: 380px; padding: 10px 12px; border-radius: 8px; background: #fff; color: #1d2140;
+  border: 1px solid var(--cft-line); border-top: 3px solid var(--cft-accent); box-shadow: 0 16px 34px -14px rgba(3, 2, 113, .45);
+  font: 400 .84rem/1.5 system-ui, sans-serif; text-align: left; }
+
+/* ---------- gambar & tabel ---------- */
+.cft-fig, .cft-table { margin: 1.6em 0; padding: 0; scroll-margin-top: 90px; }
+.cft-fig img { display: block; max-width: 100%; height: auto; margin: 0 auto; border-radius: 8px; box-shadow: 0 0 0 1px var(--cft-line); }
+.cft-zoom { display: block; cursor: zoom-in; }
+.cft-fig figcaption, .cft-table figcaption { margin-top: .6em; font: 400 .88em/1.55 system-ui, sans-serif; color: #3d4462; text-align: left; }
+.cft-table figcaption { margin: 0 0 .6em; }
+.cft-fig figcaption b, .cft-table figcaption b { color: var(--cft-navy); }
+.cft-table-scroll { overflow-x: auto; border: 1px solid var(--cft-line); border-radius: 8px; }
+.cft-table table { width: 100%; border-collapse: collapse; font: 400 .86em/1.45 system-ui, sans-serif; text-align: left; }
+.cft-table th, .cft-table td { padding: 7px 10px; border-bottom: 1px solid var(--cft-line); vertical-align: top; }
+.cft-table thead th { background: var(--cft-navy); color: #fff; font-weight: 700; white-space: nowrap; }
+.cft-table tbody tr:nth-child(even) { background: #f7f8fc; }
+.cft-table-foot { margin-top: .5em; font-size: .82em; color: var(--cft-muted); }
+.cft-table-foot p { margin: 0 0 .2em; }
+.cft-missing { padding: 1.4em; border: 1px dashed var(--cft-line); border-radius: 8px; color: var(--cft-muted); text-align: center; font-size: .85em; }
+
+/* ---------- rumus ---------- */
+.cft-formula { display: flex; align-items: center; gap: 12px; margin: 1em 0; overflow-x: auto; scroll-margin-top: 90px; }
+.cft-formula-body { flex: 1; text-align: center; }
+.cft-formula-label { flex: none; color: var(--cft-muted); }
+.cft math { font-size: 1.08em; }
+
+/* ---------- bagian belakang ---------- */
+.cft-ack, .cft-notes, .cft-app { margin-top: 1.4em; }
+.cft-text ul.cft-fn-list { margin-left: 0; list-style: none; font-size: .9em; }
+.cft-fn-list li { margin: .3em 0; }
+.cft-fn-label { color: var(--cft-accent); font-weight: 700; }
+.cft-refs ol.cft-ref-list { margin: 0; padding: 0; list-style: none; counter-reset: cftref; }
+.cft-refs .cft-ref-list li { position: relative; margin: 0; padding: .55em .6em .55em 2.6em; border-bottom: 1px solid var(--cft-line); font-size: .9em; line-height: 1.55; text-align: left; scroll-margin-top: 90px; }
+.cft-refs .cft-ref-list li:not(:has(.cft-ref-label))::before { counter-increment: cftref; content: counter(cftref) "."; position: absolute; left: .6em; color: var(--cft-accent); font-weight: 700; }
+.cft-ref-label { position: absolute; left: .4em; color: var(--cft-accent); font-weight: 700; }
+.cft-refs a { word-break: break-all; }
+
+/* ---------- halaman baca (galley XML) ---------- */
+.cft-page { max-width: 1100px; margin: 0 auto; }
+.cft-crumbs { margin: 0 0 12px; font: 600 .85rem Inter, system-ui, sans-serif; }
+.cft-crumbs a { color: var(--nv-navy, #030271); text-decoration: none; }
+.cft-page-head { margin: 0 0 18px; padding: 22px 26px; border-radius: 14px; color: #fff;
+  background: linear-gradient(135deg, var(--nv-navy, #030271), color-mix(in srgb, var(--nv-navy, #030271) 70%, #3b82f6)); }
+.cft-page-kicker { margin: 0 0 6px; font: 700 .75rem Inter, system-ui, sans-serif; letter-spacing: .06em; text-transform: uppercase; opacity: .85; }
+.cft-page-head h1 { margin: 0 0 8px; color: #fff; font: 800 1.55rem/1.3 Inter, system-ui, sans-serif; }
+.cft-page-authors { margin: 0 0 14px; opacity: .92; }
+.cft-page-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.cft-btn { display: inline-block; padding: 7px 14px; border-radius: 8px; background: #fff; color: var(--nv-navy, #030271) !important; font: 700 .85rem Inter, system-ui, sans-serif; text-decoration: none !important; }
+.cft-btn-o { background: transparent; color: #fff !important; box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .7); }
+@media (min-width: 1000px) {
+  .cft-page .cft { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 0 28px; }
+  .cft-page .cft-tools { grid-column: 1 / -1; }
+  .cft-page .cft-toc { position: sticky; top: 16px; align-self: start; max-height: calc(100vh - 32px); overflow: auto; }
+  .cft-page .cft-toc ol { columns: auto; }
+}
+@media (max-width: 600px) {
+  .cft-text { text-align: left; }
+  .cft-toc ol { columns: 1; }
+  .cft-page-head { padding: 18px; }
+}
+@media print {
+  .cft-tools, .cft-toc, .cft-crumbs, .cft-page-actions { display: none !important; }
+}

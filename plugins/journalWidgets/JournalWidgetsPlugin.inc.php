@@ -98,7 +98,7 @@ class JournalWidgetsPlugin extends GenericPlugin {
 		if (!$context) return false;
 		$done = true;
 		$tm = $args[0];
-		$tm->addStyleSheet('journalWidgets', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/css/widgets.css', ['contexts' => 'frontend']);
+		$tm->addStyleSheet('journalWidgets', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/css/widgets.css' . (preg_match('#<release>\\s*([0-9.]+)#', (string) @file_get_contents(__DIR__ . '/version.xml'), $vm) ? '?v=' . $vm[1] : ''), ['contexts' => 'frontend']);
 		$cid = $context->getId();
 		$p = $this->color($this->opt($cid, 'primary'), '#030271');
 		$a = $this->color($this->opt($cid, 'accent'), '#ed991f');

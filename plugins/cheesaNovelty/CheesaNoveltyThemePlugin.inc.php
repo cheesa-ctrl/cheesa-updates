@@ -207,9 +207,9 @@ class CheesaNoveltyThemePlugin extends ThemePlugin {
 		/* ---------------- Gaya ---------------- */
 		$this->addStyle('cheesa-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@500;600;700;800&family=Noto+Serif:wght@400;700&display=swap', ['baseUrl' => '']);
 		if ($this->getOption('chLegacy') !== 'off') {
-			$this->addStyle('cheesa-legacy', 'styles/cheesa-legacy.css');
+			$this->addStyle('cheesa-legacy', 'styles/cheesa-legacy.css' . $this->_ver());
 		}
-		$this->addStyle('cheesa-theme', 'styles/cheesa-theme.css');
+		$this->addStyle('cheesa-theme', 'styles/cheesa-theme.css' . $this->_ver());
 
 		$navy = $this->_color($this->getOption('chNavy'), '#030271');
 		$accent = $this->_color($this->getOption('chAccent'), '#ed991f');
@@ -250,9 +250,9 @@ class CheesaNoveltyThemePlugin extends ThemePlugin {
 		// Konfigurasi script disusun saat halaman pembaca ditampilkan (bukan saat API/backend berjalan)
 		HookRegistry::register('TemplateManager::display', [$this, 'addConfig']);
 		if ($this->getOption('chLegacy') !== 'off') {
-			$this->addScript('cheesa-legacy', 'js/cheesa-legacy.js');
+			$this->addScript('cheesa-legacy', 'js/cheesa-legacy.js' . $this->_ver());
 		}
-		$this->addScript('cheesa-theme', 'js/cheesa-theme.js');
+		$this->addScript('cheesa-theme', 'js/cheesa-theme.js' . $this->_ver());
 
 		if ($this->getOption('chCardStats') !== 'off') {
 			HookRegistry::register('Templates::Issue::Issue::Article', [$this, 'addSummaryData']);
@@ -588,6 +588,16 @@ class CheesaNoveltyThemePlugin extends ThemePlugin {
 		if (!$main) return null;
 		if ($kids) $main[] = $kids;
 		return $main;
+	}
+
+	/** "?v=<versi tema>" — URL CSS/JS berubah tiap update, jadi browser/server tidak memakai salinan lama. */
+	private function _ver() {
+		static $v = null;
+		if ($v === null) {
+			$x = @file_get_contents(__DIR__ . '/version.xml');
+			$v = ($x && preg_match('#<release>\s*([0-9.]+)\s*</release>#', $x, $m)) ? '?v=' . $m[1] : '';
+		}
+		return $v;
 	}
 
 	private function _color($v, $fallback) {

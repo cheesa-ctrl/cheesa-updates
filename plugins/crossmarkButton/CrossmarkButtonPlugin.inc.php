@@ -51,8 +51,8 @@ class CrossmarkButtonPlugin extends GenericPlugin {
 			$tm = TemplateManager::getManager($request);
 			$tm->addHeader('crossmarkDoi', '<meta name="dc.identifier" content="doi:' . htmlspecialchars($doi, ENT_QUOTES, 'UTF-8') . '">');
 			$tm->addJavaScript('crossmarkWidget', self::WIDGET_JS, ['contexts' => 'frontend']);
-			$tm->addStyleSheet('crossmarkButton', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/css/crossmark.css', ['contexts' => 'frontend']);
-			$tm->addJavaScript('crossmarkButton', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/crossmark.js', ['contexts' => 'frontend']);
+			$tm->addStyleSheet('crossmarkButton', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/css/crossmark.css' . (preg_match('#<release>\\s*([0-9.]+)#', (string) @file_get_contents(__DIR__ . '/version.xml'), $vm) ? '?v=' . $vm[1] : ''), ['contexts' => 'frontend']);
+			$tm->addJavaScript('crossmarkButton', $request->getBaseUrl() . '/' . $this->getPluginPath() . '/js/crossmark.js' . (preg_match('#<release>\\s*([0-9.]+)#', (string) @file_get_contents(__DIR__ . '/version.xml'), $vm) ? '?v=' . $vm[1] : ''), ['contexts' => 'frontend']);
 		} catch (\Throwable $e) {
 			error_log('crossmarkButton: ' . $e->getMessage());
 		}
