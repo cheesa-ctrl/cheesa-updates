@@ -319,6 +319,7 @@
 
   /* ---------- 8. Kartu artikel: negara & statistik dari server ---------- */
   function richCards() {
+    var needDim = false;
     [].forEach.call(D.querySelectorAll('.obj_article_summary'), function (card) {
       var src = card.querySelector('script.ch-sum-data');
       if (!src || card.classList.contains('ch-rich')) return;
@@ -347,6 +348,14 @@
       function item(ico, label, val) { var x = el('span'); x.appendChild(svgIcon(ico)); x.appendChild(D.createTextNode(' ' + label + ' ')); x.appendChild(el('b', null, String(val))); st.appendChild(x); }
       item('eye', 'Views', d.views || 0);
       item('download', 'Downloads', d.downloads || 0);
+      // badge sitasi resmi Dimensions (gaya kotak kecil seperti BCREC), di kanan Downloads
+      if (d.doi && CFG.cardCitations !== false) {
+        var dw = el('span', 'ch-cdim');
+        var db = el('span', '__dimensions_badge_embed__');
+        db.setAttribute('data-doi', d.doi); db.setAttribute('data-style', 'small_rectangle'); db.setAttribute('data-legend', 'never');
+        dw.appendChild(db); st.appendChild(dw);
+        needDim = true;
+      }
       // Pages tampil di samping label seksi (baris paling atas kartu); bila tidak ada seksi, tetap di deretan statistik
       var pg = pages && pages.textContent.trim();
       var secH = card.closest('.section') && card.closest('.section').querySelector(':scope > h2');
@@ -368,6 +377,16 @@
       var gl = card.querySelector('.galleys_links');
       card.insertBefore(st, gl || null);
     });
+    if (needDim) loadDimensions();
+  }
+
+  /* muat badge.js Dimensions sekali; bila sudah ada, minta Dimensions memproses badge baru */
+  function loadDimensions() {
+    if (!D.querySelector('script[src*="badge.dimensions.ai"]')) {
+      var sc = el('script'); sc.async = true; sc.src = 'https://badge.dimensions.ai/badge.js'; D.head.appendChild(sc);
+    } else if (window.__dimensions_embed && window.__dimensions_embed.addBadges) {
+      window.__dimensions_embed.addBadges();
+    }
   }
 
   /* ---------- 9. Pencarian: selalu menuju halaman search OJS ---------- */
@@ -856,7 +875,7 @@
     if (isHome() || isArticle() || D.querySelector('.ch-page-hero')) return;
     var main = D.querySelector('.pkp_structure_main');
     var page = main && main.querySelector('.page');
-    if (!page || page.matches('.page_issue, .page_issue_archive, .page_search, .page_announcements, .page_submissions_list') ||
+    if (!page || page.matches('.page_issue, .page_issue_archive, .page_search, .page_announcements, .page_submissions_list, .cft-page') ||
         page.querySelector('.obj_issue_toc, .issues_archive, .cmp_article_list')) return;
     var h1 = page.querySelector(':scope > h1, :scope > .page_title, :scope > .pkp_page_title');
     if (!h1) return;

@@ -1001,6 +1001,7 @@ window.addEventListener('DOMContentLoaded', function () {
     var defs = [
       { key: "keywords",   label: "Keywords",           el: main.querySelector(".item.keywords") },
       { key: "abstract",   label: "Abstract",           el: main.querySelector(".item.abstract") },
+      { key: "fulltext",   label: "Full Text",          el: main.querySelector(".item.fulltext") },
       { key: "authors",    label: "Author Biographies", el: main.querySelector(".item.author_bios") },
       { key: "references", label: "References",         el: main.querySelector(".item.references") },
       { key: "license",    label: "Licenses",           el: side && side.querySelector(".item.copyright") }

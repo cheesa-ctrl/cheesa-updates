@@ -122,6 +122,13 @@ class CheesaNoveltyThemePlugin extends ThemePlugin {
 			'options' => [['value' => 'on', 'label' => 'Tampilkan'], ['value' => 'off', 'label' => 'Sembunyikan']],
 			'default' => 'on',
 		]);
+		$this->addOption('chCardCitations', 'FieldOptions', [
+			'type' => 'radio',
+			'label' => 'Kartu artikel: badge sitasi Dimensions',
+			'description' => 'Badge resmi Dimensions (jumlah sitasi) di samping Downloads, untuk artikel yang punya DOI.',
+			'options' => [['value' => 'on', 'label' => 'Tampilkan'], ['value' => 'off', 'label' => 'Sembunyikan']],
+			'default' => 'on',
+		]);
 		$this->addOption('chCorrEmail', 'FieldOptions', [
 			'type' => 'radio',
 			'label' => 'Penulis korespondensi di halaman artikel',
@@ -234,6 +241,7 @@ class CheesaNoveltyThemePlugin extends ThemePlugin {
 			'reviewerUrl' => trim((string) $this->getOption('chReviewerUrl')),
 			'social' => $this->_lines($this->getOption('chSocial'), 2),
 			'regMenu' => $this->_regMenu($this->getOption('chRegisterMenu')),
+			'cardCitations' => $this->getOption('chCardCitations') !== 'off',
 			'indexing' => $this->_lines($this->getOption('chIndexing'), 3),
 			'upcoming' => $this->getOption('chUpcoming') !== 'off',
 			'sidebarPages' => $this->_rules($this->getOption('chSidebarPages')),

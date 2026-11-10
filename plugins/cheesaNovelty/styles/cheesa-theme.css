@@ -1192,3 +1192,12 @@
 /* v1.8.2 — tombol Crossmark tetap kecil di mana pun posisinya (logo horizontal maupun kotak) */
 :root body .obj_article_details .cmk-wrap img { width: auto !important; height: 30px !important; max-width: 170px !important; object-fit: contain; }
 :root body .obj_article_details .cmk-wrap .cmk-button { display: inline-block; line-height: 0; }
+
+/* v1.9.0 — tab Full Text (plugin CHEESA Full Text) */
+:root body .ch-panel .item.fulltext > h2.label { display: none !important; }
+:root body .ch-panel .item.fulltext .cft-text { font-family: var(--nv-serif, "Noto Serif", Georgia, serif); }
+
+/* v1.9.1 — badge sitasi Dimensions di kartu artikel (kanan Downloads) */
+:root body .ch-cstats .ch-cdim { display: inline-flex !important; align-items: center; padding: 0 !important; background: none !important; border: 0 !important; box-shadow: none !important; min-height: 26px; }
+:root body .ch-cstats .ch-cdim .__dimensions_badge_embed__ { display: inline-block; line-height: 0; }
+:root body .ch-cstats .ch-cdim img, :root body .ch-cstats .ch-cdim a { vertical-align: middle; }
