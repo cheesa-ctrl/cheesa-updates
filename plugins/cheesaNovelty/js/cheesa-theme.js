@@ -377,7 +377,30 @@
       var gl = card.querySelector('.galleys_links');
       card.insertBefore(st, gl || null);
     });
-    if (needDim) loadDimensions();
+    if (needDim) { loadDimensions(); setTimeout(dimFallback, 5000); }
+  }
+
+  /* Bila badge resmi Dimensions tidak muncul (skrip terblokir / DOI belum dikenal badge), tampilkan kotak
+     "Citations | N" dengan angka dari API metrik Dimensions — sama seperti Citations di Article Info. */
+  function dimFallback() {
+    [].forEach.call(D.querySelectorAll('.ch-cdim'), function (w) {
+      if (w.querySelector('.ch-cite-box')) return;
+      var b = w.querySelector('.__dimensions_badge_embed__');
+      // badge resmi sudah tampil: Dimensions mengisi elemen embed (atau menambah elemen lain di wadah)
+      if ((b && (b.children.length || b.textContent.trim())) || w.children.length > 1 || w.querySelector('a, img, svg, iframe')) return;
+      var doi = b && b.getAttribute('data-doi');
+      if (!doi) return;
+      var box = el('a', 'ch-cite-box');
+      box.href = 'https://badge.dimensions.ai/details/doi/' + encodeURIComponent(doi); box.target = '_blank'; box.rel = 'noopener';
+      box.title = 'Citations in Dimensions';
+      box.appendChild(el('span', 'ch-cite-l', 'Citations'));
+      var n = el('span', 'ch-cite-n', '…'); box.appendChild(n);
+      w.appendChild(box);
+      fetch('https://metrics-api.dimensions.ai/doi/' + encodeURIComponent(doi))
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) { n.textContent = j && typeof j.times_cited === 'number' ? String(j.times_cited) : '0'; })
+        .catch(function () { n.textContent = '0'; });
+    });
   }
 
   /* muat badge.js Dimensions sekali; bila sudah ada, minta Dimensions memproses badge baru */

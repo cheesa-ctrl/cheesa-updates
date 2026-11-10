@@ -671,7 +671,7 @@
 :root body .ch-art-hero > * { position: relative; z-index: 1; }
 :root body .ch-hero-kick { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
 :root body .ch-hero-kick span { padding: 4px 12px; border-radius: 999px; font: 700 .74rem var(--nv-sans); letter-spacing: .04em; text-transform: uppercase; }
-:root body .ch-hero-sec { background: var(--nv-accent); color: var(--nv-on-accent, #1a1300); }
+:root body .ch-hero-sec { background: rgba(255, 255, 255, .16) !important; color: #fff !important; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .45); }
 :root body .ch-hero-iss { background: rgba(255, 255, 255, .12); border: 1px solid rgba(255, 255, 255, .3); color: #fff; }
 :root body .ch-art-hero .page_title {
   margin: 0 0 16px !important; padding: 0 !important; background: none !important; box-shadow: none !important; border-radius: 0 !important;
@@ -1201,3 +1201,12 @@
 :root body .ch-cstats .ch-cdim { display: inline-flex !important; align-items: center; padding: 0 !important; background: none !important; border: 0 !important; box-shadow: none !important; min-height: 26px; }
 :root body .ch-cstats .ch-cdim .__dimensions_badge_embed__ { display: inline-block; line-height: 0; }
 :root body .ch-cstats .ch-cdim img, :root body .ch-cstats .ch-cdim a { vertical-align: middle; }
+
+/* v1.9.2 — kotak sitasi cadangan (bila badge resmi Dimensions tidak tampil) */
+:root body .ch-cstats .ch-cite-box {
+  display: inline-flex; align-items: stretch; height: 22px; border: 1px solid #b9bdc9; border-radius: 3px; overflow: hidden;
+  font: 600 .7rem/20px Inter, system-ui, sans-serif; text-decoration: none !important; background: #fff;
+}
+:root body .ch-cstats .ch-cite-l { padding: 0 7px; background: linear-gradient(#f6f7f9, #e3e6ec); color: #3d4462; border-right: 1px solid #b9bdc9; }
+:root body .ch-cstats .ch-cite-n { min-width: 26px; padding: 0 7px; color: #1d2140; text-align: center; font-weight: 700; }
+:root body .ch-cstats .ch-cite-box:hover .ch-cite-n { color: var(--nv-navy); }
