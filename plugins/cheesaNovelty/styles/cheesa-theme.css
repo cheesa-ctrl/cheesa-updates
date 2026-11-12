@@ -1210,3 +1210,17 @@
 :root body .ch-cstats .ch-cite-l { padding: 0 7px; background: linear-gradient(#f6f7f9, #e3e6ec); color: #3d4462; border-right: 1px solid #b9bdc9; }
 :root body .ch-cstats .ch-cite-n { min-width: 26px; padding: 0 7px; color: #1d2140; text-align: center; font-weight: 700; }
 :root body .ch-cstats .ch-cite-box:hover .ch-cite-n { color: var(--nv-navy); }
+
+/* v1.9.4 — dropdown menu utama selalu tepat di bawah item menunya (bukan di atas header) */
+@media (min-width: 992px) {
+  :root body #navigationPrimary > li,
+  :root body .pkp_navigation_primary_row .pkp_navigation_primary_wrapper > ul > li { position: relative !important; }
+  :root body #navigationPrimary > li > ul,
+  :root body .pkp_navigation_primary_row .pkp_navigation_primary_wrapper > ul > li > ul {
+    top: 100% !important; bottom: auto !important; transform: none !important;
+  }
+  /* ruang kosong di antara item dan dropdown tetap "terhubung" supaya dropdown tidak menutup saat kursor turun */
+  :root body #navigationPrimary > li > ul > li:first-child::before {
+    content: ""; position: absolute; left: 0; right: 0; top: -22px; height: 22px;
+  }
+}
