@@ -325,3 +325,17 @@ html body .jh-root .jh-cover__title { font-family: var(--jh-title-font); font-we
 /* Profile style keeps its own serif/sans pairing unless Inter-based fonts are chosen */
 .jh-root.jh-style-profile.jh-font-inter, .jh-root.jh-style-profile.jh-font-interSerif { --jh-sans: "Inter", system-ui, sans-serif; }
 .jh-root.jh-style-profile.jh-font-jakarta { --jh-sans: "Plus Jakarta Sans", system-ui, sans-serif; }
+
+/* =====================================================================
+ * Small screens, banner placed inside the header (above the menu):
+ * show the banner first, then the theme's menu toggle and the menu,
+ * so the opened menu appears right below its button.
+ * ===================================================================== */
+@media (max-width: 991px) {
+	html:root body .pkp_head_wrapper:has(> .jh-root) { display: flex !important; flex-direction: column !important; }
+	html:root body .pkp_head_wrapper:has(> .jh-root) > * { order: 4; }
+	html:root body .pkp_head_wrapper:has(> .jh-root) > .jh-root { order: 1; }
+	html:root body .pkp_head_wrapper:has(> .jh-root) > .pkp_site_name_wrapper { order: 2; }
+	html:root body .pkp_head_wrapper:has(> .jh-root) > .pkp_site_nav_menu { order: 3; }
+	html:root body .pkp_head_wrapper:has(> .jh-root) > .jh-root.jh-boxed { margin-bottom: 12px; }
+}
