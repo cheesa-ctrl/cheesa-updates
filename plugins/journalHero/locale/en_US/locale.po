@@ -1,0 +1,293 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: en_US\n"
+
+msgid "plugins.generic.journalHero.displayName"
+msgstr "Journal Hero (Journal Description)"
+
+msgid "plugins.generic.journalHero.description"
+msgstr "Shows a journal description banner below the site header: title, description, highlights, accreditation rank, ISSN, issue-cover carousel and a feature strip."
+
+msgid "plugins.generic.journalHero.section.display"
+msgstr "Display"
+
+msgid "plugins.generic.journalHero.section.content"
+msgstr "Content"
+
+msgid "plugins.generic.journalHero.section.look"
+msgstr "Appearance"
+
+msgid "plugins.generic.journalHero.pages"
+msgstr "Show on"
+
+msgid "plugins.generic.journalHero.pages.home"
+msgstr "Journal homepage only"
+
+msgid "plugins.generic.journalHero.pages.all"
+msgstr "All public pages"
+
+msgid "plugins.generic.journalHero.position"
+msgstr "Position"
+
+msgid "plugins.generic.journalHero.position.description"
+msgstr "If the banner appears in the wrong place with your theme, try the other option."
+
+msgid "plugins.generic.journalHero.position.afterHeader"
+msgstr "Directly below the header & menu"
+
+msgid "plugins.generic.journalHero.position.beforeContent"
+msgstr "Just before the main content"
+
+msgid "plugins.generic.journalHero.showFeatures"
+msgstr "Show the three highlights (Peer Reviewed, Open Access, Digital Platform)"
+
+msgid "plugins.generic.journalHero.showIssn"
+msgstr "Show p-ISSN and e-ISSN (from Journal Settings)"
+
+msgid "plugins.generic.journalHero.showCovers"
+msgstr "Show the issue-cover carousel"
+
+msgid "plugins.generic.journalHero.showStrip"
+msgstr "Show the feature strip and wave below the banner"
+
+msgid "plugins.generic.journalHero.coverCount"
+msgstr "Number of recent issues in the carousel (1–12)"
+
+msgid "plugins.generic.journalHero.heroTitle"
+msgstr "Title"
+
+msgid "plugins.generic.journalHero.heroTitle.description"
+msgstr "Leave empty to use the journal name."
+
+msgid "plugins.generic.journalHero.eyebrow"
+msgstr "Small heading above the title (optional)"
+
+msgid "plugins.generic.journalHero.eyebrow.description"
+msgstr "For example the publisher: Universitas PGRI Madiun."
+
+msgid "plugins.generic.journalHero.heroDescription"
+msgstr "Description"
+
+msgid "plugins.generic.journalHero.heroDescription.description"
+msgstr "Leave empty to use the journal summary from Journal Settings (shortened)."
+
+msgid "plugins.generic.journalHero.descriptionLength"
+msgstr "Maximum description length when taken from Journal Settings (characters)"
+
+msgid "plugins.generic.journalHero.rank"
+msgstr "Rank"
+
+msgid "plugins.generic.journalHero.rank.description"
+msgstr "Accreditation badge, e.g. label RANK and value Sinta 1. Leave the value empty to hide it."
+
+msgid "plugins.generic.journalHero.rankLabel"
+msgstr "Label"
+
+msgid "plugins.generic.journalHero.rankValue"
+msgstr "Value"
+
+msgid "plugins.generic.journalHero.backgroundUrl"
+msgstr "Background image URL (optional)"
+
+msgid "plugins.generic.journalHero.backgroundUrl.description"
+msgstr "Shown on the right and faded into the main colour."
+
+msgid "plugins.generic.journalHero.useHomepageImage"
+msgstr "If no URL is given, use the Homepage Image (Website > Appearance)"
+
+msgid "plugins.generic.journalHero.colors"
+msgstr "Colours"
+
+msgid "plugins.generic.journalHero.colors.description"
+msgstr "Hex codes, e.g. #0F2A4A."
+
+msgid "plugins.generic.journalHero.colorPrimary"
+msgstr "Main"
+
+msgid "plugins.generic.journalHero.colorAccent"
+msgstr "Accent"
+
+msgid "plugins.generic.journalHero.colorRank"
+msgstr "Rank"
+
+msgid "plugins.generic.journalHero.feature.peer"
+msgstr "Peer Reviewed"
+
+msgid "plugins.generic.journalHero.feature.peer.desc"
+msgstr "Reviewed by experts in the field"
+
+msgid "plugins.generic.journalHero.feature.oa"
+msgstr "Open Access"
+
+msgid "plugins.generic.journalHero.feature.oa.desc"
+msgstr "Free access for everyone"
+
+msgid "plugins.generic.journalHero.feature.digital"
+msgstr "Digital Platform"
+
+msgid "plugins.generic.journalHero.feature.digital.desc"
+msgstr "Easy to access anywhere"
+
+msgid "plugins.generic.journalHero.strip.ojs"
+msgstr "Open Journal Systems"
+
+msgid "plugins.generic.journalHero.strip.ojs.desc"
+msgstr "A reliable electronic journal management platform"
+
+msgid "plugins.generic.journalHero.strip.editors"
+msgstr "Editorial Team"
+
+msgid "plugins.generic.journalHero.strip.editors.desc"
+msgstr "Managed by a professional editorial board"
+
+msgid "plugins.generic.journalHero.strip.quality"
+msgstr "Quality & Integrity"
+
+msgid "plugins.generic.journalHero.strip.quality.desc"
+msgstr "Upholding high standards of publication ethics"
+
+msgid "plugins.generic.journalHero.prev"
+msgstr "Previous"
+
+msgid "plugins.generic.journalHero.next"
+msgstr "Next"
+
+msgid "plugins.generic.journalHero.rankUrl"
+msgstr "Rank link (optional)"
+
+msgid "plugins.generic.journalHero.rankUrl.description"
+msgstr "Where the rank badge leads, e.g. the journal's SINTA profile https://sinta.kemdiktisaintek.go.id/journals/profile/… Leave empty for no link."
+
+msgid "plugins.generic.journalHero.issnLinks"
+msgstr "ISSN links"
+
+msgid "plugins.generic.journalHero.issnLinks.description"
+msgstr "Leave empty to link automatically to the ISSN Portal record (portal.issn.org). Fill in to use another page, e.g. the ISSN BRIN page."
+
+msgid "plugins.generic.journalHero.printIssnUrl"
+msgstr "p-ISSN link"
+
+msgid "plugins.generic.journalHero.onlineIssnUrl"
+msgstr "e-ISSN link"
+
+msgid "plugins.generic.journalHero.layout"
+msgstr "Width"
+
+msgid "plugins.generic.journalHero.layout.description"
+msgstr "Boxed: same width as the site content, with rounded corners. Full: edge to edge across the screen."
+
+msgid "plugins.generic.journalHero.layout.boxed"
+msgstr "Boxed (follow content width)"
+
+msgid "plugins.generic.journalHero.layout.full"
+msgstr "Full screen width"
+
+msgid "plugins.generic.journalHero.boxWidth"
+msgstr "Box width (px)"
+
+msgid "plugins.generic.journalHero.boxWidth.description"
+msgstr "0 = automatically match the width of the site's main content."
+
+msgid "plugins.generic.journalHero.size"
+msgstr "Size"
+
+msgid "plugins.generic.journalHero.size.compact"
+msgstr "Compact"
+
+msgid "plugins.generic.journalHero.size.normal"
+msgstr "Large"
+
+msgid "plugins.generic.journalHero.style"
+msgstr "Style"
+
+msgid "plugins.generic.journalHero.style.description"
+msgstr "Carousel: title, highlights and issue-cover carousel. Profile: current-issue cover, journal facts and statistics, submit card."
+
+msgid "plugins.generic.journalHero.style.carousel"
+msgstr "Carousel"
+
+msgid "plugins.generic.journalHero.style.profile"
+msgstr "Profile"
+
+msgid "plugins.generic.journalHero.section.profile"
+msgstr "Profile style"
+
+msgid "plugins.generic.journalHero.subtitle"
+msgstr "Subtitle"
+
+msgid "plugins.generic.journalHero.subtitle.description"
+msgstr "Shown in italics below the title, e.g. Jurnal Pendidikan Dasar dan Pembelajaran."
+
+msgid "plugins.generic.journalHero.stats"
+msgstr "Statistics"
+
+msgid "plugins.generic.journalHero.stats.description"
+msgstr "Up to 4 lines in the form value | label, e.g. 38% | Acceptance rate. Leave empty to hide."
+
+msgid "plugins.generic.journalHero.doiPrefix"
+msgstr "DOI prefix"
+
+msgid "plugins.generic.journalHero.doiPrefix.description"
+msgstr "Leave empty to take it from the DOI plugin."
+
+msgid "plugins.generic.journalHero.license"
+msgstr "License"
+
+msgid "plugins.generic.journalHero.license.description"
+msgstr "Leave empty to derive it from the journal's Creative Commons license (e.g. CC BY-NC-SA)."
+
+msgid "plugins.generic.journalHero.frequency"
+msgstr "Publication frequency"
+
+msgid "plugins.generic.journalHero.frequency.description"
+msgstr "E.g. 2 per year. Leave empty to hide."
+
+msgid "plugins.generic.journalHero.showSubmit"
+msgstr "Show the Submit an article card"
+
+msgid "plugins.generic.journalHero.tile.accreditation"
+msgstr "Accreditation"
+
+msgid "plugins.generic.journalHero.tile.printIssn"
+msgstr "Print ISSN"
+
+msgid "plugins.generic.journalHero.tile.onlineIssn"
+msgstr "Online ISSN"
+
+msgid "plugins.generic.journalHero.tile.doiPrefix"
+msgstr "DOI prefix"
+
+msgid "plugins.generic.journalHero.tile.license"
+msgstr "License"
+
+msgid "plugins.generic.journalHero.tile.frequency"
+msgstr "Frequency"
+
+msgid "plugins.generic.journalHero.submit"
+msgstr "Submit an article"
+
+msgid "plugins.generic.journalHero.submit.desc"
+msgstr "Send your manuscript through the online system."
+
+msgid "plugins.generic.journalHero.authorGuidelines"
+msgstr "Author Guidelines"
+
+msgid "plugins.generic.journalHero.contact"
+msgstr "Contact"
+
+msgid "plugins.generic.journalHero.position.beforeHeader"
+msgstr "At the very top, above the whole header"
+
+msgid "plugins.generic.journalHero.position.beforeMenu"
+msgstr "Inside the header, just above the menu"
+
+msgid "plugins.generic.journalHero.hideSiteName"
+msgstr "Join the banner to the top: hide the site name/logo, the header's top space and the elements listed below (only on pages showing the banner)"
+
+msgid "plugins.generic.journalHero.hideSelectors"
+msgstr "Other header elements to hide"
+
+msgid "plugins.generic.journalHero.hideSelectors.description"
+msgstr "CSS selectors separated by commas. Default .ch-issn = the ISSN bar of the CHEESA theme."
+

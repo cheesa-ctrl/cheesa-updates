@@ -1,0 +1,293 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: id_ID\n"
+
+msgid "plugins.generic.journalHero.displayName"
+msgstr "Journal Hero (Deskripsi Jurnal)"
+
+msgid "plugins.generic.journalHero.description"
+msgstr "Menampilkan banner deskripsi jurnal di bawah header situs: judul, deskripsi, keunggulan, peringkat akreditasi, ISSN, carousel sampul terbitan, dan strip fitur."
+
+msgid "plugins.generic.journalHero.section.display"
+msgstr "Tampilan"
+
+msgid "plugins.generic.journalHero.section.content"
+msgstr "Isi"
+
+msgid "plugins.generic.journalHero.section.look"
+msgstr "Gaya"
+
+msgid "plugins.generic.journalHero.pages"
+msgstr "Tampilkan di"
+
+msgid "plugins.generic.journalHero.pages.home"
+msgstr "Beranda jurnal saja"
+
+msgid "plugins.generic.journalHero.pages.all"
+msgstr "Semua halaman publik"
+
+msgid "plugins.generic.journalHero.position"
+msgstr "Posisi"
+
+msgid "plugins.generic.journalHero.position.description"
+msgstr "Jika banner muncul di tempat yang kurang pas dengan tema Anda, coba pilihan lainnya."
+
+msgid "plugins.generic.journalHero.position.afterHeader"
+msgstr "Tepat di bawah header & menu"
+
+msgid "plugins.generic.journalHero.position.beforeContent"
+msgstr "Tepat sebelum konten utama"
+
+msgid "plugins.generic.journalHero.showFeatures"
+msgstr "Tampilkan tiga keunggulan (Peer Reviewed, Open Access, Digital Platform)"
+
+msgid "plugins.generic.journalHero.showIssn"
+msgstr "Tampilkan p-ISSN dan e-ISSN (dari Journal Settings)"
+
+msgid "plugins.generic.journalHero.showCovers"
+msgstr "Tampilkan carousel sampul terbitan"
+
+msgid "plugins.generic.journalHero.showStrip"
+msgstr "Tampilkan strip fitur dan gelombang di bawah banner"
+
+msgid "plugins.generic.journalHero.coverCount"
+msgstr "Jumlah terbitan terbaru di carousel (1–12)"
+
+msgid "plugins.generic.journalHero.heroTitle"
+msgstr "Judul"
+
+msgid "plugins.generic.journalHero.heroTitle.description"
+msgstr "Kosongkan untuk memakai nama jurnal."
+
+msgid "plugins.generic.journalHero.eyebrow"
+msgstr "Tulisan kecil di atas judul (opsional)"
+
+msgid "plugins.generic.journalHero.eyebrow.description"
+msgstr "Misalnya penerbit: Universitas PGRI Madiun."
+
+msgid "plugins.generic.journalHero.heroDescription"
+msgstr "Deskripsi"
+
+msgid "plugins.generic.journalHero.heroDescription.description"
+msgstr "Kosongkan untuk memakai ringkasan jurnal dari Journal Settings (dipersingkat)."
+
+msgid "plugins.generic.journalHero.descriptionLength"
+msgstr "Panjang maksimal deskripsi bila diambil dari Journal Settings (karakter)"
+
+msgid "plugins.generic.journalHero.rank"
+msgstr "Peringkat"
+
+msgid "plugins.generic.journalHero.rank.description"
+msgstr "Lencana akreditasi, mis. label PERINGKAT dan nilai Sinta 1. Kosongkan nilai untuk menyembunyikan."
+
+msgid "plugins.generic.journalHero.rankLabel"
+msgstr "Label"
+
+msgid "plugins.generic.journalHero.rankValue"
+msgstr "Nilai"
+
+msgid "plugins.generic.journalHero.backgroundUrl"
+msgstr "URL gambar latar (opsional)"
+
+msgid "plugins.generic.journalHero.backgroundUrl.description"
+msgstr "Tampil di sisi kanan dan memudar ke warna utama."
+
+msgid "plugins.generic.journalHero.useHomepageImage"
+msgstr "Jika URL kosong, pakai Homepage Image (Website > Appearance)"
+
+msgid "plugins.generic.journalHero.colors"
+msgstr "Warna"
+
+msgid "plugins.generic.journalHero.colors.description"
+msgstr "Kode hex, mis. #0F2A4A."
+
+msgid "plugins.generic.journalHero.colorPrimary"
+msgstr "Utama"
+
+msgid "plugins.generic.journalHero.colorAccent"
+msgstr "Aksen"
+
+msgid "plugins.generic.journalHero.colorRank"
+msgstr "Peringkat"
+
+msgid "plugins.generic.journalHero.feature.peer"
+msgstr "Peer Reviewed"
+
+msgid "plugins.generic.journalHero.feature.peer.desc"
+msgstr "Ditelaah oleh pakar di bidangnya"
+
+msgid "plugins.generic.journalHero.feature.oa"
+msgstr "Open Access"
+
+msgid "plugins.generic.journalHero.feature.oa.desc"
+msgstr "Akses terbuka untuk semua"
+
+msgid "plugins.generic.journalHero.feature.digital"
+msgstr "Platform Digital"
+
+msgid "plugins.generic.journalHero.feature.digital.desc"
+msgstr "Mudah diakses di mana pun"
+
+msgid "plugins.generic.journalHero.strip.ojs"
+msgstr "Open Journal Systems"
+
+msgid "plugins.generic.journalHero.strip.ojs.desc"
+msgstr "Platform manajemen jurnal elektronik yang andal"
+
+msgid "plugins.generic.journalHero.strip.editors"
+msgstr "Dewan Redaksi"
+
+msgid "plugins.generic.journalHero.strip.editors.desc"
+msgstr "Dikelola oleh dewan redaksi profesional"
+
+msgid "plugins.generic.journalHero.strip.quality"
+msgstr "Kualitas & Integritas"
+
+msgid "plugins.generic.journalHero.strip.quality.desc"
+msgstr "Menjunjung tinggi etika publikasi ilmiah"
+
+msgid "plugins.generic.journalHero.prev"
+msgstr "Sebelumnya"
+
+msgid "plugins.generic.journalHero.next"
+msgstr "Berikutnya"
+
+msgid "plugins.generic.journalHero.rankUrl"
+msgstr "Link peringkat (opsional)"
+
+msgid "plugins.generic.journalHero.rankUrl.description"
+msgstr "Tujuan saat lencana peringkat diklik, mis. profil SINTA jurnal https://sinta.kemdiktisaintek.go.id/journals/profile/… Kosongkan jika tidak perlu link."
+
+msgid "plugins.generic.journalHero.issnLinks"
+msgstr "Link ISSN"
+
+msgid "plugins.generic.journalHero.issnLinks.description"
+msgstr "Kosongkan untuk otomatis menuju data ISSN Portal (portal.issn.org). Isi jika ingin menuju halaman lain, mis. halaman ISSN BRIN."
+
+msgid "plugins.generic.journalHero.printIssnUrl"
+msgstr "Link p-ISSN"
+
+msgid "plugins.generic.journalHero.onlineIssnUrl"
+msgstr "Link e-ISSN"
+
+msgid "plugins.generic.journalHero.layout"
+msgstr "Lebar"
+
+msgid "plugins.generic.journalHero.layout.description"
+msgstr "Kotak: selebar konten situs, dengan sudut membulat. Penuh: membentang dari tepi ke tepi layar."
+
+msgid "plugins.generic.journalHero.layout.boxed"
+msgstr "Kotak (ikuti lebar konten)"
+
+msgid "plugins.generic.journalHero.layout.full"
+msgstr "Penuh selebar layar"
+
+msgid "plugins.generic.journalHero.boxWidth"
+msgstr "Lebar kotak (px)"
+
+msgid "plugins.generic.journalHero.boxWidth.description"
+msgstr "0 = otomatis menyamakan dengan lebar konten utama situs."
+
+msgid "plugins.generic.journalHero.size"
+msgstr "Ukuran"
+
+msgid "plugins.generic.journalHero.size.compact"
+msgstr "Ringkas"
+
+msgid "plugins.generic.journalHero.size.normal"
+msgstr "Besar"
+
+msgid "plugins.generic.journalHero.style"
+msgstr "Gaya"
+
+msgid "plugins.generic.journalHero.style.description"
+msgstr "Carousel: judul, keunggulan, dan carousel sampul terbitan. Profil: sampul terbitan terkini, fakta jurnal dan statistik, kartu kirim naskah."
+
+msgid "plugins.generic.journalHero.style.carousel"
+msgstr "Carousel"
+
+msgid "plugins.generic.journalHero.style.profile"
+msgstr "Profil"
+
+msgid "plugins.generic.journalHero.section.profile"
+msgstr "Gaya Profil"
+
+msgid "plugins.generic.journalHero.subtitle"
+msgstr "Subjudul"
+
+msgid "plugins.generic.journalHero.subtitle.description"
+msgstr "Tampil miring di bawah judul, mis. Jurnal Pendidikan Dasar dan Pembelajaran."
+
+msgid "plugins.generic.journalHero.stats"
+msgstr "Statistik"
+
+msgid "plugins.generic.journalHero.stats.description"
+msgstr "Maksimal 4 baris dengan format nilai | label, mis. 38% | Acceptance rate. Kosongkan untuk menyembunyikan."
+
+msgid "plugins.generic.journalHero.doiPrefix"
+msgstr "Prefix DOI"
+
+msgid "plugins.generic.journalHero.doiPrefix.description"
+msgstr "Kosongkan untuk mengambil dari plugin DOI."
+
+msgid "plugins.generic.journalHero.license"
+msgstr "Lisensi"
+
+msgid "plugins.generic.journalHero.license.description"
+msgstr "Kosongkan untuk mengambil dari lisensi Creative Commons jurnal (mis. CC BY-NC-SA)."
+
+msgid "plugins.generic.journalHero.frequency"
+msgstr "Frekuensi terbit"
+
+msgid "plugins.generic.journalHero.frequency.description"
+msgstr "Mis. 2 per year. Kosongkan untuk menyembunyikan."
+
+msgid "plugins.generic.journalHero.showSubmit"
+msgstr "Tampilkan kartu Kirim Naskah"
+
+msgid "plugins.generic.journalHero.tile.accreditation"
+msgstr "Akreditasi"
+
+msgid "plugins.generic.journalHero.tile.printIssn"
+msgstr "Print ISSN"
+
+msgid "plugins.generic.journalHero.tile.onlineIssn"
+msgstr "Online ISSN"
+
+msgid "plugins.generic.journalHero.tile.doiPrefix"
+msgstr "Prefix DOI"
+
+msgid "plugins.generic.journalHero.tile.license"
+msgstr "Lisensi"
+
+msgid "plugins.generic.journalHero.tile.frequency"
+msgstr "Frekuensi"
+
+msgid "plugins.generic.journalHero.submit"
+msgstr "Kirim Naskah"
+
+msgid "plugins.generic.journalHero.submit.desc"
+msgstr "Kirim naskah Anda melalui sistem daring."
+
+msgid "plugins.generic.journalHero.authorGuidelines"
+msgstr "Pedoman Penulis"
+
+msgid "plugins.generic.journalHero.contact"
+msgstr "Kontak"
+
+msgid "plugins.generic.journalHero.position.beforeHeader"
+msgstr "Paling atas, di atas seluruh header"
+
+msgid "plugins.generic.journalHero.position.beforeMenu"
+msgstr "Di dalam header, tepat di atas menu"
+
+msgid "plugins.generic.journalHero.hideSiteName"
+msgstr "Rapatkan header: sembunyikan nama/logo situs, ruang kosong di atas header, dan elemen di bawah ini (hanya di halaman yang menampilkan banner)"
+
+msgid "plugins.generic.journalHero.hideSelectors"
+msgstr "Elemen header lain yang disembunyikan"
+
+msgid "plugins.generic.journalHero.hideSelectors.description"
+msgstr "Selektor CSS dipisah koma. Bawaan .ch-issn = bar ISSN pada tema CHEESA."
+
