@@ -1224,3 +1224,80 @@
     content: ""; position: absolute; left: 0; right: 0; top: -22px; height: 22px;
   }
 }
+
+/* ==========================================================================
+   v1.10.0 — Hero header (beranda): carousel sampul / satu gambar, tulisan menyesuaikan
+   ========================================================================== */
+:root body.ch-hero-nologo .pkp_site_name_wrapper { display: none !important; }
+:root body .ch-hero {
+  --gap: 14px;
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; align-items: center;
+  margin: 6px 0 18px; padding: clamp(16px, 2.5vw, 28px) 0; color: #fff; font-family: var(--nv-sans);
+}
+:root body .ch-hero-title { margin: 0 0 8px !important; color: #fff !important; font: 800 clamp(1.2rem, .95rem + 1.4vw, 2rem)/1.2 var(--nv-sans) !important; letter-spacing: -.01em; text-align: left !important; }
+:root body .ch-hero-desc { margin: 0 0 16px !important; max-width: 62ch; color: rgba(255, 255, 255, .86); font-size: clamp(.84rem, .78rem + .3vw, 1rem); line-height: 1.6; text-align: left !important; }
+:root body .ch-hero-feats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px 0; margin: 0 0 16px !important; padding: 0 !important; list-style: none !important; }
+:root body .ch-hero-feats li { display: flex; align-items: center; gap: 10px; margin: 0 !important; padding: 2px 14px 2px 0 !important; border: 0 !important; }
+:root body .ch-hero-feats li + li { padding-left: 14px !important; border-left: 1px solid rgba(255, 255, 255, .18) !important; }
+:root body .ch-hero-fi { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, .35); background: rgba(255, 255, 255, .08); }
+:root body .ch-hero-ico { width: 16px; height: 16px; color: #fff; }
+:root body .ch-hero-ft { display: flex; flex-direction: column; min-width: 0; }
+:root body .ch-hero-ft b { font-size: clamp(.8rem, .76rem + .2vw, .92rem); font-weight: 700; color: #fff; }
+:root body .ch-hero-ft small { font-size: clamp(.7rem, .68rem + .15vw, .8rem); color: rgba(255, 255, 255, .72); }
+:root body .ch-hero-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+:root body .ch-hero-chip { display: inline-flex; align-items: center; padding: 6px 14px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, .35);
+  background: rgba(255, 255, 255, .06); color: #fff !important; font-size: .82rem; font-weight: 600; text-decoration: none !important; white-space: nowrap; }
+:root body .ch-hero-chip::after { content: "\2197"; margin-left: 6px; font-size: .75em; opacity: .7; }
+:root body .ch-hero-chip:hover { background: rgba(255, 255, 255, .16); }
+
+/* gambar */
+:root body .ch-hero-media { position: relative; min-width: 0; }
+:root body .ch-hero-track {
+  display: grid; grid-auto-flow: column; gap: var(--gap);
+  grid-auto-columns: calc((100% - (var(--n) - 1) * var(--gap)) / var(--n));
+  overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain;
+}
+:root body .ch-hero-track::-webkit-scrollbar { display: none; }
+:root body .ch-hero-slide { position: relative; display: block; scroll-snap-align: start; border-radius: 8px; overflow: hidden; background: rgba(255, 255, 255, .06); box-shadow: 0 14px 28px -16px rgba(0, 0, 0, .7); }
+:root body .ch-hero-carousel .ch-hero-slide img { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover; transition: transform .35s; }
+:root body .ch-hero-carousel a.ch-hero-slide:hover img { transform: scale(1.03); }
+:root body .ch-hero-cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 18px 8px 6px; background: linear-gradient(transparent, rgba(0, 0, 0, .7)); color: #fff; font-size: .72rem; font-weight: 600; text-align: center; }
+:root body .ch-hero-image .ch-hero-slide { background: transparent; box-shadow: none; }
+:root body .ch-hero-image .ch-hero-slide img { display: block; width: 100%; max-height: 300px; object-fit: contain; }
+:root body .ch-hero-nav { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; display: none; width: 34px; height: 34px; border: 0; border-radius: 50%;
+  background: rgba(255, 255, 255, .92); color: var(--nv-navy); font-size: 22px; line-height: 1; cursor: pointer; box-shadow: 0 6px 14px -6px rgba(0, 0, 0, .6); }
+:root body .ch-hero-prev { left: 6px; } :root body .ch-hero-next { right: 6px; }
+:root body .ch-hero-media.has-more .ch-hero-nav { display: inline-flex; align-items: center; justify-content: center; }
+:root body .ch-hero-dots { display: none; justify-content: center; gap: 6px; margin-top: 10px; }
+:root body .ch-hero-media.has-more .ch-hero-dots { display: flex; }
+:root body .ch-hero-dot { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .4); cursor: pointer; }
+:root body .ch-hero-dot.on { width: 22px; border-radius: 4px; background: #fff; }
+
+/* layar lebar: tulisan kiri, gambar kanan */
+@media (min-width: 992px) {
+  :root body .ch-hero { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); }
+  :root body .ch-hero-image { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); }
+}
+/* hanya SATU gambar terlihat (mode gambar, carousel 1 sampul, atau layar sempit): tulisan diperbesar & berdampingan */
+:root body .ch-hero.is-single .ch-hero-title { font-size: clamp(1.35rem, 1rem + 2.4vw, 2.6rem) !important; }
+:root body .ch-hero.is-single .ch-hero-desc { font-size: clamp(.9rem, .82rem + .45vw, 1.12rem); }
+@media (min-width: 560px) {
+  :root body .ch-hero.one-item { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); }
+  :root body .ch-hero.one-item .ch-hero-media { max-width: 320px; justify-self: end; width: 100%; }
+}
+/* layar kecil: sampul satu per satu dengan intipan sampul berikutnya */
+@media (max-width: 599px) {
+  :root body .ch-hero-carousel:not(.one-item) .ch-hero-track { grid-auto-columns: 42%; }
+  :root body .ch-hero-carousel.one-item .ch-hero-media { max-width: 220px; justify-self: center; }
+  :root body .ch-hero-feats { grid-template-columns: 1fr; }
+  :root body .ch-hero-feats li + li { padding-left: 0 !important; border-left: 0 !important; }
+  :root body .ch-hero.one-item { grid-template-columns: minmax(0, 1fr); }
+  :root body .ch-hero.one-item .ch-hero-media { max-width: 220px; justify-self: center; }
+}
+
+@media (max-width: 991px) { :root body .ch-hero { padding-left: 14px; padding-right: 14px; } }
+/* layar kecil: menu akun (View Profile / Logout) tidak tertutup baris menu */
+@media (max-width: 991px) {
+  :root body .ch-issn, :root body .ch-userbar { position: relative; z-index: 1050 !important; }
+  :root body .ch-user-drop .ch-user-sub { z-index: 1060 !important; }
+}

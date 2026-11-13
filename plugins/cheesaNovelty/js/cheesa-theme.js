@@ -963,8 +963,112 @@
     setTimeout(function () { try { window.dispatchEvent(new Event('resize')); } catch (e) {} }, 50);
   }
 
+
+  /* ---------- Hero header (beranda): judul, keunggulan, kapsul, carousel sampul / satu gambar ---------- */
+  var HERO_ICONS = [
+    'M7 2h7l5 5v15H7V2zm6 1.5V8h4.5L13 3.5zM9.5 12h7v1.6h-7zm0 3.5h7v1.6h-7z',
+    'M12 2l8 3v6c0 5-3.4 9.4-8 11-4.6-1.6-8-6-8-11V5l8-3zm0 2.2L6 6.4V11c0 3.9 2.5 7.4 6 8.8 3.5-1.4 6-4.9 6-8.8V6.4l-6-2.2z',
+    'M3 4h18v12H3V4zm2 2v8h14V6H5zm4 12h6v2H9z'
+  ];
+  function heroIcon(i) {
+    var ns = 'http://www.w3.org/2000/svg', svg = D.createElementNS(ns, 'svg'), p = D.createElementNS(ns, 'path');
+    svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('class', 'ch-hero-ico');
+    p.setAttribute('d', HERO_ICONS[i % HERO_ICONS.length]); p.setAttribute('fill', 'currentColor'); p.setAttribute('fill-rule', 'evenodd');
+    svg.appendChild(p); return svg;
+  }
+  function hero() {
+    var h = CFG.hero;
+    if (!h || !isHome() || D.querySelector('.ch-hero')) return;
+    var wrap = D.querySelector('.pkp_structure_head .pkp_head_wrapper');
+    if (!wrap) return;
+    if (h.hideLogo) D.body.classList.add('ch-hero-nologo');
+    var sec = el('section', 'ch-hero ch-hero-' + h.mode); sec.setAttribute('aria-label', 'Journal highlights');
+    sec.style.setProperty('--n', String(Math.max(1, Math.min(3, (h.items || []).length))));
+    if ((h.items || []).length === 1) sec.classList.add('one-item');
+    var txt = el('div', 'ch-hero-text');
+    if (h.title) txt.appendChild(el('h2', 'ch-hero-title', h.title));
+    if (h.desc) txt.appendChild(el('p', 'ch-hero-desc', h.desc));
+    if (h.features && h.features.length) {
+      var ul = el('ul', 'ch-hero-feats');
+      h.features.forEach(function (f, i) {
+        if (!f[0]) return;
+        var li = el('li'); var ib = el('span', 'ch-hero-fi'); ib.appendChild(heroIcon(i)); li.appendChild(ib);
+        var tx = el('span', 'ch-hero-ft'); tx.appendChild(el('b', null, f[0])); if (f[1]) tx.appendChild(el('small', null, f[1]));
+        li.appendChild(tx); ul.appendChild(li);
+      });
+      txt.appendChild(ul);
+    }
+    if (h.chips && h.chips.length) {
+      var ch = el('div', 'ch-hero-chips');
+      h.chips.forEach(function (c) {
+        var u = safe(c[1]); if (!u || !c[0]) return;
+        var a = el('a', 'ch-hero-chip', c[0]); a.href = u; a.target = '_blank'; a.rel = 'noopener';
+        ch.appendChild(a);
+      });
+      txt.appendChild(ch);
+    }
+    sec.appendChild(txt);
+
+    var items = (h.items || []).filter(function (it) { return safe(it.img); });
+    if (items.length) {
+      var media = el('div', 'ch-hero-media');
+      var track = el('div', 'ch-hero-track');
+      items.forEach(function (it, i) {
+        var slide = el(it.url ? 'a' : 'div', 'ch-hero-slide');
+        if (it.url) { slide.href = safe(it.url); slide.title = it.label || ''; }
+        var img = el('img'); img.src = safe(it.img); img.alt = it.label || ''; img.loading = i > 2 ? 'lazy' : 'eager';
+        slide.appendChild(img);
+        if (h.mode === 'carousel' && it.label) slide.appendChild(el('span', 'ch-hero-cap', it.label));
+        track.appendChild(slide);
+      });
+      media.appendChild(track);
+      if (items.length > 1) {
+        var prev = el('button', 'ch-hero-nav ch-hero-prev', '‹'); prev.type = 'button'; prev.setAttribute('aria-label', 'Previous');
+        var next = el('button', 'ch-hero-nav ch-hero-next', '›'); next.type = 'button'; next.setAttribute('aria-label', 'Next');
+        var dots = el('div', 'ch-hero-dots');
+        items.forEach(function (_, i) { var d = el('button', 'ch-hero-dot'); d.type = 'button'; d.setAttribute('aria-label', 'Slide ' + (i + 1)); d.addEventListener('click', function () { go(i); }); dots.appendChild(d); });
+        media.appendChild(prev); media.appendChild(next); media.appendChild(dots);
+        var step = function () { var s0 = track.children[0]; return s0 ? s0.getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap || 0) : track.clientWidth; };
+        var go = function (i) { track.scrollTo({ left: Math.max(0, i) * step(), behavior: 'smooth' }); };
+        prev.addEventListener('click', function () { track.scrollBy({ left: -step(), behavior: 'smooth' }); });
+        next.addEventListener('click', function () {
+          if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 4) go(0); else track.scrollBy({ left: step(), behavior: 'smooth' });
+        });
+        var mark = function () {
+          var i = Math.round(track.scrollLeft / (step() || 1));
+          [].forEach.call(dots.children, function (d, k) { d.classList.toggle('on', k === i); });
+        };
+        track.addEventListener('scroll', function () { window.requestAnimationFrame(mark); }, { passive: true });
+        // geser otomatis hanya bila tidak semua sampul terlihat; berhenti saat disentuh/diarahkan kursor
+        var timer = setInterval(function () {
+          if (sec.matches(':hover') || track.scrollWidth <= track.clientWidth + 4) return;
+          next.click();
+        }, 5000);
+        sec.addEventListener('touchstart', function () { clearInterval(timer); }, { passive: true });
+        setTimeout(mark, 100);
+      }
+      sec.appendChild(media);
+    }
+    var nav = wrap.querySelector('.pkp_site_nav_menu');
+    wrap.insertBefore(sec, nav || null);
+
+    // berapa gambar yang terlihat sekarang? satu saja -> tulisan dibuat lebih besar (menyesuaikan)
+    var fit = function () {
+      var tr = sec.querySelector('.ch-hero-track'), first = tr && tr.children[0];
+      var visible = (!first) ? 0 : Math.max(1, Math.round(tr.clientWidth / Math.max(1, first.getBoundingClientRect().width)));
+      sec.classList.toggle('is-single', visible <= 1);
+      sec.setAttribute('data-visible', String(visible));
+      var tr2 = sec.querySelector('.ch-hero-media');
+      if (tr2) tr2.classList.toggle('has-more', tr && tr.scrollWidth > tr.clientWidth + 4);
+    };
+    fit();
+    window.addEventListener('resize', function () { window.requestAnimationFrame(fit); });
+    [].forEach.call(sec.querySelectorAll('img'), function (im) { im.addEventListener('load', fit); });
+  }
+
   /* ---------- jalankan ---------- */
   function run() {
+    hero();
     userBar();
     fixSearch();
     navIcons();

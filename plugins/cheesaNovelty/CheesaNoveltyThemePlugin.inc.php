@@ -63,6 +63,51 @@ class CheesaNoveltyThemePlugin extends ThemePlugin {
 			'description' => 'Sorotan lain di atas latar navy: pita judul artikel & halaman, footer, tombol Register (dropdown), dan hover. Bila terlalu gelap di atas warna utama, otomatis dipakai versi lebih terang dari warna yang sama.',
 			'default' => '#ed991f',
 		]);
+		/* --- hero di header: judul, keunggulan, kapsul, dan carousel sampul / satu gambar --- */
+		$this->addOption('chHero', 'FieldOptions', [
+			'type' => 'radio',
+			'label' => 'Hero header',
+			'description' => 'Bagian pembuka di header (judul jurnal, keunggulan, kapsul SINTA/ISSN, dan gambar). Bila diaktifkan, hapus HTML hero buatan sendiri di pengaturan Header agar tidak dobel.',
+			'options' => [
+				['value' => 'off', 'label' => 'Tidak ditampilkan'],
+				['value' => 'carousel', 'label' => 'Carousel sampul issue terbaru (otomatis dari OJS)'],
+				['value' => 'image', 'label' => 'Satu gambar saja (mis. logo)'],
+			],
+			'default' => 'off',
+		]);
+		$this->addOption('chHeroCount', 'FieldText', [
+			'label' => 'Hero: jumlah sampul di carousel',
+			'description' => 'Angka 1–8. Bila 1, tampilannya seperti satu gambar dan tulisan menyesuaikan ukurannya.',
+			'default' => '3',
+		]);
+		$this->addOption('chHeroImage', 'FieldText', [
+			'label' => 'Hero: alamat gambar (mode satu gambar)',
+			'description' => 'URL gambar/logo (https://...). Kosongkan untuk memakai logo header jurnal, atau sampul issue terbaru bila logo tidak ada.',
+			'default' => '',
+		]);
+		$this->addOption('chHeroTitle', 'FieldText', [
+			'label' => 'Hero: judul',
+			'description' => 'Kosongkan untuk memakai nama jurnal.',
+			'default' => '',
+		]);
+		$this->addOption('chHeroDesc', 'FieldTextarea', [
+			'label' => 'Hero: deskripsi singkat',
+			'default' => 'CHEESA: Chemical Engineering Research Articles is a scientific journal that publishes articles in the field of Chemical Engineering, and Chemistry',
+		]);
+		$this->addOption('chHeroFeatures', 'FieldTextarea', [
+			'label' => 'Hero: keunggulan (satu per baris: Judul|Keterangan)',
+			'default' => "Peer Reviewed|Reviewed by experts in the field\nOpen Access|Free access for everyone\nDigital Platform|Easy to access anywhere",
+		]);
+		$this->addOption('chHeroChips', 'FieldTextarea', [
+			'label' => 'Hero: kapsul (satu per baris: Teks|URL)',
+			'default' => "SINTA 1|https://sinta.kemdiktisaintek.go.id/journals/profile/6672\np-ISSN 2614-8757|https://portal.issn.org/resource/ISSN/2614-8757\ne-ISSN 2615-2347|https://portal.issn.org/resource/ISSN/2615-2347",
+		]);
+		$this->addOption('chHeroLogo', 'FieldOptions', [
+			'type' => 'radio',
+			'label' => 'Hero: logo header',
+			'options' => [['value' => 'show', 'label' => 'Tetap tampilkan logo di atas hero'], ['value' => 'hide', 'label' => 'Sembunyikan logo (hero menggantikannya)']],
+			'default' => 'show',
+		]);
 		$this->addOption('chLayout', 'FieldOptions', [
 			'type' => 'radio',
 			'label' => 'Lebar halaman',
@@ -302,6 +347,7 @@ class CheesaNoveltyThemePlugin extends ThemePlugin {
 					],
 				];
 			}
+			$cfg['hero'] = $this->_hero($request);
 			$args[0]->addJavaScript('cheesa-config', 'window.CHEESA_CFG=' . json_encode($cfg, JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_SLASHES) . ';',
 				['inline' => true, 'contexts' => 'frontend', 'priority' => STYLE_SEQUENCE_CORE]);
 		} catch (\Throwable $e) {
@@ -588,6 +634,53 @@ class CheesaNoveltyThemePlugin extends ThemePlugin {
 		if (!$main) return null;
 		if ($kids) $main[] = $kids;
 		return $main;
+	}
+
+	/** Data hero header untuk JS (null bila tidak aktif). */
+	private function _hero($request) {
+		$mode = $this->getOption('chHero');
+		if (!in_array($mode, ['carousel', 'image'], true)) return null;
+		$context = $request->getContext();
+		$h = [
+			'mode' => $mode,
+			'title' => trim((string) $this->getOption('chHeroTitle')) ?: $context->getLocalizedName(),
+			'desc' => trim((string) $this->getOption('chHeroDesc')),
+			'features' => $this->_lines($this->getOption('chHeroFeatures'), 2),
+			'chips' => array_values(array_filter($this->_lines($this->getOption('chHeroChips'), 2), function ($c) { return preg_match('#^https?://#i', $c[1] ?? ''); })),
+			'hideLogo' => $this->getOption('chHeroLogo') === 'hide',
+			'items' => [],
+		];
+		$count = max(1, min(8, (int) $this->getOption('chHeroCount') ?: 3));
+		$covers = [];
+		try {
+			$issueDao = DAORegistry::getDAO('IssueDAO');
+			$res = $issueDao->getPublishedIssues($context->getId());
+			while (count($covers) < 8 && ($issue = $res->next())) {
+				$img = $issue->getLocalizedCoverImageUrl();
+				if (!$img) continue;
+				$covers[] = ['img' => $img, 'url' => $request->url(null, 'issue', 'view', $issue->getBestIssueId()), 'label' => $issue->getIssueIdentification()];
+			}
+		} catch (\Throwable $e) {
+			error_log('CHEESA hero: ' . $e->getMessage());
+		}
+		if ($mode === 'carousel') {
+			$h['items'] = array_slice($covers, 0, $count);
+		} else {
+			$img = trim((string) $this->getOption('chHeroImage'));
+			if (!preg_match('#^https?://#i', $img)) {
+				$img = '';
+				$logo = $context->getLocalizedData('pageHeaderLogoImage');
+				if (is_array($logo) && !empty($logo['uploadName'])) {
+					import('classes.file.PublicFileManager');
+					$pfm = new PublicFileManager();
+					$img = $request->getBaseUrl() . '/' . $pfm->getContextFilesPath($context->getId()) . '/' . $logo['uploadName'];
+				} elseif ($covers) {
+					$img = $covers[0]['img'];
+				}
+			}
+			if ($img) $h['items'] = [['img' => $img, 'url' => '', 'label' => $h['title']]];
+		}
+		return $h;
 	}
 
 	/** "?v=<versi tema>" — URL CSS/JS berubah tiap update, jadi browser/server tidak memakai salinan lama. */
