@@ -3,7 +3,7 @@
  *
  * Journal Hero — rendered below the site header.
  *}
-<div class="jh-root jh-{$jh.layout} jh-{$jh.size} jh-style-{$jh.style}"{if $jh.layout == 'boxed' && $jh.boxWidth} style="--jh-boxw:{$jh.boxWidth}px" data-jh-fixed{/if}>
+<div class="jh-root jh-{$jh.layout} jh-{$jh.size} jh-style-{$jh.style} jh-font-{$jh.font}"{if $jh.layout == 'boxed' && $jh.boxWidth} style="--jh-boxw:{$jh.boxWidth}px" data-jh-fixed{/if}>
 	{if $jh.style == 'profile'}
 		{assign var="jhP" value=$jh.profile}
 		<section class="jh-pro{if $jh.background} jh-pro--image{/if}"{if $jh.background} style="--jh-bg:url('{$jh.background|escape}')"{/if}>

@@ -103,6 +103,9 @@
 		{fbvFormSection list=true}
 			{fbvElement type="checkbox" id="useHomepageImage" checked=$useHomepageImage label="plugins.generic.journalHero.useHomepageImage"}
 		{/fbvFormSection}
+		{fbvFormSection title="plugins.generic.journalHero.font"}
+			{fbvElement type="select" id="font" from=$fontOptions selected=$font translate=false size=$fbvStyles.size.MEDIUM}
+		{/fbvFormSection}
 		{fbvFormSection title="plugins.generic.journalHero.colors" description="plugins.generic.journalHero.colors.description"}
 			{fbvElement type="text" id="colorPrimary" value=$colorPrimary label="plugins.generic.journalHero.colorPrimary" inline=true size=$fbvStyles.size.SMALL}
 			{fbvElement type="text" id="colorAccent" value=$colorAccent label="plugins.generic.journalHero.colorAccent" inline=true size=$fbvStyles.size.SMALL}

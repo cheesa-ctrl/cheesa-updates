@@ -304,3 +304,24 @@ html body .jh-root a { text-decoration: none; border-bottom: 0; }
 html body .jh-root .jh-pro__submitlinks a { text-decoration: underline; }
 .pkp_structure_head .jh-root.jh-boxed { margin-top: 20px; margin-bottom: 20px; }
 .pkp_structure_head .jh-root { text-transform: none; letter-spacing: normal; }
+
+/* =====================================================================
+ * Font choices
+ * ===================================================================== */
+.jh-root { --jh-title-font: var(--jh-font); --jh-title-weight: 800; --jh-title-track: -.01em; }
+.jh-root.jh-font-inter { --jh-font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; --jh-title-weight: 700; --jh-title-track: -.025em; }
+.jh-root.jh-font-interSerif { --jh-font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; --jh-title-font: "Source Serif 4", Georgia, "Times New Roman", serif; --jh-title-weight: 700; --jh-title-track: -.005em; }
+.jh-root.jh-font-jakarta { --jh-font: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; --jh-title-weight: 800; --jh-title-track: -.02em; }
+.jh-root.jh-font-outfit { --jh-font: "Outfit", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.jh-root.jh-font-theme { --jh-font: inherit; }
+.jh-root.jh-font-theme * { font-family: inherit; }
+
+html body .jh-root .jh-title { font-family: var(--jh-title-font); font-weight: var(--jh-title-weight); letter-spacing: var(--jh-title-track); line-height: 1.12; }
+html body .jh-root .jh-cover__title { font-family: var(--jh-title-font); font-weight: var(--jh-title-weight); letter-spacing: var(--jh-title-track); }
+.jh-root.jh-font-inter .jh-features b, .jh-root.jh-font-inter .jh-strip__item b { font-weight: 600; letter-spacing: -.01em; }
+.jh-root.jh-font-inter .jh-desc, .jh-root.jh-font-interSerif .jh-desc { line-height: 1.65; color: rgba(255,255,255,.86); }
+.jh-root.jh-font-inter .jh-eyebrow, .jh-root.jh-font-interSerif .jh-eyebrow { font-weight: 600; letter-spacing: .16em; font-size: 13px; }
+.jh-root.jh-font-inter .jh-chip, .jh-root.jh-font-interSerif .jh-chip { font-weight: 500; font-size: 14.5px; }
+/* Profile style keeps its own serif/sans pairing unless Inter-based fonts are chosen */
+.jh-root.jh-style-profile.jh-font-inter, .jh-root.jh-style-profile.jh-font-interSerif { --jh-sans: "Inter", system-ui, sans-serif; }
+.jh-root.jh-style-profile.jh-font-jakarta { --jh-sans: "Plus Jakarta Sans", system-ui, sans-serif; }

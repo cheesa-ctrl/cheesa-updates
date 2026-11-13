@@ -289,5 +289,23 @@ msgid "plugins.generic.journalHero.hideSelectors"
 msgstr "Other header elements to hide"
 
 msgid "plugins.generic.journalHero.hideSelectors.description"
-msgstr "CSS selectors separated by commas. Default .ch-issn = the ISSN bar of the CHEESA theme."
+msgstr "CSS selectors separated by commas. Default .ch-issn > a = the ISSN links of the CHEESA theme (the bar itself stays, because on small screens it holds the user menu)."
+
+msgid "plugins.generic.journalHero.font"
+msgstr "Font"
+
+msgid "plugins.generic.journalHero.font.inter"
+msgstr "Inter — clean, matches most OJS themes (recommended)"
+
+msgid "plugins.generic.journalHero.font.interSerif"
+msgstr "Inter with serif title — formal academic look"
+
+msgid "plugins.generic.journalHero.font.jakarta"
+msgstr "Plus Jakarta Sans — modern, rounded"
+
+msgid "plugins.generic.journalHero.font.outfit"
+msgstr "Outfit — bold geometric (previous default)"
+
+msgid "plugins.generic.journalHero.font.theme"
+msgstr "Follow the theme's font"
 

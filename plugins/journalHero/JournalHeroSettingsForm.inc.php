@@ -50,6 +50,13 @@ class JournalHeroSettingsForm extends Form {
 				'carousel' => __('plugins.generic.journalHero.style.carousel'),
 				'profile' => __('plugins.generic.journalHero.style.profile'),
 			],
+			'fontOptions' => [
+				'inter' => __('plugins.generic.journalHero.font.inter'),
+				'interSerif' => __('plugins.generic.journalHero.font.interSerif'),
+				'jakarta' => __('plugins.generic.journalHero.font.jakarta'),
+				'outfit' => __('plugins.generic.journalHero.font.outfit'),
+				'theme' => __('plugins.generic.journalHero.font.theme'),
+			],
 			'layoutOptions' => [
 				'boxed' => __('plugins.generic.journalHero.layout.boxed'),
 				'full' => __('plugins.generic.journalHero.layout.full'),

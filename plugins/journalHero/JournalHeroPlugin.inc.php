@@ -19,7 +19,7 @@ class JournalHeroPlugin extends GenericPlugin {
 		'pages' => 'home',              // home | all
 		'position' => 'afterHeader',    // beforeHeader | beforeMenu | afterHeader | beforeContent
 		'hideSiteName' => false,
-		'hideSelectors' => '.ch-issn',
+		'hideSelectors' => '.ch-issn > a',
 		'layout' => 'boxed',            // boxed | full
 		'boxWidth' => 0,                // px, 0 = match the site's content width
 		'size' => 'compact',            // compact | normal
@@ -45,6 +45,7 @@ class JournalHeroPlugin extends GenericPlugin {
 		'license' => '',
 		'frequency' => '',
 		'showSubmit' => true,
+		'font' => 'inter',              // inter | interSerif | jakarta | outfit | theme
 		'colorPrimary' => '#0F2A4A',
 		'colorAccent' => '#F2B630',
 		'colorRank' => '#2563EB',
@@ -96,24 +97,42 @@ class JournalHeroPlugin extends GenericPlugin {
 		}
 
 		$baseUrl = $request->getBaseUrl() . '/' . $this->getPluginPath();
-		$templateMgr->addStyleSheet(
-			'journalHeroFont',
-			'https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Figtree:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,600;0,8..60,700;1,8..60,500&display=swap',
-			['contexts' => 'frontend']
-		);
+		$fonts = [
+			'inter' => 'family=Inter:wght@400;500;600;700',
+			'interSerif' => 'family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,600;0,8..60,700;1,8..60,500',
+			'jakarta' => 'family=Plus+Jakarta+Sans:wght@400;500;600;700;800',
+			'outfit' => 'family=Outfit:wght@400;500;600;700;800',
+			'theme' => '',
+		];
+		$font = $this->getHeroSetting($contextId, 'font');
+		if (!isset($fonts[$font])) $font = 'inter';
+		$families = $fonts[$font];
+		if ($this->getHeroSetting($contextId, 'style') === 'profile' && strpos($families, 'Source+Serif') === false) {
+			$families .= ($families ? '&' : '') . 'family=Source+Serif+4:ital,opsz,wght@0,8..60,600;0,8..60,700;1,8..60,500';
+		}
+		if ($families !== '') {
+			$templateMgr->addStyleSheet('journalHeroFont', 'https://fonts.googleapis.com/css2?' . $families . '&display=swap', ['contexts' => 'frontend']);
+		}
 		$templateMgr->addStyleSheet('journalHero', $baseUrl . '/css/hero.css', ['contexts' => 'frontend']);
 		$templateMgr->addStyleSheet('journalHeroVars', $this->_cssVariables($contextId), ['contexts' => 'frontend', 'inline' => true]);
 		if ($this->getHeroSetting($contextId, 'hideSiteName')) {
 			// Join the banner to the top of the page: hide the site name/logo,
 			// extra header elements (e.g. the theme's ISSN bar) and the header's top padding.
 			$selectors = ['.pkp_structure_head .pkp_site_name'];
-			foreach (preg_split('/[\r\n,]+/', (string) $this->getHeroSetting($contextId, 'hideSelectors')) as $sel) {
+			$extra = trim((string) $this->getHeroSetting($contextId, 'hideSelectors'));
+			// v1.3.x default hid the whole ISSN bar, which on small screens also holds the user menu
+			if ($extra === '.ch-issn') $extra = '.ch-issn > a';
+			foreach (preg_split('/[\r\n,]+/', $extra) as $sel) {
 				$sel = trim($sel);
 				if ($sel !== '' && preg_match('/^[a-zA-Z0-9_\-\.#\s>:\[\]="\'*]+$/', $sel)) $selectors[] = $sel;
 			}
+			// Prefix with "html:root body" so theme rules such as ":root body .x{display:flex!important}" cannot win
+			$selectors = array_map(function ($sel) {
+				return preg_match('/^(html|body|:root)\b/i', $sel) ? $sel : 'html:root body ' . $sel;
+			}, $selectors);
 			$css = implode(',', $selectors) . '{display:none!important}'
-				. '.pkp_structure_head .pkp_head_wrapper{padding-top:0!important}'
-				. '.pkp_structure_head .pkp_site_name_wrapper{min-height:0!important;padding-top:0!important;padding-bottom:0!important}';
+				. 'html:root body .pkp_structure_head .pkp_head_wrapper{padding-top:0!important}'
+				. 'html:root body .pkp_structure_head .pkp_site_name_wrapper{min-height:0!important;padding-top:0!important;padding-bottom:0!important}';
 			$templateMgr->addStyleSheet('journalHeroHideName', $css, ['contexts' => 'frontend', 'inline' => true]);
 		}
 		$templateMgr->addJavaScript('journalHero', $baseUrl . '/js/hero.js', ['contexts' => 'frontend']);
@@ -240,6 +259,7 @@ class JournalHeroPlugin extends GenericPlugin {
 		return [
 			'style' => $profile ? 'profile' : 'carousel',
 			'profile' => $profile,
+			'font' => in_array($s('font'), ['inter', 'interSerif', 'jakarta', 'outfit', 'theme']) ? $s('font') : 'inter',
 			'layout' => $s('layout') === 'full' ? 'full' : 'boxed',
 			'size' => $s('size') === 'normal' ? 'normal' : 'compact',
 			'boxWidth' => max(0, (int) $s('boxWidth')),

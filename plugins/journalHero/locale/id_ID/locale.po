@@ -289,5 +289,23 @@ msgid "plugins.generic.journalHero.hideSelectors"
 msgstr "Elemen header lain yang disembunyikan"
 
 msgid "plugins.generic.journalHero.hideSelectors.description"
-msgstr "Selektor CSS dipisah koma. Bawaan .ch-issn = bar ISSN pada tema CHEESA."
+msgstr "Selektor CSS dipisah koma. Bawaan .ch-issn > a = tautan ISSN pada tema CHEESA (barnya tetap ada, karena di layar kecil berisi menu pengguna)."
+
+msgid "plugins.generic.journalHero.font"
+msgstr "Font"
+
+msgid "plugins.generic.journalHero.font.inter"
+msgstr "Inter — bersih, senada dengan kebanyakan tema OJS (disarankan)"
+
+msgid "plugins.generic.journalHero.font.interSerif"
+msgstr "Inter dengan judul serif — kesan akademik formal"
+
+msgid "plugins.generic.journalHero.font.jakarta"
+msgstr "Plus Jakarta Sans — modern, membulat"
+
+msgid "plugins.generic.journalHero.font.outfit"
+msgstr "Outfit — geometris tebal (bawaan sebelumnya)"
+
+msgid "plugins.generic.journalHero.font.theme"
+msgstr "Ikuti font tema"
 
