@@ -395,3 +395,25 @@ html body .jh-root .jh-features small { font-size: clamp(12.5px, 2.1cqi, 14px); 
 .jh-root .jh-single--logo .jh-single__link { width: 100%; }
 .jh-root .jh-single--logo img { width: 100%; max-width: 440px; }
 @media (max-width: 991px) { .jh-root .jh-single--logo img { max-width: 320px; } }
+
+/* =====================================================================
+ * Small screens: keep the theme's user menu dropdown above the menu bar,
+ * whatever the banner position (before the header or inside it).
+ * ===================================================================== */
+@media (max-width: 991px) {
+	html:root body .pkp_structure_head > .ch-issn,
+	html:root body .pkp_structure_head .pkp_navigation_user_wrapper,
+	html:root body .pkp_structure_head .ch-userbar,
+	html:root body .pkp_structure_head .ch-user-menu,
+	html:root body .pkp_structure_head #navigationUser { position: relative !important; z-index: 1000 !important; }
+	html:root body .pkp_structure_head #navigationUser ul,
+	html:root body .pkp_structure_head .pkp_navigation_user ul,
+	html:root body .pkp_structure_head .ch-user-menu ul,
+	html:root body .pkp_structure_head .dropdown-menu { z-index: 1001 !important; }
+	html:root body .pkp_structure_head > .ch-issn,
+	html:root body .pkp_structure_head .ch-userbar { overflow: visible !important; }
+
+	/* Centre the single image (logo / cover) on phones */
+	html body .jh-root .jh-single, html body .jh-root .jh-single__link { display: flex !important; justify-content: center; width: 100%; }
+	html body .jh-root .jh-single img { margin-left: auto !important; margin-right: auto !important; }
+}

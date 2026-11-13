@@ -48,10 +48,10 @@
         "journalHero": {
             "category": "generic",
             "label": "Journal Hero",
-            "version": "1.5.0.0",
-            "file": "journalHero-1.5.0.0.tar.gz",
-            "sha256": "f865d465b373a31187f55a6ffbe96cfe7440ef9e999fe354e88a4d6d2c451904",
-            "size": 22828,
+            "version": "1.5.1.0",
+            "file": "journalHero-1.5.1.0.tar.gz",
+            "sha256": "a56a0fd2e1c507fce3e050d7facf1a398d9bba9beb0969f4b398c21c67bd03fc",
+            "size": 23017,
             "released": "2026-11-13"
         },
         "journalWidgets": {
@@ -64,5 +64,5 @@
             "released": "2026-11-10"
         }
     },
-    "generated": "2026-11-13T16:10:11+00:00"
+    "generated": "2026-11-13T16:28:17+00:00"
 }
