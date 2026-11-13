@@ -45,6 +45,15 @@
             "size": 7642,
             "released": "2026-11-10"
         },
+        "journalHero": {
+            "category": "generic",
+            "label": "Journal Hero",
+            "version": "1.3.1.0",
+            "file": "journalHero-1.3.1.0.tar.gz",
+            "sha256": "2ebdf5d2a74bf1b33bdb63eaa15978ebd716ee36c4e062cc1604b44f57f0f048",
+            "size": 19761,
+            "released": "2026-11-13"
+        },
         "journalWidgets": {
             "category": "generic",
             "label": "Journal Portal Widgets",
@@ -55,5 +64,5 @@
             "released": "2026-11-10"
         }
     },
-    "generated": "2026-11-12T08:26:34+00:00"
+    "generated": "2026-11-13T03:02:00+00:00"
 }
