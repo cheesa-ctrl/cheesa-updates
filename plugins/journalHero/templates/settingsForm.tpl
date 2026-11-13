@@ -11,6 +11,7 @@
 
 <form class="pkp_form" id="journalHeroSettingsForm" method="post" action="{url router=$smarty.const.ROUTE_COMPONENT op="manage" category="generic" plugin=$pluginName verb="settings" save=true}">
 	{csrf}
+	<input type="hidden" name="showCovers" value="1">
 	{include file="controllers/notification/inPlaceNotification.tpl" notificationId="journalHeroSettingsFormNotification"}
 
 	{fbvFormArea id="journalHeroDisplay" title="plugins.generic.journalHero.section.display"}
@@ -41,8 +42,16 @@
 		{fbvFormSection list=true}
 			{fbvElement type="checkbox" id="showFeatures" checked=$showFeatures label="plugins.generic.journalHero.showFeatures"}
 			{fbvElement type="checkbox" id="showIssn" checked=$showIssn label="plugins.generic.journalHero.showIssn"}
-			{fbvElement type="checkbox" id="showCovers" checked=$showCovers label="plugins.generic.journalHero.showCovers"}
 			{fbvElement type="checkbox" id="showStrip" checked=$showStrip label="plugins.generic.journalHero.showStrip"}
+		{/fbvFormSection}
+		{fbvFormSection title="plugins.generic.journalHero.media" description="plugins.generic.journalHero.media.description"}
+			{fbvElement type="select" id="media" from=$mediaOptions selected=$media translate=false size=$fbvStyles.size.MEDIUM}
+		{/fbvFormSection}
+		{fbvFormSection title="plugins.generic.journalHero.mediaUrl" description="plugins.generic.journalHero.mediaUrl.description"}
+			{fbvElement type="text" id="mediaUrl" value=$mediaUrl}
+		{/fbvFormSection}
+		{fbvFormSection title="plugins.generic.journalHero.mediaLink" description="plugins.generic.journalHero.mediaLink.description"}
+			{fbvElement type="text" id="mediaLink" value=$mediaLink}
 		{/fbvFormSection}
 		{fbvFormSection title="plugins.generic.journalHero.coverCount"}
 			{fbvElement type="text" id="coverCount" value=$coverCount size=$fbvStyles.size.SMALL}

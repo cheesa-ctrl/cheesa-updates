@@ -309,3 +309,36 @@ msgstr "Outfit — geometris tebal (bawaan sebelumnya)"
 msgid "plugins.generic.journalHero.font.theme"
 msgstr "Ikuti font tema"
 
+msgid "plugins.generic.journalHero.media"
+msgstr "Sisi kanan"
+
+msgid "plugins.generic.journalHero.media.description"
+msgstr "Yang ditampilkan di samping teks."
+
+msgid "plugins.generic.journalHero.media.carousel"
+msgstr "Carousel sampul terbitan terbaru"
+
+msgid "plugins.generic.journalHero.media.current"
+msgstr "Satu gambar: sampul terbitan terkini"
+
+msgid "plugins.generic.journalHero.media.logo"
+msgstr "Satu gambar: logo jurnal (Website > Appearance)"
+
+msgid "plugins.generic.journalHero.media.image"
+msgstr "Satu gambar: dari URL di bawah"
+
+msgid "plugins.generic.journalHero.media.none"
+msgstr "Tidak ada (teks saja)"
+
+msgid "plugins.generic.journalHero.mediaUrl"
+msgstr "URL gambar"
+
+msgid "plugins.generic.journalHero.mediaUrl.description"
+msgstr "Dipakai untuk pilihan “Satu gambar: dari URL di bawah”. Logo PNG transparan terlihat paling bagus."
+
+msgid "plugins.generic.journalHero.mediaLink"
+msgstr "Link gambar (opsional)"
+
+msgid "plugins.generic.journalHero.mediaLink.description"
+msgstr "Tujuan saat gambar diklik. Kosongkan: sampul menuju terbitannya, logo tanpa link."
+

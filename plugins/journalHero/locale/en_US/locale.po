@@ -309,3 +309,36 @@ msgstr "Outfit — bold geometric (previous default)"
 msgid "plugins.generic.journalHero.font.theme"
 msgstr "Follow the theme's font"
 
+msgid "plugins.generic.journalHero.media"
+msgstr "Right-hand side"
+
+msgid "plugins.generic.journalHero.media.description"
+msgstr "What to show next to the text."
+
+msgid "plugins.generic.journalHero.media.carousel"
+msgstr "Carousel of recent issue covers"
+
+msgid "plugins.generic.journalHero.media.current"
+msgstr "One image: current issue cover"
+
+msgid "plugins.generic.journalHero.media.logo"
+msgstr "One image: journal logo (Website > Appearance)"
+
+msgid "plugins.generic.journalHero.media.image"
+msgstr "One image: from the URL below"
+
+msgid "plugins.generic.journalHero.media.none"
+msgstr "Nothing (text only)"
+
+msgid "plugins.generic.journalHero.mediaUrl"
+msgstr "Image URL"
+
+msgid "plugins.generic.journalHero.mediaUrl.description"
+msgstr "Used with “One image: from the URL below”. A transparent PNG logo looks best."
+
+msgid "plugins.generic.journalHero.mediaLink"
+msgstr "Image link (optional)"
+
+msgid "plugins.generic.journalHero.mediaLink.description"
+msgstr "Where the single image leads. Leave empty: the cover links to its issue, a logo has no link."
+

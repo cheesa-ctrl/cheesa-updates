@@ -37,6 +37,9 @@ class JournalHeroPlugin extends GenericPlugin {
 		'showIssn' => true,
 		'showFeatures' => true,
 		'showCovers' => true,
+		'media' => 'carousel',          // carousel | current | logo | image | none
+		'mediaUrl' => '',
+		'mediaLink' => '',
 		'coverCount' => 6,
 		'showStrip' => true,
 		'subtitle' => '',
@@ -219,7 +222,11 @@ class JournalHeroPlugin extends GenericPlugin {
 
 		// Recent issues for the cover carousel
 		$covers = [];
-		if ($s('showCovers')) {
+		$media = $s('media');
+		if (!in_array($media, ['carousel', 'current', 'logo', 'image', 'none'])) $media = 'carousel';
+		if (!$s('showCovers') && $media === 'carousel') $media = 'none';
+
+		if ($media === 'carousel') {
 			$count = max(1, min(12, (int) $s('coverCount')));
 			try {
 				$issueDao = DAORegistry::getDAO('IssueDAO');
@@ -276,11 +283,66 @@ class JournalHeroPlugin extends GenericPlugin {
 			'onlineIssnUrl' => $issnUrl($s('onlineIssnUrl'), $onlineIssn),
 			'showFeatures' => (bool) $s('showFeatures'),
 			'covers' => $covers,
+			'media' => $media,
+			'single' => $this->_singleMedia($request, $context, $media, $s),
 			'showStrip' => (bool) $s('showStrip'),
 			'journalName' => $context->getLocalizedAcronym() ?: $context->getLocalizedName(),
 			'editorialUrl' => $dispatcher->url($request, ROUTE_PAGE, null, 'about', 'editorialTeam'),
 			'aboutUrl' => $dispatcher->url($request, ROUTE_PAGE, null, 'about'),
 		];
+	}
+
+	/**
+	 * One image for the right-hand side: current issue cover, the journal logo,
+	 * or any image URL.
+	 */
+	private function _singleMedia($request, $context, $media, $s) {
+		if (!in_array($media, ['current', 'logo', 'image'])) return null;
+		$contextId = $context->getId();
+		$dispatcher = $request->getDispatcher();
+		$cleanUrl = function ($url) {
+			$url = trim((string) $url);
+			return preg_match('#^https?://#i', $url) ? $url : '';
+		};
+		$link = $cleanUrl($s('mediaLink'));
+
+		if ($media === 'current') {
+			try {
+				$issue = DAORegistry::getDAO('IssueDAO')->getCurrent($contextId);
+			} catch (Exception $e) {
+				$issue = null;
+			}
+			if (!$issue) return null;
+			return [
+				'kind' => 'cover',
+				'image' => $issue->getLocalizedCoverImageUrl(),
+				'alt' => $issue->getLocalizedCoverImageAltText() ?: $issue->getIssueIdentification(),
+				'title' => $issue->getLocalizedTitle() ?: ($context->getLocalizedAcronym() ?: $context->getLocalizedName()),
+				'label' => $issue->getIssueIdentification(['showTitle' => false]),
+				'url' => $link ?: $dispatcher->url($request, ROUTE_PAGE, null, 'issue', 'view', $issue->getBestIssueId()),
+			];
+		}
+
+		$image = '';
+		$alt = $context->getLocalizedName();
+		if ($media === 'image') {
+			$image = $cleanUrl($s('mediaUrl'));
+		}
+		if ($image === '') {
+			// Journal logo (Website > Appearance > Logo), then thumbnail
+			foreach (['pageHeaderLogoImage', 'journalThumbnail'] as $field) {
+				$logo = $context->getLocalizedData($field);
+				if (is_array($logo) && !empty($logo['uploadName'])) {
+					import('classes.file.PublicFileManager');
+					$publicFileManager = new PublicFileManager();
+					$image = $request->getBaseUrl() . '/' . $publicFileManager->getContextFilesPath($contextId) . '/' . rawurlencode($logo['uploadName']);
+					if (!empty($logo['altText'])) $alt = $logo['altText'];
+					break;
+				}
+			}
+		}
+		if ($image === '') return null;
+		return ['kind' => 'logo', 'image' => $image, 'alt' => $alt, 'url' => $link];
 	}
 
 	/**

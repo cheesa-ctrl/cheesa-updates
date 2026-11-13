@@ -148,7 +148,7 @@ html:has(.jh-root) { overflow-x: clip; }
 .jh-boxed .jh-hero:only-child { border-radius: 16px; }
 .jh-boxed .jh-strip { border-radius: 0 0 16px 16px; border: 1px solid var(--jh-line); border-top: 0; border-bottom: 4px solid var(--jh-accent); box-shadow: 0 8px 24px rgba(15,23,42,.06); }
 .jh-boxed .jh-wave { display: none; }
-.jh-boxed .jh-wrap { padding: 0 36px; max-width: none; }
+.jh-boxed .jh-wrap { padding-left: 36px; padding-right: 36px; max-width: none; }
 .jh-boxed .jh-strip__grid { padding-top: 22px; padding-bottom: 22px; }
 .jh-root.jh-boxed .jh-strip__item { padding: 0 20px; }
 .jh-root.jh-boxed .jh-strip__item:first-child { border-left: 0; padding-left: 0; }
@@ -169,7 +169,7 @@ html:has(.jh-root) { overflow-x: clip; }
 .jh-compact .jh-covers__nav { margin-top: 4px; }
 
 @media (max-width: 992px) {
-	.jh-boxed .jh-wrap { padding: 0 22px; }
+	.jh-boxed .jh-wrap { padding-left: 22px; padding-right: 22px; }
 	.jh-root.jh-boxed .jh-strip__item { padding: 0; }
 }
 
@@ -339,3 +339,59 @@ html body .jh-root .jh-cover__title { font-family: var(--jh-title-font); font-we
 	html:root body .pkp_head_wrapper:has(> .jh-root) > .pkp_site_nav_menu { order: 3; }
 	html:root body .pkp_head_wrapper:has(> .jh-root) > .jh-root.jh-boxed { margin-bottom: 12px; }
 }
+
+/* =====================================================================
+ * Right-hand media: single image (logo / current cover / custom image)
+ * ===================================================================== */
+.jh-hero__grid--media1 { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); }
+.jh-hero__grid--carousel { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); }
+.jh-single { display: flex; align-items: center; justify-content: center; min-width: 0; }
+.jh-root .jh-single__link { display: block; color: #fff; transition: transform .2s; }
+.jh-root a.jh-single__link:hover { transform: translateY(-4px); }
+.jh-root .jh-single--logo img { display: block; max-width: 100%; max-height: 300px; width: auto; height: auto; object-fit: contain; margin: 0 auto; filter: drop-shadow(0 12px 28px rgba(0,0,0,.35)); border: 0; }
+.jh-root .jh-single--cover img { display: block; width: 100%; max-width: 270px; height: auto; margin: 0 auto; border-radius: 6px; box-shadow: 0 22px 46px rgba(0,0,0,.45); border: 0; }
+.jh-root .jh-single--cover .jh-single__link { width: 100%; max-width: 270px; }
+.jh-root .jh-cover--solo { width: 100%; flex: none; }
+
+/* =====================================================================
+ * Text sizes follow the width of the text column (container queries),
+ * so the title fits whether the right side is a carousel, one image or nothing.
+ * ===================================================================== */
+.jh-hero__main { container-type: inline-size; }
+html body .jh-root .jh-title { font-size: clamp(24px, 7.6cqi, 52px); }
+html body .jh-root.jh-compact .jh-title { font-size: clamp(22px, 6.6cqi, 42px); }
+html body .jh-root .jh-desc { font-size: clamp(14.5px, 2.75cqi, 18px); }
+html body .jh-root.jh-compact .jh-desc { font-size: clamp(14px, 2.5cqi, 16.5px); }
+html body .jh-root .jh-eyebrow { font-size: clamp(11px, 2cqi, 14px); }
+html body .jh-root .jh-features b { font-size: clamp(14px, 2.4cqi, 16px); }
+html body .jh-root .jh-features small { font-size: clamp(12.5px, 2.1cqi, 14px); }
+@container (max-width: 520px) {
+	.jh-root .jh-features { grid-template-columns: 1fr; gap: 12px; }
+	.jh-root .jh-features li { border-left: 0; padding: 0; }
+}
+
+/* =====================================================================
+ * Small screens
+ * ===================================================================== */
+@media (max-width: 991px) {
+	.jh-hero__grid--media1, .jh-hero__grid--carousel { grid-template-columns: 1fr; }
+	.jh-covers { width: 100%; max-width: 540px; margin: 0 auto; }
+	.jh-root .jh-single--logo img { max-height: 180px; }
+	.jh-root .jh-single--cover img, .jh-root .jh-single--cover .jh-single__link { max-width: 200px; }
+
+	/* The theme's user menu (inside the header) must open above the menu bar */
+	html:root body .pkp_head_wrapper:has(> .jh-root) .pkp_site_name_wrapper { position: relative; z-index: 60; overflow: visible !important; }
+	html:root body .pkp_head_wrapper:has(> .jh-root) .pkp_navigation_user_wrapper,
+	html:root body .pkp_head_wrapper:has(> .jh-root) .ch-userbar,
+	html:root body .pkp_head_wrapper:has(> .jh-root) #navigationUser { position: relative; z-index: 70; }
+	html:root body .pkp_head_wrapper:has(> .jh-root) #navigationUser ul { z-index: 80; }
+	html:root body .pkp_head_wrapper:has(> .jh-root) > .pkp_site_nav_menu { position: relative; z-index: 50; }
+}
+@media (max-width: 640px) {
+	.jh-root .jh-cover { flex-basis: 40%; }
+	.jh-hero__grid { gap: 26px; }
+}
+/* Logo: fill the column (works for SVG logos without an intrinsic size too) */
+.jh-root .jh-single--logo .jh-single__link { width: 100%; }
+.jh-root .jh-single--logo img { width: 100%; max-width: 440px; }
+@media (max-width: 991px) { .jh-root .jh-single--logo img { max-width: 320px; } }

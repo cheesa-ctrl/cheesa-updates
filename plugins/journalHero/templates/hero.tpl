@@ -70,7 +70,7 @@
 	{else}
 
 	<section class="jh-hero{if $jh.background} jh-hero--image{/if}"{if $jh.background} style="--jh-bg:url('{$jh.background|escape}')"{/if}>
-		<div class="jh-wrap jh-hero__grid{if !$jh.covers} jh-hero__grid--single{/if}">
+		<div class="jh-wrap jh-hero__grid{if $jh.media == 'carousel' && $jh.covers} jh-hero__grid--carousel{elseif $jh.single} jh-hero__grid--media1{else} jh-hero__grid--single{/if}">
 			<div class="jh-hero__main">
 				{if $jh.eyebrow}
 					<div class="jh-eyebrow">{$jh.eyebrow|escape}</div>
@@ -116,7 +116,7 @@
 				{/if}
 			</div>
 
-			{if $jh.covers}
+			{if $jh.media == 'carousel' && $jh.covers}
 				<div class="jh-covers" data-jh-carousel>
 					<div class="jh-covers__track">
 						{foreach from=$jh.covers item=jhCover name=jhCovers}
@@ -138,6 +138,20 @@
 							<button type="button" data-jh-next aria-label="{translate|escape key="plugins.generic.journalHero.next"}">&rsaquo;</button>
 						</div>
 					{/if}
+				</div>
+			{elseif $jh.single}
+				<div class="jh-single jh-single--{$jh.single.kind}">
+					{if $jh.single.url}<a class="jh-single__link" href="{$jh.single.url|escape}">{else}<span class="jh-single__link">{/if}
+						{if $jh.single.image}
+							<img src="{$jh.single.image|escape}" alt="{$jh.single.alt|escape}">
+						{else}
+							<span class="jh-cover jh-cover--0 jh-cover--solo">
+								<span class="jh-cover__journal">{$jh.journalName|escape}</span>
+								<span class="jh-cover__title">{$jh.single.title|escape}</span>
+								<span class="jh-cover__label">{$jh.single.label|escape}</span>
+							</span>
+						{/if}
+					{if $jh.single.url}</a>{else}</span>{/if}
 				</div>
 			{/if}
 		</div>
