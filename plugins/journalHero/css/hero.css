@@ -417,3 +417,42 @@ html body .jh-root .jh-features small { font-size: clamp(12.5px, 2.1cqi, 14px); 
 	html body .jh-root .jh-single, html body .jh-root .jh-single__link { display: flex !important; justify-content: center; width: 100%; }
 	html body .jh-root .jh-single img { margin-left: auto !important; margin-right: auto !important; }
 }
+
+/* =====================================================================
+ * v1.6 — proportional sizing
+ * Tighter spacing, smaller title cap, logo never enlarged past its own
+ * size, text column takes the free width.
+ * ===================================================================== */
+.jh-hero__grid { padding-top: 48px; padding-bottom: 48px; gap: 40px; }
+.jh-compact .jh-hero__grid { padding-top: 32px; padding-bottom: 32px; gap: 32px; }
+
+html body .jh-root .jh-title { font-size: clamp(24px, 6.2cqi, 44px); line-height: 1.12; margin-bottom: 14px; }
+html body .jh-root.jh-compact .jh-title { font-size: clamp(22px, 5.4cqi, 36px); margin-bottom: 10px; }
+html body .jh-root .jh-desc { max-width: 64ch; margin-bottom: 22px; }
+html body .jh-root.jh-compact .jh-desc { margin-bottom: 18px; }
+.jh-root .jh-features { margin-bottom: 20px; max-width: 760px; }
+.jh-root.jh-compact .jh-features { margin-bottom: 16px; }
+
+/* One image: the image column is only as wide as the image */
+.jh-hero__grid--media1 { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+html body .jh-root .jh-single, html body .jh-root .jh-single__link { width: auto; }
+.jh-root .jh-single--logo img { width: auto; max-width: min(100%, 280px); max-height: 240px; }
+.jh-root .jh-single--logo img[src$=".svg"], .jh-root .jh-single--logo img[src^="data:image/svg"] { width: 280px; }
+.jh-compact .jh-single--logo img { max-width: min(100%, 220px); max-height: 200px; }
+.jh-compact .jh-single--logo img[src$=".svg"] { width: 220px; }
+.jh-root .jh-single--cover img, .jh-root .jh-single--cover .jh-single__link { max-width: 230px; }
+.jh-compact .jh-single--cover img, .jh-compact .jh-single--cover .jh-single__link { max-width: 190px; }
+.jh-root .jh-single--cover .jh-cover--solo { width: 230px; }
+.jh-compact .jh-single--cover .jh-cover--solo { width: 190px; }
+
+/* Carousel: a bit smaller so it doesn't dominate */
+.jh-hero__grid--carousel { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+.jh-root .jh-covers { max-width: 520px; justify-self: end; width: 100%; }
+
+@media (max-width: 991px) {
+	.jh-hero__grid { padding-top: 32px; padding-bottom: 32px; gap: 24px; }
+	.jh-hero__grid--media1 { grid-template-columns: 1fr; }
+	html body .jh-root .jh-single, html body .jh-root .jh-single__link { width: 100%; }
+	.jh-root .jh-single--logo img { max-width: 200px; max-height: 180px; }
+	.jh-root .jh-covers { justify-self: center; }
+}
