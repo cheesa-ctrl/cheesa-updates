@@ -456,3 +456,7 @@ html body .jh-root .jh-single, html body .jh-root .jh-single__link { width: auto
 	.jh-root .jh-single--logo img { max-width: 200px; max-height: 180px; }
 	.jh-root .jh-covers { justify-self: center; }
 }
+
+/* Full width: inner content lines up with the site's content column */
+.jh-full .jh-wrap { max-width: var(--jh-wrapw, 1200px); padding-left: 0; padding-right: 0; }
+@media (max-width: 1240px) { .jh-full .jh-wrap { padding-left: 24px; padding-right: 24px; } }

@@ -116,7 +116,15 @@ class JournalHeroPlugin extends GenericPlugin {
 		if ($families !== '') {
 			$templateMgr->addStyleSheet('journalHeroFont', 'https://fonts.googleapis.com/css2?' . $families . '&display=swap', ['contexts' => 'frontend']);
 		}
-		$templateMgr->addStyleSheet('journalHero', $baseUrl . '/css/hero.css', ['contexts' => 'frontend']);
+		// Cache-buster tied to the plugin version (OJS only appends its own version)
+		$assetVersion = '1';
+		try {
+			$version = $this->getCurrentVersion();
+			if ($version) $assetVersion = $version->getVersionString(false);
+		} catch (Exception $e) {
+		}
+		$assetVersion = rawurlencode($assetVersion);
+		$templateMgr->addStyleSheet('journalHero', $baseUrl . '/css/hero.css?jhv=' . $assetVersion, ['contexts' => 'frontend']);
 		$templateMgr->addStyleSheet('journalHeroVars', $this->_cssVariables($contextId), ['contexts' => 'frontend', 'inline' => true]);
 		if ($this->getHeroSetting($contextId, 'hideSiteName')) {
 			// Join the banner to the top of the page: hide the site name/logo,
@@ -138,7 +146,7 @@ class JournalHeroPlugin extends GenericPlugin {
 				. 'html:root body .pkp_structure_head .pkp_site_name_wrapper{min-height:0!important;padding-top:0!important;padding-bottom:0!important}';
 			$templateMgr->addStyleSheet('journalHeroHideName', $css, ['contexts' => 'frontend', 'inline' => true]);
 		}
-		$templateMgr->addJavaScript('journalHero', $baseUrl . '/js/hero.js', ['contexts' => 'frontend']);
+		$templateMgr->addJavaScript('journalHero', $baseUrl . '/js/hero.js?jhv=' . $assetVersion, ['contexts' => 'frontend']);
 
 		$templateMgr->assign('jh', $this->_buildData($request, $context));
 		$html = $templateMgr->fetch($this->getTemplateResource('hero.tpl'));

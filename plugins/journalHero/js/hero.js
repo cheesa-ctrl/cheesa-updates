@@ -4,13 +4,22 @@
 (function () {
 	'use strict';
 	/* Boxed layout: match the width of the site's main content column */
+	/* Match the site's content width: the whole box (boxed) or the inner
+	   content of a full-width banner, so edges line up with the page below. */
+	function contentWidth() {
+		var content = document.querySelector('.pkp_structure_content') || document.querySelector('main, [role=main]');
+		if (!content) return 0;
+		var cs = getComputedStyle(content);
+		return content.getBoundingClientRect().width - parseFloat(cs.paddingLeft || 0) - parseFloat(cs.paddingRight || 0);
+	}
 	function matchWidth() {
+		var w = Math.round(contentWidth());
+		if (w <= 320) return;
 		document.querySelectorAll('.jh-root.jh-boxed:not([data-jh-fixed])').forEach(function (root) {
-			var content = document.querySelector('.pkp_structure_content') || document.querySelector('main, [role=main]');
-			if (!content) return;
-			var cs = getComputedStyle(content);
-			var w = content.getBoundingClientRect().width - parseFloat(cs.paddingLeft || 0) - parseFloat(cs.paddingRight || 0);
-			if (w > 320) root.style.setProperty('--jh-boxw', Math.round(w) + 'px');
+			root.style.setProperty('--jh-boxw', w + 'px');
+		});
+		document.querySelectorAll('.jh-root.jh-full').forEach(function (root) {
+			root.style.setProperty('--jh-wrapw', w + 'px');
 		});
 	}
 
