@@ -1,0 +1,488 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: id_ID\n"
+
+msgid "plugins.generic.apcLoa.displayName"
+msgstr "LoA & Invoice APC"
+
+msgid "plugins.generic.apcLoa.description"
+msgstr "Menerbitkan Letter of Acceptance bernomor dan dua bahasa saat naskah diterima, beserta invoice APC, kuitansi, pembayaran online (Midtrans, Xendit) atau bukti transfer bank, dasbor pembayaran, dan verifikasi QR."
+
+msgid "plugins.generic.apcLoa.dashboard"
+msgstr "Dasbor APC & LoA"
+
+msgid "plugins.generic.apcLoa.amount"
+msgstr "Jumlah"
+
+msgid "plugins.generic.apcLoa.dueDate"
+msgstr "Jatuh tempo"
+
+msgid "plugins.generic.apcLoa.paidDate"
+msgstr "Dibayar pada"
+
+msgid "plugins.generic.apcLoa.status.nofee"
+msgstr "Tanpa biaya"
+
+msgid "plugins.generic.apcLoa.status.unpaid"
+msgstr "Belum dibayar"
+
+msgid "plugins.generic.apcLoa.status.pending"
+msgstr "Menunggu konfirmasi"
+
+msgid "plugins.generic.apcLoa.status.paid"
+msgstr "Lunas"
+
+msgid "plugins.generic.apcLoa.status.waived"
+msgstr "Dibebaskan"
+
+msgid "plugins.generic.apcLoa.status.revoked"
+msgstr "Dibatalkan"
+
+msgid "plugins.generic.apcLoa.method.bank"
+msgstr "Transfer bank"
+
+msgid "plugins.generic.apcLoa.method.midtrans"
+msgstr "Online (Midtrans)"
+
+msgid "plugins.generic.apcLoa.method.xendit"
+msgstr "Online (Xendit)"
+
+msgid "plugins.generic.apcLoa.method.manual"
+msgstr "Dikonfirmasi editor"
+
+msgid "plugins.generic.apcLoa.method.waiver"
+msgstr "Pembebasan biaya"
+
+msgid "plugins.generic.apcLoa.doc.loa"
+msgstr "Letter of Acceptance"
+
+msgid "plugins.generic.apcLoa.doc.invoice"
+msgstr "Invoice"
+
+msgid "plugins.generic.apcLoa.doc.receipt"
+msgstr "Kuitansi"
+
+msgid "plugins.generic.apcLoa.doc.print"
+msgstr "Cetak / Simpan PDF"
+
+msgid "plugins.generic.apcLoa.doc.printHint"
+msgstr "Di jendela cetak pilih “Simpan sebagai PDF”, margin “Tidak ada”."
+
+msgid "plugins.generic.apcLoa.doc.preview"
+msgstr "PRATINJAU"
+
+msgid "plugins.generic.apcLoa.doc.paidStamp"
+msgstr "LUNAS · PAID"
+
+msgid "plugins.generic.apcLoa.preview.sampleTitle"
+msgstr "Contoh Judul Naskah untuk Pratinjau Tata Letak Letter of Acceptance"
+
+msgid "plugins.generic.apcLoa.author.title"
+msgstr "APC & LoA"
+
+msgid "plugins.generic.apcLoa.author.lead"
+msgstr "Letter of Acceptance, invoice, dan kuitansi untuk naskah Anda yang diterima. Bayar biaya publikasi (APC) secara online atau unggah bukti transfer di sini."
+
+msgid "plugins.generic.apcLoa.author.empty"
+msgstr "Belum ada naskah Anda yang diterima di jurnal ini."
+
+msgid "plugins.generic.apcLoa.author.pending"
+msgstr "Bukti transfer Anda sudah diterima dan sedang menunggu konfirmasi editor."
+
+msgid "plugins.generic.apcLoa.author.viewProof"
+msgstr "lihat bukti"
+
+msgid "plugins.generic.apcLoa.author.editorNote"
+msgstr "Catatan dari editor"
+
+msgid "plugins.generic.apcLoa.author.payOnline"
+msgstr "Bayar online"
+
+msgid "plugins.generic.apcLoa.author.payOnline.desc"
+msgstr "QRIS, e-wallet, virtual account, atau kartu. Invoice otomatis berstatus lunas setelah pembayaran terkonfirmasi."
+
+msgid "plugins.generic.apcLoa.author.payMidtrans"
+msgstr "Bayar via Midtrans"
+
+msgid "plugins.generic.apcLoa.author.payXendit"
+msgstr "Bayar via Xendit"
+
+msgid "plugins.generic.apcLoa.author.payBank"
+msgstr "Transfer bank"
+
+msgid "plugins.generic.apcLoa.author.proofFile"
+msgstr "Bukti transfer (PDF/JPG/PNG, maks. 5 MB)"
+
+msgid "plugins.generic.apcLoa.author.proofNote"
+msgstr "Catatan (opsional)"
+
+msgid "plugins.generic.apcLoa.author.proofNote.placeholder"
+msgstr "mis. nama pengirim, bank, tanggal transfer"
+
+msgid "plugins.generic.apcLoa.author.upload"
+msgstr "Unggah bukti"
+
+msgid "plugins.generic.apcLoa.author.reupload"
+msgstr "Ganti bukti"
+
+msgid "plugins.generic.apcLoa.author.proofRules"
+msgstr "Editor akan memeriksa bukti Anda; kuitansi tersedia setelah dikonfirmasi."
+
+msgid "plugins.generic.apcLoa.msg.error"
+msgstr "Permintaan tidak dapat diproses. Silakan coba lagi."
+
+msgid "plugins.generic.apcLoa.msg.gatewayerror"
+msgstr "Halaman pembayaran tidak dapat dibuka. Coba lagi nanti atau gunakan transfer bank."
+
+msgid "plugins.generic.apcLoa.msg.returned"
+msgstr "Terima kasih. Jika pembayaran berhasil, status akan berubah menjadi Lunas dalam beberapa menit."
+
+msgid "plugins.generic.apcLoa.msg.uploaded"
+msgstr "Bukti transfer berhasil diunggah. Editor akan mengonfirmasinya."
+
+msgid "plugins.generic.apcLoa.msg.uploaderror"
+msgstr "Berkas tidak dapat diunggah."
+
+msgid "plugins.generic.apcLoa.msg.toolarge"
+msgstr "Ukuran berkas lebih dari 5 MB."
+
+msgid "plugins.generic.apcLoa.msg.badtype"
+msgstr "Hanya berkas PDF, JPG, PNG, atau WEBP yang diterima."
+
+msgid "plugins.generic.apcLoa.msg.saved"
+msgstr "Tersimpan."
+
+msgid "plugins.generic.apcLoa.msg.sent"
+msgstr "Email LoA sudah dikirim."
+
+msgid "plugins.generic.apcLoa.msg.notsent"
+msgstr "Email tidak terkirim (email penulis tidak ada atau terjadi kesalahan pengiriman)."
+
+msgid "plugins.generic.apcLoa.mail.newProof"
+msgstr "Bukti transfer baru"
+
+msgid "plugins.generic.apcLoa.mail.paidOnline"
+msgstr "Pembayaran online diterima"
+
+msgid "plugins.generic.apcLoa.verify.title"
+msgstr "Verifikasi Dokumen"
+
+msgid "plugins.generic.apcLoa.verify.notFound"
+msgstr "Dokumen tidak ditemukan"
+
+msgid "plugins.generic.apcLoa.verify.notFound.desc"
+msgstr "Kode ini tidak cocok dengan dokumen apa pun yang diterbitkan jurnal ini."
+
+msgid "plugins.generic.apcLoa.verify.revoked"
+msgstr "Dokumen dibatalkan"
+
+msgid "plugins.generic.apcLoa.verify.revoked.desc"
+msgstr "Dokumen ini pernah diterbitkan oleh jurnal, tetapi telah dibatalkan dan tidak berlaku lagi."
+
+msgid "plugins.generic.apcLoa.verify.valid"
+msgstr "Dokumen sah"
+
+msgid "plugins.generic.apcLoa.verify.valid.desc"
+msgstr "Dokumen ini diterbitkan oleh jurnal dan sah."
+
+msgid "plugins.generic.apcLoa.verify.manuscript"
+msgstr "Naskah"
+
+msgid "plugins.generic.apcLoa.verify.authors"
+msgstr "Penulis"
+
+msgid "plugins.generic.apcLoa.verify.paymentStatus"
+msgstr "Status pembayaran"
+
+msgid "plugins.generic.apcLoa.dash.all"
+msgstr "Semua"
+
+msgid "plugins.generic.apcLoa.dash.received"
+msgstr "Diterima"
+
+msgid "plugins.generic.apcLoa.dash.outstanding"
+msgstr "Belum terbayar"
+
+msgid "plugins.generic.apcLoa.dash.preview"
+msgstr "Pratinjau dokumen"
+
+msgid "plugins.generic.apcLoa.dash.empty"
+msgstr "Belum ada data. Data dibuat saat naskah diterima (Accept)."
+
+msgid "plugins.generic.apcLoa.dash.numbers"
+msgstr "Nomor dokumen"
+
+msgid "plugins.generic.apcLoa.dash.actions"
+msgstr "Aksi"
+
+msgid "plugins.generic.apcLoa.dash.accepted"
+msgstr "Diterima"
+
+msgid "plugins.generic.apcLoa.dash.loaSent"
+msgstr "LoA terkirim"
+
+msgid "plugins.generic.apcLoa.dash.setAmount"
+msgstr "Ubah"
+
+msgid "plugins.generic.apcLoa.dash.proof"
+msgstr "Bukti"
+
+msgid "plugins.generic.apcLoa.dash.markPaid"
+msgstr "Tandai lunas"
+
+msgid "plugins.generic.apcLoa.dash.confirmPaid.ask"
+msgstr "Tandai invoice ini lunas?"
+
+msgid "plugins.generic.apcLoa.dash.rejectProof"
+msgstr "Tolak bukti"
+
+msgid "plugins.generic.apcLoa.dash.rejectReason"
+msgstr "alasan"
+
+msgid "plugins.generic.apcLoa.dash.waive"
+msgstr "Bebaskan biaya"
+
+msgid "plugins.generic.apcLoa.dash.waive.ask"
+msgstr "Bebaskan APC untuk naskah ini?"
+
+msgid "plugins.generic.apcLoa.dash.unwaive"
+msgstr "Batalkan pembebasan"
+
+msgid "plugins.generic.apcLoa.dash.resend"
+msgstr "Kirim ulang LoA"
+
+msgid "plugins.generic.apcLoa.dash.revoke"
+msgstr "Batalkan"
+
+msgid "plugins.generic.apcLoa.dash.revoke.ask"
+msgstr "Batalkan LoA dan invoice? Verifikasi QR akan menampilkannya sebagai dibatalkan."
+
+msgid "plugins.generic.apcLoa.dash.restore"
+msgstr "Pulihkan"
+
+msgid "plugins.generic.apcLoa.dash.note"
+msgstr "catatan editor"
+
+msgid "plugins.generic.apcLoa.settings.preview"
+msgstr "Pratinjau LoA"
+
+msgid "plugins.generic.apcLoa.settings.authorPage"
+msgstr "Halaman penulis (tambahkan ke menu sebagai Remote URL):"
+
+msgid "plugins.generic.apcLoa.settings.section.fee"
+msgstr "Biaya & pengiriman"
+
+msgid "plugins.generic.apcLoa.settings.apcFee"
+msgstr "Biaya publikasi (APC)"
+
+msgid "plugins.generic.apcLoa.settings.apcFee.description"
+msgstr "0 = tanpa APC: hanya LoA yang diterbitkan."
+
+msgid "plugins.generic.apcLoa.settings.apcFee.amount"
+msgstr "Jumlah"
+
+msgid "plugins.generic.apcLoa.settings.apcFee.invalid"
+msgstr "Isi biaya 0 atau lebih."
+
+msgid "plugins.generic.apcLoa.settings.currency"
+msgstr "Mata uang (IDR, USD…)"
+
+msgid "plugins.generic.apcLoa.settings.currency.invalid"
+msgstr "Gunakan kode mata uang 3 huruf, mis. IDR."
+
+msgid "plugins.generic.apcLoa.settings.dueDays"
+msgstr "Jatuh tempo (hari)"
+
+msgid "plugins.generic.apcLoa.settings.sendTo"
+msgstr "Kirim LoA ke"
+
+msgid "plugins.generic.apcLoa.settings.sendTo.all"
+msgstr "Semua penulis"
+
+msgid "plugins.generic.apcLoa.settings.sendTo.primary"
+msgstr "Penulis korespondensi saja"
+
+msgid "plugins.generic.apcLoa.settings.triggerProduction"
+msgstr "Terbitkan LoA juga saat naskah langsung dikirim ke produksi"
+
+msgid "plugins.generic.apcLoa.settings.section.payment"
+msgstr "Pembayaran"
+
+msgid "plugins.generic.apcLoa.settings.methods"
+msgstr "Metode pembayaran"
+
+msgid "plugins.generic.apcLoa.settings.methodBank"
+msgstr "Transfer bank dengan unggah bukti"
+
+msgid "plugins.generic.apcLoa.settings.methodMidtrans"
+msgstr "Midtrans Snap (khusus IDR)"
+
+msgid "plugins.generic.apcLoa.settings.methodXendit"
+msgstr "Xendit Invoice"
+
+msgid "plugins.generic.apcLoa.settings.bankInstructions"
+msgstr "Instruksi transfer bank"
+
+msgid "plugins.generic.apcLoa.settings.bankInstructions.description"
+msgstr "Bank, nomor rekening, atas nama. Tampil di invoice dan halaman penulis."
+
+msgid "plugins.generic.apcLoa.settings.qrisUrl"
+msgstr "URL gambar QRIS statis (opsional)"
+
+msgid "plugins.generic.apcLoa.settings.qrisUrl.description"
+msgstr "Unggah gambarnya (mis. Website > Appearance atau pengelola berkas), lalu tempel URL-nya."
+
+msgid "plugins.generic.apcLoa.settings.midtrans"
+msgstr "Midtrans"
+
+msgid "plugins.generic.apcLoa.settings.midtrans.description"
+msgstr "Gunakan Server Key dari akun Midtrans milik jurnal (Settings > Access Keys)."
+
+msgid "plugins.generic.apcLoa.settings.midtransServerKey"
+msgstr "Server Key"
+
+msgid "plugins.generic.apcLoa.settings.midtransProduction"
+msgstr "Mode produksi (kosongkan centang untuk uji Sandbox)"
+
+msgid "plugins.generic.apcLoa.settings.xendit"
+msgstr "Xendit"
+
+msgid "plugins.generic.apcLoa.settings.xendit.description"
+msgstr "Secret API key dengan izin Money-in write, dan Callback Verification Token (Settings > Webhooks)."
+
+msgid "plugins.generic.apcLoa.settings.xenditSecretKey"
+msgstr "Secret Key"
+
+msgid "plugins.generic.apcLoa.settings.xenditCallbackToken"
+msgstr "Callback Verification Token"
+
+msgid "plugins.generic.apcLoa.settings.notifyUrl"
+msgstr "URL notifikasi / webhook yang didaftarkan di dasbor gateway:"
+
+msgid "plugins.generic.apcLoa.settings.section.letterhead"
+msgstr "Kop surat"
+
+msgid "plugins.generic.apcLoa.settings.logos"
+msgstr "Logo"
+
+msgid "plugins.generic.apcLoa.settings.logos.description"
+msgstr "URL gambar logo kiri dan kanan (boleh kosong salah satu)."
+
+msgid "plugins.generic.apcLoa.settings.logoLeftUrl"
+msgstr "URL logo kiri"
+
+msgid "plugins.generic.apcLoa.settings.logoRightUrl"
+msgstr "URL logo kanan"
+
+msgid "plugins.generic.apcLoa.settings.headerLines"
+msgstr "Teks kop (maks. 5 baris)"
+
+msgid "plugins.generic.apcLoa.settings.headerLines.description"
+msgstr "Satu baris per baris; baris pertama paling besar. Kosong = nama jurnal, penerbit, ISSN, alamat, dan email."
+
+msgid "plugins.generic.apcLoa.settings.layout"
+msgstr "Tata letak"
+
+msgid "plugins.generic.apcLoa.settings.headerLineStyle"
+msgstr "Garis di bawah kop"
+
+msgid "plugins.generic.apcLoa.settings.line.double"
+msgstr "Ganda"
+
+msgid "plugins.generic.apcLoa.settings.line.single"
+msgstr "Tunggal"
+
+msgid "plugins.generic.apcLoa.settings.line.thick"
+msgstr "Tebal"
+
+msgid "plugins.generic.apcLoa.settings.line.none"
+msgstr "Tanpa garis"
+
+msgid "plugins.generic.apcLoa.settings.paperSize"
+msgstr "Ukuran kertas"
+
+msgid "plugins.generic.apcLoa.settings.accentColor"
+msgstr "Warna aksen (hex)"
+
+msgid "plugins.generic.apcLoa.settings.city"
+msgstr "Kota untuk baris tanggal"
+
+msgid "plugins.generic.apcLoa.settings.city.description"
+msgstr "mis. Madiun → “Madiun, 16 November 2026”."
+
+msgid "plugins.generic.apcLoa.settings.section.numbering"
+msgstr "Penomoran dokumen"
+
+msgid "plugins.generic.apcLoa.settings.numberPattern"
+msgstr "Pola nomor"
+
+msgid "plugins.generic.apcLoa.settings.numberPattern.description"
+msgstr "Placeholder: {SEQ} nomor urut 5 digit per tahun, {PREFIX}, {ACRONYM}, {YEAR}, {MONTH}, {ROMAN} bulan Romawi, {ID} ID naskah. Nomor yang sudah terbit tidak akan berubah."
+
+msgid "plugins.generic.apcLoa.settings.prefixes"
+msgstr "Prefiks"
+
+msgid "plugins.generic.apcLoa.settings.prefixLoa"
+msgstr "LoA"
+
+msgid "plugins.generic.apcLoa.settings.prefixInvoice"
+msgstr "Invoice"
+
+msgid "plugins.generic.apcLoa.settings.prefixReceipt"
+msgstr "Kuitansi"
+
+msgid "plugins.generic.apcLoa.settings.section.signers"
+msgstr "Tanda tangan & verifikasi"
+
+msgid "plugins.generic.apcLoa.settings.signer1"
+msgstr "Penanda tangan 1"
+
+msgid "plugins.generic.apcLoa.settings.signer2"
+msgstr "Penanda tangan 2 (opsional)"
+
+msgid "plugins.generic.apcLoa.settings.signer2.description"
+msgstr "Kosongkan nama untuk menampilkan satu penanda tangan saja."
+
+msgid "plugins.generic.apcLoa.settings.signerName"
+msgstr "Nama"
+
+msgid "plugins.generic.apcLoa.settings.signerTitle"
+msgstr "Jabatan"
+
+msgid "plugins.generic.apcLoa.settings.signerSign"
+msgstr "URL gambar tanda tangan (PNG transparan)"
+
+msgid "plugins.generic.apcLoa.settings.stampUrl"
+msgstr "URL gambar stempel (opsional)"
+
+msgid "plugins.generic.apcLoa.settings.stampUrl.description"
+msgstr "Ditempatkan di samping penanda tangan 1."
+
+msgid "plugins.generic.apcLoa.settings.showQr"
+msgstr "Tampilkan kode QR verifikasi pada dokumen"
+
+msgid "plugins.generic.apcLoa.settings.footerText"
+msgstr "Teks kaki"
+
+msgid "plugins.generic.apcLoa.settings.section.wording"
+msgstr "Isi LoA & email"
+
+msgid "plugins.generic.apcLoa.settings.loaBodyId"
+msgstr "Paragraf LoA (Bahasa Indonesia)"
+
+msgid "plugins.generic.apcLoa.settings.loaBodyEn"
+msgstr "Paragraf LoA (Bahasa Inggris)"
+
+msgid "plugins.generic.apcLoa.settings.loaBody.description"
+msgstr "Placeholder: {title}, {authors}, {journal}, {date}."
+
+msgid "plugins.generic.apcLoa.settings.emailSubject"
+msgstr "Subjek email"
+
+msgid "plugins.generic.apcLoa.settings.emailBody"
+msgstr "Isi email"
+
+msgid "plugins.generic.apcLoa.settings.emailBody.description"
+msgstr "Placeholder: {authorName}, {title}, {journal}, {loaUrl}, {invoiceBlock} / {invoiceBlockEn} (baris invoice, kosong bila tanpa biaya), {apcPageUrl}."
+

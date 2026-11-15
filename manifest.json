@@ -1,5 +1,14 @@
 {
     "packages": {
+        "apcLoa": {
+            "category": "generic",
+            "label": "Apc Loa",
+            "version": "1.0.0.0",
+            "file": "apcLoa-1.0.0.0.tar.gz",
+            "sha256": "e9da0181133aafebef0560f48abbca8ca1042b8b1ee28ff5544859f2ff9b483f",
+            "size": 40730,
+            "released": "2026-11-15"
+        },
         "cheesaControlPanel": {
             "category": "generic",
             "label": "CHEESA Control Panel",
@@ -64,5 +73,5 @@
             "released": "2026-11-10"
         }
     },
-    "generated": "2026-11-15T22:09:51+00:00"
+    "generated": "2026-11-15T22:37:04+00:00"
 }

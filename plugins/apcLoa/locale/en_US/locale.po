@@ -1,0 +1,488 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: en_US\n"
+
+msgid "plugins.generic.apcLoa.displayName"
+msgstr "LoA & APC Invoice"
+
+msgid "plugins.generic.apcLoa.description"
+msgstr "Issues a numbered, bilingual Letter of Acceptance when a manuscript is accepted, with APC invoice, receipts, online payment (Midtrans, Xendit) or bank-transfer proof, a payment dashboard and QR verification."
+
+msgid "plugins.generic.apcLoa.dashboard"
+msgstr "APC & LoA Dashboard"
+
+msgid "plugins.generic.apcLoa.amount"
+msgstr "Amount"
+
+msgid "plugins.generic.apcLoa.dueDate"
+msgstr "Due date"
+
+msgid "plugins.generic.apcLoa.paidDate"
+msgstr "Paid on"
+
+msgid "plugins.generic.apcLoa.status.nofee"
+msgstr "No fee"
+
+msgid "plugins.generic.apcLoa.status.unpaid"
+msgstr "Unpaid"
+
+msgid "plugins.generic.apcLoa.status.pending"
+msgstr "Awaiting confirmation"
+
+msgid "plugins.generic.apcLoa.status.paid"
+msgstr "Paid"
+
+msgid "plugins.generic.apcLoa.status.waived"
+msgstr "Waived"
+
+msgid "plugins.generic.apcLoa.status.revoked"
+msgstr "Revoked"
+
+msgid "plugins.generic.apcLoa.method.bank"
+msgstr "Bank transfer"
+
+msgid "plugins.generic.apcLoa.method.midtrans"
+msgstr "Online (Midtrans)"
+
+msgid "plugins.generic.apcLoa.method.xendit"
+msgstr "Online (Xendit)"
+
+msgid "plugins.generic.apcLoa.method.manual"
+msgstr "Confirmed by editor"
+
+msgid "plugins.generic.apcLoa.method.waiver"
+msgstr "Waiver"
+
+msgid "plugins.generic.apcLoa.doc.loa"
+msgstr "Letter of Acceptance"
+
+msgid "plugins.generic.apcLoa.doc.invoice"
+msgstr "Invoice"
+
+msgid "plugins.generic.apcLoa.doc.receipt"
+msgstr "Receipt"
+
+msgid "plugins.generic.apcLoa.doc.print"
+msgstr "Print / Save as PDF"
+
+msgid "plugins.generic.apcLoa.doc.printHint"
+msgstr "In the print dialog choose “Save as PDF”, margins “None”."
+
+msgid "plugins.generic.apcLoa.doc.preview"
+msgstr "PREVIEW"
+
+msgid "plugins.generic.apcLoa.doc.paidStamp"
+msgstr "PAID · LUNAS"
+
+msgid "plugins.generic.apcLoa.preview.sampleTitle"
+msgstr "Sample Manuscript Title for Previewing the Letter of Acceptance Layout"
+
+msgid "plugins.generic.apcLoa.author.title"
+msgstr "APC & LoA"
+
+msgid "plugins.generic.apcLoa.author.lead"
+msgstr "Letters of Acceptance, invoices and receipts for your accepted manuscripts. Pay the Article Processing Charge online or upload your transfer proof here."
+
+msgid "plugins.generic.apcLoa.author.empty"
+msgstr "You have no accepted manuscripts in this journal yet."
+
+msgid "plugins.generic.apcLoa.author.pending"
+msgstr "Your transfer proof has been received and is awaiting confirmation by the editor."
+
+msgid "plugins.generic.apcLoa.author.viewProof"
+msgstr "view proof"
+
+msgid "plugins.generic.apcLoa.author.editorNote"
+msgstr "Note from the editor"
+
+msgid "plugins.generic.apcLoa.author.payOnline"
+msgstr "Pay online"
+
+msgid "plugins.generic.apcLoa.author.payOnline.desc"
+msgstr "QRIS, e-wallets, virtual accounts or cards. The invoice is marked paid automatically once the payment is confirmed."
+
+msgid "plugins.generic.apcLoa.author.payMidtrans"
+msgstr "Pay via Midtrans"
+
+msgid "plugins.generic.apcLoa.author.payXendit"
+msgstr "Pay via Xendit"
+
+msgid "plugins.generic.apcLoa.author.payBank"
+msgstr "Bank transfer"
+
+msgid "plugins.generic.apcLoa.author.proofFile"
+msgstr "Transfer proof (PDF/JPG/PNG, max 5 MB)"
+
+msgid "plugins.generic.apcLoa.author.proofNote"
+msgstr "Note (optional)"
+
+msgid "plugins.generic.apcLoa.author.proofNote.placeholder"
+msgstr "e.g. sender name, bank, transfer date"
+
+msgid "plugins.generic.apcLoa.author.upload"
+msgstr "Upload proof"
+
+msgid "plugins.generic.apcLoa.author.reupload"
+msgstr "Replace proof"
+
+msgid "plugins.generic.apcLoa.author.proofRules"
+msgstr "The editor will check your proof; you will receive a receipt once it is confirmed."
+
+msgid "plugins.generic.apcLoa.msg.error"
+msgstr "The request could not be processed. Please try again."
+
+msgid "plugins.generic.apcLoa.msg.gatewayerror"
+msgstr "The payment page could not be opened. Please try again later or use bank transfer."
+
+msgid "plugins.generic.apcLoa.msg.returned"
+msgstr "Thank you. If your payment succeeded, the status will change to Paid within a few minutes."
+
+msgid "plugins.generic.apcLoa.msg.uploaded"
+msgstr "Your transfer proof has been uploaded. The editor will confirm it."
+
+msgid "plugins.generic.apcLoa.msg.uploaderror"
+msgstr "The file could not be uploaded."
+
+msgid "plugins.generic.apcLoa.msg.toolarge"
+msgstr "The file is larger than 5 MB."
+
+msgid "plugins.generic.apcLoa.msg.badtype"
+msgstr "Only PDF, JPG, PNG or WEBP files are accepted."
+
+msgid "plugins.generic.apcLoa.msg.saved"
+msgstr "Saved."
+
+msgid "plugins.generic.apcLoa.msg.sent"
+msgstr "The LoA email has been sent."
+
+msgid "plugins.generic.apcLoa.msg.notsent"
+msgstr "The email could not be sent (no author email found or mail error)."
+
+msgid "plugins.generic.apcLoa.mail.newProof"
+msgstr "New transfer proof"
+
+msgid "plugins.generic.apcLoa.mail.paidOnline"
+msgstr "Online payment received"
+
+msgid "plugins.generic.apcLoa.verify.title"
+msgstr "Document Verification"
+
+msgid "plugins.generic.apcLoa.verify.notFound"
+msgstr "Document not found"
+
+msgid "plugins.generic.apcLoa.verify.notFound.desc"
+msgstr "This code does not match any document issued by this journal."
+
+msgid "plugins.generic.apcLoa.verify.revoked"
+msgstr "Document revoked"
+
+msgid "plugins.generic.apcLoa.verify.revoked.desc"
+msgstr "This document was issued by the journal but has since been revoked and is no longer valid."
+
+msgid "plugins.generic.apcLoa.verify.valid"
+msgstr "Valid document"
+
+msgid "plugins.generic.apcLoa.verify.valid.desc"
+msgstr "This document was issued by the journal and is valid."
+
+msgid "plugins.generic.apcLoa.verify.manuscript"
+msgstr "Manuscript"
+
+msgid "plugins.generic.apcLoa.verify.authors"
+msgstr "Authors"
+
+msgid "plugins.generic.apcLoa.verify.paymentStatus"
+msgstr "Payment status"
+
+msgid "plugins.generic.apcLoa.dash.all"
+msgstr "All"
+
+msgid "plugins.generic.apcLoa.dash.received"
+msgstr "Received"
+
+msgid "plugins.generic.apcLoa.dash.outstanding"
+msgstr "Outstanding"
+
+msgid "plugins.generic.apcLoa.dash.preview"
+msgstr "Preview documents"
+
+msgid "plugins.generic.apcLoa.dash.empty"
+msgstr "No records yet. A record is created when a manuscript is accepted."
+
+msgid "plugins.generic.apcLoa.dash.numbers"
+msgstr "Document numbers"
+
+msgid "plugins.generic.apcLoa.dash.actions"
+msgstr "Actions"
+
+msgid "plugins.generic.apcLoa.dash.accepted"
+msgstr "Accepted"
+
+msgid "plugins.generic.apcLoa.dash.loaSent"
+msgstr "LoA emailed"
+
+msgid "plugins.generic.apcLoa.dash.setAmount"
+msgstr "Set"
+
+msgid "plugins.generic.apcLoa.dash.proof"
+msgstr "Proof"
+
+msgid "plugins.generic.apcLoa.dash.markPaid"
+msgstr "Mark paid"
+
+msgid "plugins.generic.apcLoa.dash.confirmPaid.ask"
+msgstr "Mark this invoice as paid?"
+
+msgid "plugins.generic.apcLoa.dash.rejectProof"
+msgstr "Reject proof"
+
+msgid "plugins.generic.apcLoa.dash.rejectReason"
+msgstr "reason"
+
+msgid "plugins.generic.apcLoa.dash.waive"
+msgstr "Waive fee"
+
+msgid "plugins.generic.apcLoa.dash.waive.ask"
+msgstr "Waive the APC for this manuscript?"
+
+msgid "plugins.generic.apcLoa.dash.unwaive"
+msgstr "Cancel waiver"
+
+msgid "plugins.generic.apcLoa.dash.resend"
+msgstr "Resend LoA"
+
+msgid "plugins.generic.apcLoa.dash.revoke"
+msgstr "Revoke"
+
+msgid "plugins.generic.apcLoa.dash.revoke.ask"
+msgstr "Revoke the LoA and invoice? The QR verification will show them as revoked."
+
+msgid "plugins.generic.apcLoa.dash.restore"
+msgstr "Restore"
+
+msgid "plugins.generic.apcLoa.dash.note"
+msgstr "editor note"
+
+msgid "plugins.generic.apcLoa.settings.preview"
+msgstr "Preview LoA"
+
+msgid "plugins.generic.apcLoa.settings.authorPage"
+msgstr "Authors' page (add it to your menu as a Remote URL):"
+
+msgid "plugins.generic.apcLoa.settings.section.fee"
+msgstr "Fee & sending"
+
+msgid "plugins.generic.apcLoa.settings.apcFee"
+msgstr "Article Processing Charge"
+
+msgid "plugins.generic.apcLoa.settings.apcFee.description"
+msgstr "0 = no APC: only the LoA is issued."
+
+msgid "plugins.generic.apcLoa.settings.apcFee.amount"
+msgstr "Amount"
+
+msgid "plugins.generic.apcLoa.settings.apcFee.invalid"
+msgstr "Enter a fee of 0 or more."
+
+msgid "plugins.generic.apcLoa.settings.currency"
+msgstr "Currency (IDR, USD…)"
+
+msgid "plugins.generic.apcLoa.settings.currency.invalid"
+msgstr "Use a 3-letter currency code such as IDR."
+
+msgid "plugins.generic.apcLoa.settings.dueDays"
+msgstr "Due in (days)"
+
+msgid "plugins.generic.apcLoa.settings.sendTo"
+msgstr "Send the LoA to"
+
+msgid "plugins.generic.apcLoa.settings.sendTo.all"
+msgstr "All authors"
+
+msgid "plugins.generic.apcLoa.settings.sendTo.primary"
+msgstr "Corresponding author only"
+
+msgid "plugins.generic.apcLoa.settings.triggerProduction"
+msgstr "Also issue the LoA when a manuscript is sent straight to production"
+
+msgid "plugins.generic.apcLoa.settings.section.payment"
+msgstr "Payment"
+
+msgid "plugins.generic.apcLoa.settings.methods"
+msgstr "Payment methods"
+
+msgid "plugins.generic.apcLoa.settings.methodBank"
+msgstr "Bank transfer with proof upload"
+
+msgid "plugins.generic.apcLoa.settings.methodMidtrans"
+msgstr "Midtrans Snap (IDR only)"
+
+msgid "plugins.generic.apcLoa.settings.methodXendit"
+msgstr "Xendit Invoice"
+
+msgid "plugins.generic.apcLoa.settings.bankInstructions"
+msgstr "Bank transfer instructions"
+
+msgid "plugins.generic.apcLoa.settings.bankInstructions.description"
+msgstr "Bank, account number, account name. Shown on the invoice and the authors' page."
+
+msgid "plugins.generic.apcLoa.settings.qrisUrl"
+msgstr "Static QRIS image URL (optional)"
+
+msgid "plugins.generic.apcLoa.settings.qrisUrl.description"
+msgstr "Upload the image (e.g. Website > Appearance or the file manager) and paste its URL."
+
+msgid "plugins.generic.apcLoa.settings.midtrans"
+msgstr "Midtrans"
+
+msgid "plugins.generic.apcLoa.settings.midtrans.description"
+msgstr "Use the Server Key of the journal's own Midtrans account (Settings > Access Keys)."
+
+msgid "plugins.generic.apcLoa.settings.midtransServerKey"
+msgstr "Server Key"
+
+msgid "plugins.generic.apcLoa.settings.midtransProduction"
+msgstr "Production mode (untick for Sandbox testing)"
+
+msgid "plugins.generic.apcLoa.settings.xendit"
+msgstr "Xendit"
+
+msgid "plugins.generic.apcLoa.settings.xendit.description"
+msgstr "Secret API key with Money-in write permission, and the Callback Verification Token (Settings > Webhooks)."
+
+msgid "plugins.generic.apcLoa.settings.xenditSecretKey"
+msgstr "Secret Key"
+
+msgid "plugins.generic.apcLoa.settings.xenditCallbackToken"
+msgstr "Callback Verification Token"
+
+msgid "plugins.generic.apcLoa.settings.notifyUrl"
+msgstr "Notification / webhook URL to register in the gateway dashboard:"
+
+msgid "plugins.generic.apcLoa.settings.section.letterhead"
+msgstr "Letterhead"
+
+msgid "plugins.generic.apcLoa.settings.logos"
+msgstr "Logos"
+
+msgid "plugins.generic.apcLoa.settings.logos.description"
+msgstr "Image URLs for the left and right logos (either may be empty)."
+
+msgid "plugins.generic.apcLoa.settings.logoLeftUrl"
+msgstr "Left logo URL"
+
+msgid "plugins.generic.apcLoa.settings.logoRightUrl"
+msgstr "Right logo URL"
+
+msgid "plugins.generic.apcLoa.settings.headerLines"
+msgstr "Header text (up to 5 lines)"
+
+msgid "plugins.generic.apcLoa.settings.headerLines.description"
+msgstr "One line per row; the first line is the largest. Empty = journal name, publisher, ISSN, address and email."
+
+msgid "plugins.generic.apcLoa.settings.layout"
+msgstr "Layout"
+
+msgid "plugins.generic.apcLoa.settings.headerLineStyle"
+msgstr "Line under header"
+
+msgid "plugins.generic.apcLoa.settings.line.double"
+msgstr "Double"
+
+msgid "plugins.generic.apcLoa.settings.line.single"
+msgstr "Single"
+
+msgid "plugins.generic.apcLoa.settings.line.thick"
+msgstr "Thick"
+
+msgid "plugins.generic.apcLoa.settings.line.none"
+msgstr "None"
+
+msgid "plugins.generic.apcLoa.settings.paperSize"
+msgstr "Paper size"
+
+msgid "plugins.generic.apcLoa.settings.accentColor"
+msgstr "Accent colour (hex)"
+
+msgid "plugins.generic.apcLoa.settings.city"
+msgstr "City for the date line"
+
+msgid "plugins.generic.apcLoa.settings.city.description"
+msgstr "e.g. Madiun → “Madiun, 16 November 2026”."
+
+msgid "plugins.generic.apcLoa.settings.section.numbering"
+msgstr "Document numbers"
+
+msgid "plugins.generic.apcLoa.settings.numberPattern"
+msgstr "Number pattern"
+
+msgid "plugins.generic.apcLoa.settings.numberPattern.description"
+msgstr "Placeholders: {SEQ} 5-digit sequence per year, {PREFIX}, {ACRONYM}, {YEAR}, {MONTH}, {ROMAN} month, {ID} submission ID. Issued numbers never change."
+
+msgid "plugins.generic.apcLoa.settings.prefixes"
+msgstr "Prefixes"
+
+msgid "plugins.generic.apcLoa.settings.prefixLoa"
+msgstr "LoA"
+
+msgid "plugins.generic.apcLoa.settings.prefixInvoice"
+msgstr "Invoice"
+
+msgid "plugins.generic.apcLoa.settings.prefixReceipt"
+msgstr "Receipt"
+
+msgid "plugins.generic.apcLoa.settings.section.signers"
+msgstr "Signatures & verification"
+
+msgid "plugins.generic.apcLoa.settings.signer1"
+msgstr "Signatory 1"
+
+msgid "plugins.generic.apcLoa.settings.signer2"
+msgstr "Signatory 2 (optional)"
+
+msgid "plugins.generic.apcLoa.settings.signer2.description"
+msgstr "Leave the name empty to show one signatory."
+
+msgid "plugins.generic.apcLoa.settings.signerName"
+msgstr "Name"
+
+msgid "plugins.generic.apcLoa.settings.signerTitle"
+msgstr "Position"
+
+msgid "plugins.generic.apcLoa.settings.signerSign"
+msgstr "Signature image URL (transparent PNG)"
+
+msgid "plugins.generic.apcLoa.settings.stampUrl"
+msgstr "Stamp image URL (optional)"
+
+msgid "plugins.generic.apcLoa.settings.stampUrl.description"
+msgstr "Placed next to signatory 1."
+
+msgid "plugins.generic.apcLoa.settings.showQr"
+msgstr "Show the verification QR code on documents"
+
+msgid "plugins.generic.apcLoa.settings.footerText"
+msgstr "Footer text"
+
+msgid "plugins.generic.apcLoa.settings.section.wording"
+msgstr "LoA wording & email"
+
+msgid "plugins.generic.apcLoa.settings.loaBodyId"
+msgstr "LoA paragraph (Indonesian)"
+
+msgid "plugins.generic.apcLoa.settings.loaBodyEn"
+msgstr "LoA paragraph (English)"
+
+msgid "plugins.generic.apcLoa.settings.loaBody.description"
+msgstr "Placeholders: {title}, {authors}, {journal}, {date}."
+
+msgid "plugins.generic.apcLoa.settings.emailSubject"
+msgstr "Email subject"
+
+msgid "plugins.generic.apcLoa.settings.emailBody"
+msgstr "Email body"
+
+msgid "plugins.generic.apcLoa.settings.emailBody.description"
+msgstr "Placeholders: {authorName}, {title}, {journal}, {loaUrl}, {invoiceBlock} / {invoiceBlockEn} (invoice line, empty when there is no fee), {apcPageUrl}."
+
