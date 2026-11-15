@@ -1226,7 +1226,7 @@
 }
 
 /* ==========================================================================
-   v1.9.4.1 — Article Info tetap menempel (sticky) di kolom kiri halaman artikel
+   v1.10.0.1 — Article Info tetap menempel (sticky) di kolom kiri halaman artikel
    Aturan sticky ada di sini (selalu dimuat), bukan hanya di cheesa-legacy.css, supaya tetap jalan
    walau opsi "Kode CHEESA lama" = Jangan muat atau CSS lama di Appearance menimpanya.
    Sticky mati bila ada induk yang menjadi wadah gulir (overflow hidden/auto), mis. html{overflow-x:hidden}
