@@ -1,0 +1,94 @@
+<?php
+
+/**
+ * @file plugins/generic/cheesaUserManager/CheesaUserManagerPlugin.inc.php
+ *
+ * CHEESA User Manager — ubah username, hapus akun, dan gabungkan akun dari satu halaman.
+ * Halaman: /index.php/<jurnal>/cheesausers  — hanya untuk Site Administrator, karena akun pengguna
+ * berlaku untuk semua jurnal di server yang sama.
+ */
+
+import('lib.pkp.classes.plugins.GenericPlugin');
+
+class CheesaUserManagerPlugin extends GenericPlugin {
+
+	const PAGE = 'cheesausers';
+
+	public function register($category, $path, $mainContextId = null) {
+		$success = parent::register($category, $path, $mainContextId);
+		if ($success && $this->getEnabled($mainContextId)) {
+			HookRegistry::register('LoadHandler', [$this, 'loadPageHandler']);
+			HookRegistry::register('TemplateManager::setupBackendPage', [$this, 'addBackendMenu']);
+		}
+		return $success;
+	}
+
+	/** Satu pengaturan untuk seluruh server (akun pengguna juga satu untuk seluruh server). */
+	public function isSitePlugin() { return true; }
+
+	public function getDisplayName() { return 'CHEESA User Manager'; }
+
+	public function getDescription() {
+		return 'Ubah username, hapus akun yang tidak punya aktivitas, atau gabungkan akun ganda ke akun lain. Khusus Site Administrator; setiap tindakan dicatat.';
+	}
+
+	public function loadPageHandler($hookName, $params) {
+		if ($params[0] !== self::PAGE) return false;
+		require_once(__DIR__ . '/CheesaUserManagerHandler.inc.php');
+		CheesaUserManagerHandler::$plugin = $this;
+		define('HANDLER_CLASS', 'CheesaUserManagerHandler');
+		return true;
+	}
+
+	public function pageUrl($request, $params = null) {
+		return $request->getDispatcher()->url($request, ROUTE_PAGE, null, self::PAGE, null, null, $params);
+	}
+
+	/** Menu "Kelola Akun" di sidebar dasbor (bila versi OJS menyediakan hook-nya). */
+	public function addBackendMenu($hookName, $args) {
+		try {
+			$request = Application::get()->getRequest();
+			if (!$request->getUser() || !Validation::isSiteAdmin()) return false;
+			$tm = TemplateManager::getManager($request);
+			$menu = $tm->getState('menu');
+			if (!is_array($menu) || isset($menu['cheesaUsers'])) return false;
+			$item = ['name' => 'Kelola Akun', 'url' => $this->pageUrl($request), 'isCurrent' => $request->getRequestedPage() === self::PAGE];
+			$new = [];
+			foreach ($menu as $k => $v) { $new[$k] = $v; if ($k === 'users') $new['cheesaUsers'] = $item; }
+			if (!isset($new['cheesaUsers'])) $new['cheesaUsers'] = $item;
+			$tm->setState(['menu' => $new]);
+		} catch (\Throwable $e) {
+			error_log('cheesaUserManager menu: ' . $e->getMessage());
+		}
+		return false;
+	}
+
+	public function getActions($request, $actionArgs) {
+		$actions = parent::getActions($request, $actionArgs);
+		if (!$this->getEnabled() || !Validation::isSiteAdmin()) return $actions;
+		import('lib.pkp.classes.linkAction.request.RedirectAction');
+		array_unshift($actions, new LinkAction('cheesaUsersPage', new RedirectAction($this->pageUrl($request)), 'Buka Kelola Akun', null));
+		return $actions;
+	}
+
+	/** Catatan tindakan (100 terakhir), disimpan di pengaturan plugin tingkat situs. */
+	public function audit($action, $detail, $request) {
+		$log = $this->getSetting(CONTEXT_SITE, 'auditLog');
+		if (!is_array($log)) $log = [];
+		$me = $request->getUser();
+		array_unshift($log, [
+			'time' => date('Y-m-d H:i:s'),
+			'by' => $me ? $me->getUsername() : '-',
+			'ip' => $request->getRemoteAddr(),
+			'action' => $action,
+			'detail' => $detail,
+		]);
+		$this->updateSetting(CONTEXT_SITE, 'auditLog', array_slice($log, 0, 100), 'object');
+		error_log('cheesaUserManager: ' . ($me ? $me->getUsername() : '-') . ' ' . $action . ' — ' . $detail);
+	}
+
+	public function auditLog() {
+		$log = $this->getSetting(CONTEXT_SITE, 'auditLog');
+		return is_array($log) ? $log : [];
+	}
+}

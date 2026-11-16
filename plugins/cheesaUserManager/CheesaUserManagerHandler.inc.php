@@ -1,0 +1,284 @@
+<?php
+
+/**
+ * @file plugins/generic/cheesaUserManager/CheesaUserManagerHandler.inc.php
+ *
+ * Halaman /index.php/<jurnal>/cheesausers — khusus Site Administrator.
+ *  - index : cari & lihat akun (username, email, nama, peran, jejak aktivitas)
+ *  - save  : POST verb=username | delete | merge  (CSRF + konfirmasi ketik username)
+ *
+ * Hapus hanya untuk akun TANPA jejak aktivitas (naskah, review, keputusan, file, diskusi, pembayaran).
+ * Akun yang punya jejak harus digabungkan ke akun lain (fungsi bawaan OJS UserAction::mergeUsers),
+ * supaya riwayat naskah tetap utuh.
+ */
+
+import('classes.handler.Handler');
+
+use Illuminate\Database\Capsule\Manager as Capsule;
+
+class CheesaUserManagerHandler extends Handler {
+
+	/** @var CheesaUserManagerPlugin */
+	public static $plugin;
+
+	const PER_PAGE = 25;
+
+	/** Tabel yang menandakan akun pernah dipakai bekerja: [kolom, label]. */
+	const ACTIVITY = [
+		'stage_assignments'   => ['user_id', 'penugasan naskah'],
+		'review_assignments'  => ['reviewer_id', 'review'],
+		'edit_decisions'      => ['editor_id', 'keputusan editor'],
+		'submission_files'    => ['uploader_user_id', 'file naskah'],
+		'notes'               => ['user_id', 'catatan'],
+		'query_participants'  => ['user_id', 'diskusi'],
+		'submission_comments' => ['author_id', 'komentar'],
+		'event_log'           => ['user_id', 'riwayat aktivitas'],
+		'subscriptions'       => ['user_id', 'langganan'],
+		'completed_payments'  => ['user_id', 'pembayaran'],
+	];
+
+	/** Data milik akun yang ikut dihapus bersama akun (urutan penting: users terakhir). */
+	const CLEANUP = [
+		'user_settings', 'user_user_groups', 'user_interests', 'notifications',
+		'notification_subscription_settings', 'sessions', 'access_keys', 'temporary_files', 'email_log_users',
+	];
+
+	const ROLES = [
+		1 => 'Site Admin', 16 => 'Manager', 17 => 'Editor Bagian', 4097 => 'Asisten',
+		65536 => 'Penulis', 4096 => 'Reviewer', 1048576 => 'Pembaca', 2097152 => 'Pelanggan',
+	];
+
+	public function __construct() {
+		parent::__construct();
+		$this->addRoleAssignment([ROLE_ID_SITE_ADMIN], ['index', 'save']);
+	}
+
+	public function authorize($request, &$args, $roleAssignments) {
+		import('lib.pkp.classes.security.authorization.PKPSiteAccessPolicy');
+		$this->addPolicy(new PKPSiteAccessPolicy($request, null, $roleAssignments));
+		return parent::authorize($request, $args, $roleAssignments);
+	}
+
+	/* ------------------------------------------------------------------ halaman */
+
+	public function index($args, $request) {
+		$plugin = self::$plugin;
+		$q = trim((string) $request->getUserVar('q'));
+		$page = max(1, (int) $request->getUserVar('p'));
+
+		$base = Capsule::table('users as u');
+		if ($q !== '') {
+			$like = '%' . addcslashes($q, '%_\\') . '%';
+			$base->where(function ($w) use ($like, $q) {
+				$w->where('u.username', 'like', $like)
+					->orWhere('u.email', 'like', $like)
+					->orWhereIn('u.user_id', function ($s) use ($like) {
+						$s->select('user_id')->from('user_settings')
+							->whereIn('setting_name', ['givenName', 'familyName'])
+							->where('setting_value', 'like', $like);
+					});
+				if (ctype_digit($q)) $w->orWhere('u.user_id', (int) $q);
+			});
+		}
+		$total = (clone $base)->count();
+		$pages = max(1, (int) ceil($total / self::PER_PAGE));
+		$page = min($page, $pages);
+		$list = $base->orderBy('u.user_id', 'desc')
+			->offset(($page - 1) * self::PER_PAGE)->limit(self::PER_PAGE)
+			->get(['u.user_id', 'u.username', 'u.email', 'u.date_registered', 'u.date_last_login', 'u.disabled']);
+
+		$ids = [];
+		foreach ($list as $r) $ids[] = (int) $r->user_id;
+		$names = $this->names($ids);
+		$roles = $this->roles($ids);
+		$activity = $this->activity($ids);
+		$me = (int) $request->getUser()->getId();
+
+		$rows = [];
+		foreach ($list as $r) {
+			$id = (int) $r->user_id;
+			$act = isset($activity[$id]) ? $activity[$id] : [];
+			$isAdmin = !empty($roles[$id]['admin']);
+			$rows[] = [
+				'id' => $id,
+				'username' => $r->username,
+				'email' => $r->email,
+				'name' => isset($names[$id]) ? $names[$id] : '',
+				'registered' => $r->date_registered ? substr($r->date_registered, 0, 10) : '',
+				'lastLogin' => $r->date_last_login ? substr($r->date_last_login, 0, 10) : '',
+				'disabled' => (bool) $r->disabled,
+				'roles' => isset($roles[$id]['list']) ? $roles[$id]['list'] : [],
+				'isAdmin' => $isAdmin,
+				'isMe' => $id === $me,
+				'activity' => $act,
+				'activityText' => implode(', ', array_map(function ($k, $n) { return $n . ' ' . $k; }, array_keys($act), $act)),
+				'canDelete' => !$act && !$isAdmin && $id !== $me,
+				'canMerge' => !$isAdmin && $id !== $me,
+			];
+		}
+
+		$session = $request->getSession();
+		$flash = $session->getSessionVar('cheesaUM');
+		$session->unsetSessionVar('cheesaUM');
+		$flash = $flash ? json_decode($flash, true) : null;
+
+		$keep = $q !== '' ? ['q' => $q] : [];
+		$tm = TemplateManager::getManager($request);
+		$tm->assign([
+			'umRows' => $rows,
+			'umQ' => $q,
+			'umTotal' => $total,
+			'umAll' => $q === '' ? $total : Capsule::table('users')->count(),
+			'umPage' => $page,
+			'umPages' => $pages,
+			'umPrev' => $page > 1 ? $plugin->pageUrl($request, $keep + ['p' => $page - 1]) : '',
+			'umNext' => $page < $pages ? $plugin->pageUrl($request, $keep + ['p' => $page + 1]) : '',
+			'umSearchUrl' => $plugin->pageUrl($request),
+			'umSaveUrl' => $request->getDispatcher()->url($request, ROUTE_PAGE, null, CheesaUserManagerPlugin::PAGE, 'save'),
+			'umFlash' => $flash,
+			'umLog' => array_slice($plugin->auditLog(), 0, 30),
+			'umJournal' => $request->getContext() ? $request->getContext()->getLocalizedName() : '',
+			'umDashUrl' => $request->getDispatcher()->url($request, ROUTE_PAGE, null, 'submissions'),
+			'umUsersUrl' => $request->getDispatcher()->url($request, ROUTE_PAGE, null, 'management', 'settings', 'access'),
+			'umAdminName' => $request->getUser()->getUsername(),
+		]);
+		$tm->display($plugin->getTemplateResource('page.tpl'));
+	}
+
+	/* ------------------------------------------------------------------ aksi */
+
+	public function save($args, $request) {
+		$plugin = self::$plugin;
+		$back = array_filter(['q' => (string) $request->getUserVar('q'), 'p' => (string) $request->getUserVar('p')], 'strlen');
+		$ok = '';
+		$err = '';
+		try {
+			if (!$request->isPost() || !$request->checkCSRF()) throw new Exception('Sesi formulir kedaluwarsa. Muat ulang halaman lalu coba lagi.');
+			$verb = (string) $request->getUserVar('verb');
+			$userDao = DAORegistry::getDAO('UserDAO');
+			$user = $userDao->getById((int) $request->getUserVar('userId'), true);
+			if (!$user) throw new Exception('Akun tidak ditemukan.');
+			$id = (int) $user->getId();
+			$old = $user->getUsername();
+			$me = (int) $request->getUser()->getId();
+
+			if ($verb === 'username') {
+				$new = trim((string) $request->getUserVar('newUsername'));
+				if (!preg_match('/^[a-z0-9]+([\-_][a-z0-9]+)*$/i', $new)) throw new Exception('Username hanya boleh huruf, angka, dan tanda - atau _ di antara huruf/angka (tanpa spasi).');
+				if (strlen($new) > 32) throw new Exception('Username maksimal 32 karakter.');
+				if ($new === $old) throw new Exception('Username baru sama dengan yang lama.');
+				$taken = Capsule::table('users')->whereRaw('LOWER(username) = ?', [strtolower($new)])->where('user_id', '<>', $id)->exists();
+				if ($taken) throw new Exception('Username "' . $new . '" sudah dipakai akun lain.');
+				$user->setUsername($new);
+				$userDao->updateObject($user);
+				$plugin->audit('ubah username', "#$id $old → $new", $request);
+				$ok = "Username #$id diubah dari \"$old\" menjadi \"$new\". Beri tahu pemilik akun bahwa ia sekarang login dengan username baru.";
+
+			} elseif ($verb === 'delete') {
+				$this->guardTarget($id, $me, (string) $request->getUserVar('confirm'), $old, 'dihapus');
+				$act = $this->activity([$id]);
+				if (!empty($act[$id])) {
+					$list = [];
+					foreach ($act[$id] as $k => $n) $list[] = "$n $k";
+					throw new Exception('Akun "' . $old . '" punya jejak aktivitas (' . implode(', ', $list) . '), jadi tidak boleh dihapus langsung. Gunakan "Gabungkan" ke akun lain.');
+				}
+				$email = $user->getEmail();
+				Capsule::connection()->transaction(function () use ($id) {
+					$schema = Capsule::schema();
+					foreach (self::CLEANUP as $t) {
+						if ($schema->hasTable($t) && $schema->hasColumn($t, 'user_id')) Capsule::table($t)->where('user_id', $id)->delete();
+					}
+					Capsule::table('users')->where('user_id', $id)->delete();
+				});
+				$plugin->audit('hapus akun', "#$id $old <$email>", $request);
+				$ok = "Akun \"$old\" ($email) sudah dihapus.";
+
+			} elseif ($verb === 'merge') {
+				$this->guardTarget($id, $me, (string) $request->getUserVar('confirm'), $old, 'digabungkan');
+				$targetName = trim((string) $request->getUserVar('target'));
+				$target = $targetName !== '' ? $userDao->getByUsername($targetName, true) : null;
+				if (!$target) throw new Exception('Akun tujuan "' . $targetName . '" tidak ditemukan.');
+				if ((int) $target->getId() === $id) throw new Exception('Akun tujuan tidak boleh sama dengan akun yang digabungkan.');
+				import('classes.user.UserAction');
+				$ua = new UserAction();
+				$ua->mergeUsers($id, (int) $target->getId());
+				$plugin->audit('gabungkan akun', "#$id $old → #" . $target->getId() . ' ' . $target->getUsername(), $request);
+				$ok = "Akun \"$old\" digabungkan ke \"" . $target->getUsername() . '". Semua naskah, review, dan peran dipindahkan; akun lama dihapus.';
+
+			} else {
+				throw new Exception('Aksi tidak dikenal.');
+			}
+		} catch (\Throwable $e) {
+			$err = $e->getMessage();
+		}
+		$request->getSession()->setSessionVar('cheesaUM', json_encode(['ok' => $ok, 'err' => $err]));
+		$request->redirectUrl($plugin->pageUrl($request, $back ?: null));
+	}
+
+	/* ------------------------------------------------------------------ bantuan */
+
+	/** Pengaman bersama untuk hapus & gabung. */
+	private function guardTarget($id, $me, $confirm, $username, $what) {
+		if ($id === $me) throw new Exception('Akun Anda sendiri tidak bisa ' . $what . ' dari sini.');
+		if ($this->isSiteAdmin($id)) throw new Exception('Akun Site Administrator tidak bisa ' . $what . '. Cabut dulu peran Site Admin-nya.');
+		if (strtolower(trim($confirm)) !== strtolower($username)) throw new Exception('Konfirmasi tidak cocok: ketik username "' . $username . '" persis untuk melanjutkan.');
+	}
+
+	private function isSiteAdmin($id) {
+		return Capsule::table('user_user_groups as uug')
+			->join('user_groups as ug', 'ug.user_group_id', '=', 'uug.user_group_id')
+			->where('uug.user_id', $id)->where('ug.role_id', ROLE_ID_SITE_ADMIN)->exists();
+	}
+
+	/** @return array user_id => nama lengkap */
+	private function names(array $ids) {
+		if (!$ids) return [];
+		$parts = [];
+		$rows = Capsule::table('user_settings')->whereIn('user_id', $ids)
+			->whereIn('setting_name', ['givenName', 'familyName'])->where('setting_value', '<>', '')
+			->get(['user_id', 'setting_name', 'setting_value', 'locale']);
+		$primary = AppLocale::getPrimaryLocale();
+		foreach ($rows as $r) {
+			$k = (int) $r->user_id;
+			// utamakan locale utama; locale lain hanya mengisi yang kosong
+			if (!isset($parts[$k][$r->setting_name]) || $r->locale === $primary) $parts[$k][$r->setting_name] = $r->setting_value;
+		}
+		$out = [];
+		foreach ($parts as $k => $p) $out[$k] = trim((isset($p['givenName']) ? $p['givenName'] : '') . ' ' . (isset($p['familyName']) ? $p['familyName'] : ''));
+		return $out;
+	}
+
+	/** @return array user_id => ['admin' => bool, 'list' => ['Penulis · cheesa', ...]] */
+	private function roles(array $ids) {
+		if (!$ids) return [];
+		$paths = Capsule::table('journals')->pluck('path', 'journal_id')->all();
+		$rows = Capsule::table('user_user_groups as uug')
+			->join('user_groups as ug', 'ug.user_group_id', '=', 'uug.user_group_id')
+			->whereIn('uug.user_id', $ids)->get(['uug.user_id', 'ug.role_id', 'ug.context_id']);
+		$out = [];
+		foreach ($rows as $r) {
+			$k = (int) $r->user_id;
+			$role = isset(self::ROLES[(int) $r->role_id]) ? self::ROLES[(int) $r->role_id] : 'Peran ' . $r->role_id;
+			if ((int) $r->role_id === ROLE_ID_SITE_ADMIN) { $out[$k]['admin'] = true; continue; }
+			$label = $role . ((int) $r->context_id && isset($paths[$r->context_id]) ? ' · ' . $paths[$r->context_id] : '');
+			$out[$k]['list'][$label] = $label;
+		}
+		foreach ($out as $k => $v) $out[$k]['list'] = isset($v['list']) ? array_values($v['list']) : [];
+		return $out;
+	}
+
+	/** @return array user_id => ['review' => 3, ...] (hanya yang > 0) */
+	private function activity(array $ids) {
+		if (!$ids) return [];
+		$schema = Capsule::schema();
+		$out = [];
+		foreach (self::ACTIVITY as $table => $def) {
+			list($col, $label) = $def;
+			if (!$schema->hasTable($table) || !$schema->hasColumn($table, $col)) continue;
+			$rows = Capsule::table($table)->whereIn($col, $ids)->groupBy($col)
+				->select([$col . ' as uid', Capsule::raw('COUNT(*) as n')])->get();
+			foreach ($rows as $r) if ((int) $r->n > 0) $out[(int) $r->uid][$label] = (int) $r->n;
+		}
+		return $out;
+	}
+}
