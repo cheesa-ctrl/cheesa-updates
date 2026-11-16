@@ -1,88 +1,236 @@
 {**
  * plugins/generic/cheesaControlPanel/templates/panel.tpl
+ * Isi panel. Dipakai di modal "Buka Panel" dan di halaman penuh /cheesapanel.
  *}
-<div id="cheesaCP" class="cheesa-cp" data-action="{$cpAction|escape}" data-csrf="{csrf type="raw"}">
+<div id="cheesaCP" class="ccp{if $cpFullPage} ccp-full{/if}" data-action="{$cpAction|escape}" data-csrf="{csrf type="raw"}" data-fullpage="{if $cpFullPage}1{/if}">
+{literal}
 <style>
-	.cheesa-cp {ldelim} font-size: 14px; {rdelim}
-	.cheesa-cp .cp-msg {ldelim} margin: 0 0 12px; padding: 10px 12px; border-left: 4px solid #2e7d32; background: #eef7ee; {rdelim}
-	.cheesa-cp .cp-err {ldelim} margin: 0 0 12px; padding: 10px 12px; border-left: 4px solid #c62828; background: #fdecec; {rdelim}
-	.cheesa-cp .cp-warn {ldelim} margin: 0 0 12px; padding: 10px 12px; border-left: 4px solid #ed991f; background: #fff8ec; {rdelim}
-	.cheesa-cp table {ldelim} width: 100%; border-collapse: collapse; margin: 6px 0 16px; {rdelim}
-	.cheesa-cp th, .cheesa-cp td {ldelim} padding: 9px 10px; border-bottom: 1px solid #e3e6ef; text-align: left; vertical-align: middle; {rdelim}
-	.cheesa-cp th {ldelim} background: #030271; color: #fff; font-weight: 600; {rdelim}
-	.cheesa-cp .cp-new {ldelim} display: inline-block; padding: 2px 8px; border-radius: 10px; background: #ed991f; color: #fff; font-size: 12px; font-weight: 700; {rdelim}
-	.cheesa-cp .cp-ok {ldelim} color: #2e7d32; font-weight: 600; {rdelim}
-	.cheesa-cp button {ldelim} padding: 6px 12px; border-radius: 4px; border: 1px solid #030271; background: #030271; color: #fff; cursor: pointer; font-weight: 600; {rdelim}
-	.cheesa-cp button.cp-sec {ldelim} background: #fff; color: #030271; {rdelim}
-	.cheesa-cp button.cp-del {ldelim} background: #fff; color: #c62828; border-color: #c62828; {rdelim}
-	.cheesa-cp button[disabled] {ldelim} opacity: .55; cursor: wait; {rdelim}
-	.cheesa-cp input[type=text] {ldelim} width: 100%; max-width: 560px; padding: 7px 9px; {rdelim}
-	.cheesa-cp small {ldelim} color: #5b6178; {rdelim}
+	.ccp { --ccp-navy: #030271; --ccp-navy-2: #1b1a8f; --ccp-accent: #ed991f; --ccp-ok: #1f8a4c; --ccp-red: #c62828;
+		--ccp-line: #e4e7f0; --ccp-soft: #f5f6fb; --ccp-muted: #5e6580;
+		font: 14px/1.5 "Noto Sans", Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: #1d2140; }
+	.ccp *, .ccp *::before, .ccp *::after { box-sizing: border-box; }
+
+	/* kepala */
+	.ccp-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+		padding: 18px 20px; margin: 0 0 16px; border-radius: 14px; color: #fff;
+		background: radial-gradient(120% 140% at 100% 0, rgba(237,153,31,.35) 0, rgba(237,153,31,0) 45%), linear-gradient(135deg, var(--ccp-navy) 0, var(--ccp-navy-2) 100%); }
+	.ccp-brand { display: flex; align-items: center; gap: 14px; min-width: 0; }
+	.ccp-logo { flex: 0 0 auto; width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center;
+		background: var(--ccp-accent); color: #fff; font-weight: 800; font-size: 20px; box-shadow: 0 6px 16px rgba(0,0,0,.2); }
+	.ccp-brand h2 { margin: 0; font-size: 18px; font-weight: 700; color: #fff; line-height: 1.25; }
+	.ccp-brand p { margin: 2px 0 0; font-size: 12.5px; color: rgba(255,255,255,.78); }
+	.ccp-head-act { display: flex; gap: 8px; flex-wrap: wrap; }
+	.ccp-head .ccp-btn { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.35); color: #fff; }
+	.ccp-head .ccp-btn:hover { background: rgba(255,255,255,.22); }
+
+	/* ringkasan */
+	.ccp-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0 0 16px; }
+	.ccp-stat { padding: 12px 14px; border: 1px solid var(--ccp-line); border-radius: 12px; background: #fff; }
+	.ccp-stat span { display: block; font-size: 11.5px; letter-spacing: .04em; text-transform: uppercase; color: var(--ccp-muted); font-weight: 600; }
+	.ccp-stat b { display: block; margin-top: 2px; font-size: 22px; line-height: 1.2; color: var(--ccp-navy); }
+	.ccp-stat b small { font-size: 12px; font-weight: 600; color: var(--ccp-muted); }
+	.ccp-stat.is-hot { border-color: rgba(237,153,31,.55); background: #fff8ec; }
+	.ccp-stat.is-hot b { color: #b86a00; }
+
+	/* pesan */
+	.ccp-note { display: flex; gap: 10px; align-items: flex-start; margin: 0 0 14px; padding: 11px 14px; border-radius: 10px; border: 1px solid; }
+	.ccp-note::before { flex: 0 0 auto; font-weight: 800; }
+	.ccp-note.ok { background: #ecf8f1; border-color: #b9e4cb; color: #14532d; }
+	.ccp-note.ok::before { content: "✓"; }
+	.ccp-note.err { background: #fdecec; border-color: #f3c0c0; color: #7f1d1d; }
+	.ccp-note.err::before { content: "!"; }
+	.ccp-note.warn { background: #fff8ec; border-color: #f6d9a8; color: #7a4a00; }
+	.ccp-note.warn::before { content: "i"; }
+
+	/* daftar paket */
+	.ccp-list { display: grid; gap: 10px; margin: 0 0 18px; }
+	.ccp-item { display: grid; grid-template-columns: 44px minmax(0, 1fr) 130px 170px 300px; align-items: center; gap: 14px;
+		padding: 14px 16px; background: #fff; border: 1px solid var(--ccp-line); border-radius: 12px; transition: box-shadow .15s, border-color .15s; }
+	.ccp-item:hover { border-color: #cfd4e6; box-shadow: 0 6px 18px rgba(3,2,113,.07); }
+	.ccp-item.has-update { border-left: 4px solid var(--ccp-accent); }
+	.ccp-item.is-gone { background: var(--ccp-soft); }
+	.ccp-ico { width: 44px; height: 44px; border-radius: 11px; display: grid; place-items: center; font-weight: 800; font-size: 15px; color: var(--ccp-navy); background: #e9ebfb; }
+	.ccp-ico.cat-themes { background: #fff1db; color: #a45d00; }
+	.ccp-item.is-gone .ccp-ico { background: #eceef4; color: #8a90a6; }
+	.ccp-name { font-weight: 700; font-size: 15px; color: #1d2140; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+	.ccp-tag { font-size: 10.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 1px 7px; border-radius: 99px; background: var(--ccp-soft); color: var(--ccp-muted); border: 1px solid var(--ccp-line); }
+	.ccp-path { display: block; margin-top: 2px; font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--ccp-muted); overflow-wrap: anywhere; }
+	.ccp-ver .ccp-lbl { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--ccp-muted); font-weight: 600; }
+	.ccp-ver b { font-size: 15px; color: #1d2140; }
+	.ccp-ver small { display: block; color: var(--ccp-muted); font-size: 11.5px; }
+	.ccp-ver .none { color: #8a90a6; font-weight: 500; font-style: italic; font-size: 13px; }
+	.ccp-pill { display: inline-flex; align-items: center; gap: 4px; padding: 2px 9px; border-radius: 99px; font-size: 11.5px; font-weight: 700; vertical-align: 2px; }
+	.ccp-pill.new { background: var(--ccp-accent); color: #fff; }
+	.ccp-pill.ok { background: #e3f4ea; color: var(--ccp-ok); }
+	.ccp-actions { display: flex; gap: 6px; justify-content: flex-end; flex-wrap: wrap; }
+
+	/* tombol */
+	.ccp-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; border-radius: 8px; border: 1px solid var(--ccp-navy);
+		background: var(--ccp-navy); color: #fff !important; font-weight: 600; font-size: 13px; line-height: 1.2; font-family: inherit; cursor: pointer;
+		text-decoration: none !important; white-space: nowrap; transition: background .15s, transform .05s; }
+	.ccp-btn:hover { background: var(--ccp-navy-2); }
+	.ccp-btn:active { transform: translateY(1px); }
+	.ccp-btn.sec { background: #fff; color: var(--ccp-navy) !important; border-color: #c9cde3; }
+	.ccp-btn.sec:hover { border-color: var(--ccp-navy); background: #f6f7fd; }
+	.ccp-btn.del { background: #fff; color: var(--ccp-red) !important; border-color: #f0c4c4; }
+	.ccp-btn.del:hover { background: #fdecec; border-color: var(--ccp-red); }
+	.ccp-btn.go { background: var(--ccp-accent); border-color: var(--ccp-accent); }
+	.ccp-btn.go:hover { background: #d9860f; }
+	.ccp-btn[disabled] { opacity: .5; cursor: wait; }
+
+	/* pengaturan & pemulihan */
+	.ccp-box { margin: 0 0 12px; border: 1px solid var(--ccp-line); border-radius: 12px; background: #fff; }
+	.ccp-box > summary { cursor: pointer; padding: 12px 16px; font-weight: 700; color: var(--ccp-navy); list-style: none; display: flex; justify-content: space-between; align-items: center; }
+	.ccp-box > summary::-webkit-details-marker { display: none; }
+	.ccp-box > summary::after { content: "▾"; color: var(--ccp-muted); transition: transform .15s; }
+	.ccp-box[open] > summary::after { transform: rotate(180deg); }
+	.ccp-box > summary small { font-weight: 500; color: var(--ccp-muted); margin-left: 8px; }
+	.ccp-box-in { padding: 4px 16px 16px; border-top: 1px solid var(--ccp-line); }
+	.ccp-field { margin: 12px 0 0; }
+	.ccp-field label { display: block; font-weight: 600; margin: 0 0 4px; }
+	.ccp-field label small { font-weight: 400; color: var(--ccp-muted); }
+	.ccp-field input { width: 100%; max-width: 640px; padding: 8px 10px; border: 1px solid #cdd1e1; border-radius: 8px; font-size: 13px; font-family: inherit; }
+	.ccp-field input:focus { outline: 2px solid rgba(3,2,113,.25); border-color: var(--ccp-navy); }
+	.ccp-help { margin: 10px 0 0; font-size: 12.5px; color: var(--ccp-muted); }
+
+	@media (max-width: 980px) {
+		.ccp-item { grid-template-columns: 44px minmax(0, 1fr) minmax(0, 1fr); }
+		.ccp-item .ccp-info { grid-column: 2 / -1; }
+		.ccp-item .ccp-ver.inst { grid-column: 2; }
+		.ccp-item .ccp-actions { grid-column: 1 / -1; justify-content: flex-start; }
+	}
+	@media (max-width: 560px) { .ccp-stats { grid-template-columns: 1fr; } }
 </style>
+{/literal}
 
-{if $cpMsg}<div class="cp-msg">{$cpMsg|escape}</div>{/if}
-{if $cpErr}<div class="cp-err">{$cpErr|escape}</div>{/if}
-{if $cpProblems}<div class="cp-warn"><strong>Update belum bisa dijalankan:</strong><br>{foreach from=$cpProblems item=p}{$p|escape}<br>{/foreach}</div>{/if}
-{if !$cpAdmin}<div class="cp-warn">Anda bisa melihat versi, tetapi hanya Site Administrator atau Journal Manager/Editor yang dapat memasang update atau menghapus plugin.</div>{/if}
+<div class="ccp-head">
+	<div class="ccp-brand">
+		<div class="ccp-logo">C</div>
+		<div>
+			<h2>CHEESA Control Panel</h2>
+			<p>Update, kembalikan, dan hapus plugin CHEESA langsung dari OJS</p>
+		</div>
+	</div>
+	<div class="ccp-head-act">
+		<button type="button" class="ccp-btn" data-cp-verb="check">⟳ Cek update</button>
+		{if $cpPageUrl && !$cpFullPage}<a class="ccp-btn" href="{$cpPageUrl|escape}" target="_blank" rel="noopener">⤢ Halaman penuh</a>{/if}
+	</div>
+</div>
 
-<table>
-	<thead><tr><th>Paket</th><th>Terpasang</th><th>Tersedia</th><th></th></tr></thead>
-	<tbody>
-	{foreach from=$cpRows item=r}
-		<tr>
-			<td><strong>{$r.label|escape}</strong><br><small>plugins/{$r.category|escape}/{$r.name|escape}</small></td>
-			<td>{if $r.installed}{$r.installed|escape}{else}<small>belum terpasang</small>{/if}</td>
-			<td>{if $r.available}{$r.available|escape}{if $r.canUpdate} <span class="cp-new">baru</span>{/if}{if $r.released}<br><small>{$r.released|escape}</small>{/if}{else}<small>—</small>{/if}</td>
-			<td style="white-space:nowrap">
-				{if $r.canUpdate && $cpAdmin}<button type="button" data-cp-verb="update" data-cp-package="{$r.name|escape}">{if $r.installed}Update{else}Pasang{/if}</button>{elseif $r.installed && $r.available}<span class="cp-ok">✓ terbaru</span>{/if}
-				{if $r.backups && $cpAdmin} <button type="button" class="cp-sec" data-cp-verb="rollback" data-cp-package="{$r.name|escape}" title="Kembalikan versi sebelumnya">Kembalikan</button>{/if}
-				{if $r.canDelete && $cpAdmin} <button type="button" class="cp-del" data-cp-verb="uninstall" data-cp-package="{$r.name|escape}" data-cp-label="{$r.label|escape}" title="Hapus plugin ini dari server (dicadangkan dulu)">Hapus</button>{/if}
-			</td>
-		</tr>
-	{/foreach}
-	</tbody>
-</table>
+<div class="ccp-stats">
+	<div class="ccp-stat"><span>Terpasang</span><b>{$cpCountInstalled} <small>paket</small></b></div>
+	<div class="ccp-stat{if $cpCountUpdates} is-hot{/if}"><span>Update tersedia</span><b>{$cpCountUpdates} <small>{if $cpCountUpdates}siap dipasang{else}semua terbaru{/if}</small></b></div>
+	<div class="ccp-stat"><span>Manifest</span><b style="font-size:15px;padding-top:5px">{if $cpGenerated}✓ terverifikasi <small>{$cpGenerated|escape}</small>{else}<small>belum terbaca</small>{/if}</b></div>
+</div>
 
-<p>
-	<label for="cpManifestUrl"><strong>Alamat update (manifest.json)</strong></label><br>
-	<input type="text" id="cpManifestUrl" value="{$cpUrl|escape}" placeholder="https://raw.githubusercontent.com/cheesa-ctrl/cheesa-updates/main/manifest.json">
-	<br><label for="cpToken"><strong>Token GitHub</strong> <small>(hanya bila repo dibuat Private)</small></label><br>
-	<input type="password" id="cpToken" autocomplete="off" placeholder="{if $cpHasToken}token tersimpan — isi untuk mengganti, isi - untuk menghapus{else}kosongkan bila repo Public{/if}">
-	<br><button type="button" class="cp-sec" data-cp-verb="saveUrl">Simpan</button>
-	<button type="button" class="cp-sec" data-cp-verb="check">Cek update</button><br>
-	<small>Kosongkan lalu Simpan untuk kembali ke alamat bawaan. {if $cpGenerated}Manifest terverifikasi, dibuat {$cpGenerated|escape}. {/if}Paket hanya dipasang bila tanda tangan digitalnya cocok. Versi lama dan plugin yang dihapus otomatis dicadangkan (3 terakhir).</small>
-</p>
+{if $cpMsg}<div class="ccp-note ok">{$cpMsg|escape}</div>{/if}
+{if $cpErr}<div class="ccp-note err">{$cpErr|escape}</div>{/if}
+{if $cpProblems}<div class="ccp-note warn"><div><strong>Update belum bisa dijalankan:</strong><br>{foreach from=$cpProblems item=p}{$p|escape}<br>{/foreach}</div></div>{/if}
+{if !$cpAdmin}<div class="ccp-note warn">Anda bisa melihat versi, tetapi hanya Site Administrator atau Journal Manager/Editor yang dapat memasang update atau menghapus plugin.</div>{/if}
+
+<div class="ccp-list">
+{foreach from=$cpRows item=r}
+	<div class="ccp-item{if $r.canUpdate} has-update{/if}{if !$r.installed} is-gone{/if}">
+		<div class="ccp-ico cat-{$r.category|escape}">{$r.label|truncate:2:"":true|upper|escape}</div>
+		<div class="ccp-info">
+			<div class="ccp-name">{$r.label|escape} <span class="ccp-tag">{if $r.category == 'themes'}tema{else}{$r.category|escape}{/if}</span></div>
+			<span class="ccp-path">plugins/{$r.category|escape}/{$r.name|escape}</span>
+		</div>
+		<div class="ccp-ver inst">
+			<span class="ccp-lbl">Terpasang</span>
+			{if $r.installed}<b>{$r.installed|escape}</b>{else}<b class="none">belum terpasang</b>{/if}
+		</div>
+		<div class="ccp-ver">
+			<span class="ccp-lbl">Tersedia</span>
+			{if $r.available}
+				<b>{$r.available|escape}</b>
+				{if $r.canUpdate} <span class="ccp-pill new">baru</span>{elseif $r.installed} <span class="ccp-pill ok">✓ terbaru</span>{/if}
+				{if $r.released}<small>{$r.released|escape}</small>{/if}
+			{else}<b class="none">tidak di manifest</b>{/if}
+		</div>
+		<div class="ccp-actions">
+			{if $cpAdmin}
+				{if $r.canUpdate}<button type="button" class="ccp-btn{if !$r.installed} go{/if}" data-cp-verb="update" data-cp-package="{$r.name|escape}" data-cp-label="{$r.label|escape}">{if $r.installed}↑ Update{else}+ Pasang{/if}</button>{/if}
+				{if $r.backups}<button type="button" class="ccp-btn sec" data-cp-verb="rollback" data-cp-package="{$r.name|escape}" data-cp-label="{$r.label|escape}" title="Kembalikan cadangan terakhir ({$r.backups} tersimpan)">↺ Kembalikan</button>{/if}
+				{if $r.canDelete}<button type="button" class="ccp-btn del" data-cp-verb="uninstall" data-cp-package="{$r.name|escape}" data-cp-label="{$r.label|escape}" title="Hapus plugin ini dari server (dicadangkan dulu)">✕ Hapus</button>{/if}
+			{/if}
+		</div>
+	</div>
+{/foreach}
+</div>
+
+<details class="ccp-box">
+	<summary><span>Sumber update <small>manifest.json &amp; token GitHub</small></span></summary>
+	<div class="ccp-box-in">
+		<div class="ccp-field">
+			<label for="cpManifestUrl">Alamat update (manifest.json)</label>
+			<input type="text" id="cpManifestUrl" value="{$cpUrl|escape}" placeholder="https://raw.githubusercontent.com/cheesa-ctrl/cheesa-updates/main/manifest.json">
+		</div>
+		<div class="ccp-field">
+			<label for="cpToken">Token GitHub <small>(hanya bila repo dibuat Private)</small></label>
+			<input type="password" id="cpToken" autocomplete="off" placeholder="{if $cpHasToken}token tersimpan — isi untuk mengganti, isi - untuk menghapus{else}kosongkan bila repo Public{/if}">
+		</div>
+		<p style="margin:12px 0 0"><button type="button" class="ccp-btn" data-cp-verb="saveUrl">Simpan</button></p>
+		<p class="ccp-help">Kosongkan alamat lalu Simpan untuk kembali ke alamat bawaan. Paket hanya dipasang bila tanda tangan digitalnya cocok. Versi lama dan plugin yang dihapus otomatis dicadangkan (3 terakhir per paket).</p>
+	</div>
+</details>
 
 {if $cpRecovery}
-<details style="margin:4px 0 14px">
-	<summary><strong>Link pemulihan darurat</strong> — simpan di tempat aman</summary>
-	<p><small>Bila setelah update situs atau dasbor OJS tidak bisa dibuka, buka link ini untuk mengembalikan versi sebelumnya.
-	Link ini tetap berfungsi walau OJS error, dan tidak memerlukan cPanel/FTP. Jangan dibagikan.</small></p>
-	<input type="text" readonly value="{$cpRecovery|escape}" onclick="this.select()">
+<details class="ccp-box">
+	<summary><span>Link pemulihan darurat <small>simpan di tempat aman</small></span></summary>
+	<div class="ccp-box-in">
+		<p class="ccp-help">Bila setelah update situs atau dasbor OJS tidak bisa dibuka, buka link ini untuk mengembalikan versi sebelumnya.
+		Link ini tetap berfungsi walau OJS error, dan tidak memerlukan cPanel/FTP. Jangan dibagikan.</p>
+		<div class="ccp-field"><input type="text" readonly value="{$cpRecovery|escape}" onclick="this.select()"></div>
+	</div>
 </details>
 {/if}
 
 <script>
 {literal}
-(function ($) {
-	$(document).off('click.cheesacp').on('click.cheesacp', '#cheesaCP [data-cp-verb]', function () {
-		var $b = $(this), $cp = $('#cheesaCP'), verb = $b.data('cp-verb');
-		if (verb === 'update' && !confirm('Pasang update ' + $b.data('cp-package') + '? Versi saat ini akan dicadangkan.')) return;
-		if (verb === 'rollback' && !confirm('Kembalikan ' + $b.data('cp-package') + ' ke versi cadangan terakhir?')) return;
-		if (verb === 'uninstall' && !confirm('Hapus ' + ($b.data('cp-label') || $b.data('cp-package')) + ' dari server?\n\nPlugin dinonaktifkan lalu foldernya dihapus. Cadangan disimpan, jadi bisa dikembalikan dengan tombol "Kembalikan". Pengaturan dan data di database tidak dihapus.')) return;
-		$cp.find('button').prop('disabled', true);
-		$b.text(verb === 'update' ? 'Memasang…' : verb === 'rollback' ? 'Mengembalikan…' : verb === 'uninstall' ? 'Menghapus…' : 'Memproses…');
-		$.post($cp.data('action'), {
-			verb: verb, package: $b.data('cp-package') || '', manifestUrl: $('#cpManifestUrl').val(), githubToken: $('#cpToken').val() || '', csrfToken: $cp.data('csrf')
-		}, null, 'json').done(function (r) {
-			if (r && r.status && r.content) $cp.replaceWith(r.content);
-			else { alert((r && r.content) || 'Gagal memproses permintaan.'); $cp.find('button').prop('disabled', false); }
-		}).fail(function (x) {
-			alert('Permintaan gagal (' + x.status + '). Periksa log error server.');
-			$cp.find('button').prop('disabled', false);
-		});
+(function () {
+	// pengikat lama (panel versi sebelumnya, berbasis jQuery) dilepas supaya aksi tidak terkirim dua kali
+	if (window.jQuery) window.jQuery(document).off('click.cheesacp');
+	if (window.__cheesaCPBound) return;
+	window.__cheesaCPBound = true;
+	var BUSY = { update: 'Memasang…', rollback: 'Mengembalikan…', uninstall: 'Menghapus…', check: 'Memeriksa…', saveUrl: 'Menyimpan…' };
+	document.addEventListener('click', function (ev) {
+		var b = ev.target && ev.target.closest ? ev.target.closest('#cheesaCP [data-cp-verb]') : null;
+		if (!b) return;
+		ev.preventDefault();
+		var cp = document.getElementById('cheesaCP');
+		var verb = b.getAttribute('data-cp-verb'), pkg = b.getAttribute('data-cp-package') || '', label = b.getAttribute('data-cp-label') || pkg;
+		if (verb === 'update' && !confirm('Pasang update ' + label + '? Versi saat ini akan dicadangkan.')) return;
+		if (verb === 'rollback' && !confirm('Kembalikan ' + label + ' ke versi cadangan terakhir?')) return;
+		if (verb === 'uninstall' && !confirm('Hapus ' + label + ' dari server?\n\nPlugin dinonaktifkan lalu foldernya dihapus. Cadangan disimpan, jadi bisa dikembalikan dengan tombol "Kembalikan". Pengaturan dan data di database tidak dihapus.')) return;
+		var btns = cp.querySelectorAll('button');
+		for (var i = 0; i < btns.length; i++) btns[i].disabled = true;
+		b.textContent = BUSY[verb] || 'Memproses…';
+		var url = cp.querySelector('#cpManifestUrl'), tok = cp.querySelector('#cpToken');
+		var body = new URLSearchParams();
+		body.append('verb', verb);
+		body.append('package', pkg);
+		body.append('manifestUrl', url ? url.value : '');
+		body.append('githubToken', tok ? tok.value : '');
+		body.append('csrfToken', cp.getAttribute('data-csrf') || '');
+		body.append('fullpage', cp.getAttribute('data-fullpage') || '');
+		var fail = function (m) { alert(m); for (var i = 0; i < btns.length; i++) btns[i].disabled = false; };
+		fetch(cp.getAttribute('data-action'), {
+			method: 'POST', credentials: 'same-origin',
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest' },
+			body: body.toString()
+		}).then(function (r) {
+			if (!r.ok) throw new Error('Permintaan gagal (' + r.status + '). Periksa log error server.');
+			return r.json();
+		}).then(function (r) {
+			if (!r || !r.status || !r.content) return fail((r && r.content) || 'Gagal memproses permintaan.');
+			var t = document.createElement('div');
+			t.innerHTML = r.content;
+			var n = t.querySelector('#cheesaCP');
+			if (n) cp.parentNode.replaceChild(n, cp); else fail('Jawaban server tidak dikenali.');
+		}).catch(function (e) { fail(e.message || 'Permintaan gagal.'); });
 	});
-})(jQuery);
+})();
 {/literal}
 </script>
 </div>

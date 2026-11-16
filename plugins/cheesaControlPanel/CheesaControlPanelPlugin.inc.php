@@ -29,8 +29,61 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 		'cheesaControlPanel' => ['generic', 'CHEESA Control Panel'],
 	];
 
+	/** Nama halaman penuh panel: /index.php/<jurnal>/cheesapanel */
+	const PAGE = 'cheesapanel';
+
 	public function register($category, $path, $mainContextId = null) {
-		return parent::register($category, $path, $mainContextId);
+		$success = parent::register($category, $path, $mainContextId);
+		if ($success && $this->getEnabled($mainContextId)) {
+			HookRegistry::register('LoadHandler', [$this, 'loadPageHandler']);
+			HookRegistry::register('TemplateManager::setupBackendPage', [$this, 'addBackendMenu']);
+		}
+		return $success;
+	}
+
+	/** Halaman penuh panel (bukan modal). Hak akses diperiksa di CheesaPanelHandler. */
+	public function loadPageHandler($hookName, $params) {
+		if ($params[0] !== self::PAGE) return false;
+		require_once(__DIR__ . '/CheesaPanelHandler.inc.php');
+		CheesaPanelHandler::$plugin = $this;
+		define('HANDLER_CLASS', 'CheesaPanelHandler');
+		return true;
+	}
+
+	/** Alamat halaman penuh panel di jurnal yang sedang dibuka. */
+	public function pageUrl($request) {
+		return $request->getDispatcher()->url($request, ROUTE_PAGE, null, self::PAGE);
+	}
+
+	/** Alamat aksi panel (dipakai modal dan halaman penuh). */
+	public function manageUrl($request) {
+		return $request->getDispatcher()->url($request, ROUTE_COMPONENT, null, 'grid.settings.plugins.SettingsPluginGridHandler', 'manage', null,
+			['plugin' => $this->getName(), 'category' => 'generic']);
+	}
+
+	/** Boleh membuka panel: Site Admin, atau Journal Manager / Journal Editor jurnal ini. */
+	public function canUse($request) {
+		$user = $request->getUser(); $c = $request->getContext();
+		return $user && (Validation::isSiteAdmin() || ($c && $user->hasRole([ROLE_ID_MANAGER], (int) $c->getId())));
+	}
+
+	/** Menu "CHEESA Panel" di sidebar dasbor (bila versi OJS menyediakan hook-nya). */
+	public function addBackendMenu($hookName, $args) {
+		try {
+			$request = Application::get()->getRequest();
+			if (!$request->getContext() || !$this->canUse($request)) return false;
+			$tm = TemplateManager::getManager($request);
+			$menu = $tm->getState('menu');
+			if (!is_array($menu) || isset($menu['cheesaPanel'])) return false;
+			$item = ['name' => 'CHEESA Panel', 'url' => $this->pageUrl($request), 'isCurrent' => $request->getRequestedPage() === self::PAGE];
+			$new = [];
+			foreach ($menu as $k => $v) { $new[$k] = $v; if ($k === 'settings') $new['cheesaPanel'] = $item; }
+			if (!isset($new['cheesaPanel'])) $new['cheesaPanel'] = $item;
+			$tm->setState(['menu' => $new]);
+		} catch (\Throwable $e) {
+			error_log('cheesaControlPanel menu: ' . $e->getMessage());
+		}
+		return false;
 	}
 
 	public function getDisplayName() { return 'CHEESA Control Panel'; }
@@ -194,10 +247,14 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 		$actions = parent::getActions($request, $actionArgs);
 		if (!$this->getEnabled()) return $actions;
 		import('lib.pkp.classes.linkAction.request.AjaxModal');
+		import('lib.pkp.classes.linkAction.request.RedirectAction');
 		$router = $request->getRouter();
 		array_unshift($actions, new LinkAction('settings',
 			new AjaxModal($router->url($request, null, null, 'manage', null, ['verb' => 'panel', 'plugin' => $this->getName(), 'category' => 'generic']), $this->getDisplayName()),
 			'Buka Panel', null));
+		if ($request->getContext()) {
+			array_splice($actions, 1, 0, [new LinkAction('cheesaPanelPage', new RedirectAction($this->pageUrl($request)), 'Halaman Penuh', null)]);
+		}
 		return $actions;
 	}
 
@@ -307,9 +364,14 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 		}
 
 		$problems = $isAdmin ? $u->preflight('generic') : [];
+		$rows = $this->rows($u, $manifest);
 		$tm = TemplateManager::getManager($request);
 		$tm->assign([
-			'cpRows' => $this->rows($u, $manifest),
+			'cpRows' => $rows,
+			'cpCountInstalled' => count(array_filter($rows, function ($r) { return (bool) $r['installed']; })),
+			'cpCountUpdates' => count(array_filter($rows, function ($r) { return (bool) $r['canUpdate']; })),
+			'cpFullPage' => $request->getUserVar('fullpage') === '1',
+			'cpPageUrl' => $request->getContext() ? $this->pageUrl($request) : '',
 			'cpUrl' => $url,
 			'cpHasToken' => (bool) $this->getSetting($cid, 'githubToken'),
 			'cpMsg' => $msg,
