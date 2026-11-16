@@ -23,9 +23,6 @@ class CheesaUserManagerPlugin extends GenericPlugin {
 		return $success;
 	}
 
-	/** Satu pengaturan untuk seluruh server (akun pengguna juga satu untuk seluruh server). */
-	public function isSitePlugin() { return true; }
-
 	public function getDisplayName() { return 'CHEESA User Manager'; }
 
 	public function getDescription() {
