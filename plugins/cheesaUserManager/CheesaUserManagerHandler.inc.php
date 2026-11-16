@@ -193,6 +193,11 @@ class CheesaUserManagerHandler extends Handler {
 			'umTotal' => $total,
 			'umAll' => $q === '' ? $total : $allQuery->count(),
 			'umScoped' => !$siteAdmin,
+			'umGroups' => array_map(function ($g) use ($flash) {
+				$g['checked'] = $flash && !empty($flash['old']['groups']) && in_array($g['id'], $flash['old']['groups']);
+				return $g;
+			}, $this->journalGroups($cid)),
+			'umOld' => $flash && isset($flash['old']) ? $flash['old'] : [],
 			'umPage' => $page,
 			'umPages' => $pages,
 			'umPrev' => $page > 1 ? $plugin->pageUrl($request, $keep + ['p' => $page - 1]) : '',
@@ -221,6 +226,11 @@ class CheesaUserManagerHandler extends Handler {
 			$cid = (int) $request->getContext()->getId();
 			$verb = (string) $request->getUserVar('verb');
 			$userDao = DAORegistry::getDAO('UserDAO');
+			if ($verb === 'add') {
+				$ok = $this->addUser($request, $cid);
+				$request->getSession()->setSessionVar('cheesaUM', json_encode(['ok' => $ok, 'err' => '']));
+				return $request->redirectUrl($plugin->pageUrl($request, ['q' => trim((string) $request->getUserVar('username'))]));
+			}
 			$user = $userDao->getById((int) $request->getUserVar('userId'), true);
 			if (!$user) throw new Exception('Akun tidak ditemukan.');
 			$id = (int) $user->getId();
@@ -288,8 +298,86 @@ class CheesaUserManagerHandler extends Handler {
 		} catch (\Throwable $e) {
 			$err = $e->getMessage();
 		}
-		$request->getSession()->setSessionVar('cheesaUM', json_encode(['ok' => $ok, 'err' => $err]));
+		$old = [];
+		if ($err && (string) $request->getUserVar('verb') === 'add') {
+			// isian formulir dikembalikan (kecuali password) supaya tidak perlu mengetik ulang
+			foreach (['username', 'email', 'givenName', 'familyName', 'affiliation'] as $f) $old[$f] = (string) $request->getUserVar($f);
+			$old['groups'] = array_map('intval', (array) $request->getUserVar('groups'));
+			$old['open'] = true;
+		}
+		$request->getSession()->setSessionVar('cheesaUM', json_encode(['ok' => $ok, 'err' => $err, 'old' => $old]));
 		$request->redirectUrl($plugin->pageUrl($request, $back ?: null));
+	}
+
+	/* ------------------------------------------------------------------ tambah akun */
+
+	/** @return string pesan sukses; melempar Exception bila isian tidak valid */
+	private function addUser($request, $cid) {
+		$plugin = self::$plugin;
+		$userDao = DAORegistry::getDAO('UserDAO');
+		$username = trim((string) $request->getUserVar('username'));
+		$email = trim((string) $request->getUserVar('email'));
+		$given = trim((string) $request->getUserVar('givenName'));
+		$family = trim((string) $request->getUserVar('familyName'));
+		$affiliation = trim((string) $request->getUserVar('affiliation'));
+		// password dikirim base64 di "npk" (server ini membuang parameter yang bernama password)
+		$npk = (string) $request->getUserVar('npk');
+		$password = $npk !== '' ? (string) base64_decode(strtr($npk, '-_', '+/'), true) : '';
+		$mustChange = (bool) $request->getUserVar('mustChange');
+		$groups = array_unique(array_map('intval', (array) $request->getUserVar('groups')));
+
+		if (!preg_match('/^[a-z0-9]+([\-_][a-z0-9]+)*$/i', $username)) throw new Exception('Username hanya boleh huruf, angka, dan tanda - atau _ di antara huruf/angka (tanpa spasi).');
+		if (strlen($username) > 32) throw new Exception('Username maksimal 32 karakter.');
+		if (Capsule::table('users')->whereRaw('LOWER(username) = ?', [strtolower($username)])->exists()) throw new Exception('Username "' . $username . '" sudah dipakai akun lain.');
+		if (!filter_var($email, FILTER_VALIDATE_EMAIL)) throw new Exception('Alamat email tidak valid.');
+		if (Capsule::table('users')->whereRaw('LOWER(email) = ?', [strtolower($email)])->exists()) throw new Exception('Email "' . $email . '" sudah dipakai akun lain. Cari akun itu lalu tambahkan perannya lewat Users & Roles.');
+		if ($given === '') throw new Exception('Nama depan wajib diisi.');
+		$min = (int) Config::getVar('security', 'min_password_length') ?: 6;
+		if (strlen($password) < $min) throw new Exception('Password minimal ' . $min . ' karakter.');
+		if (!$groups) throw new Exception('Pilih minimal satu peran di jurnal ini.');
+		$allowed = [];
+		foreach ($this->journalGroups($cid) as $g) $allowed[$g['id']] = true;
+		foreach ($groups as $gid) if (!isset($allowed[$gid])) throw new Exception('Peran yang dipilih tidak valid untuk jurnal ini.');
+
+		$locale = AppLocale::getPrimaryLocale();
+		$user = $userDao->newDataObject();
+		$user->setUsername($username);
+		$user->setEmail($email);
+		$user->setGivenName($given, $locale);
+		$user->setFamilyName($family, $locale);
+		if ($affiliation !== '') $user->setAffiliation($affiliation, $locale);
+		$user->setPassword(Validation::encryptCredentials($username, $password));
+		$user->setMustChangePassword($mustChange);
+		$user->setDateRegistered(Core::getCurrentDate());
+		$user->setDisabled(false);
+		$user->setInlineHelp(1);
+		$userDao->insertObject($user);
+		$newId = (int) $user->getId();
+		if (!$newId) throw new Exception('Akun gagal dibuat (database tidak mengembalikan ID).');
+
+		$ugDao = DAORegistry::getDAO('UserGroupDAO');
+		$names = [];
+		foreach ($groups as $gid) {
+			$ugDao->assignUserToGroup($newId, $gid);
+			foreach ($this->journalGroups($cid) as $g) if ($g['id'] === $gid) $names[] = $g['name'];
+		}
+		$plugin->audit('tambah akun', "#$newId $username <$email> — " . implode(', ', $names), $request);
+		return "Akun \"$username\" dibuat dengan peran " . implode(', ', $names) . '.'
+			. ($mustChange ? ' Pengguna wajib mengganti password saat login pertama.' : '')
+			. ' Sampaikan username dan password-nya ke pengguna (OJS tidak mengirim email otomatis dari halaman ini).';
+	}
+
+	/** @return array [['id'=>, 'name'=>, 'role'=>], ...] peran (user group) di jurnal ini */
+	private function journalGroups($cid) {
+		static $cache = [];
+		if (isset($cache[$cid])) return $cache[$cid];
+		$out = [];
+		$res = DAORegistry::getDAO('UserGroupDAO')->getByContextId($cid);
+		while ($g = $res->next()) {
+			$rid = (int) $g->getRoleId();
+			$out[] = ['id' => (int) $g->getId(), 'name' => $g->getLocalizedName(), 'role' => isset(self::ROLES[$rid]) ? self::ROLES[$rid] : ''];
+		}
+		return $cache[$cid] = $out;
 	}
 
 	/* ------------------------------------------------------------------ bantuan */

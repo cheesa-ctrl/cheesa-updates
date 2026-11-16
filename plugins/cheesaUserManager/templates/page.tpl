@@ -96,6 +96,26 @@
 	.popbox p { margin: 8px 0 10px; font-size: 12px; color: var(--muted); }
 	.popbox .row { display: flex; justify-content: flex-end; gap: 6px; }
 
+	.btn.add { background: var(--accent); border-color: var(--accent); }
+	.btn.add:hover { background: #d9860f; }
+	.addbox { margin: 0 0 16px; }
+	.addbox[open] { border-color: #f6d9a8; box-shadow: 0 8px 24px rgba(237,153,31,.12); }
+	.addform { padding: 4px 16px 16px; border-top: 1px solid var(--line); }
+	.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 18px; }
+	.fld { margin: 12px 0 0; }
+	.fld > label { display: block; font-weight: 600; margin: 0 0 4px; }
+	.fld > label i { color: var(--red); font-style: normal; }
+	.fld input[type=text], .fld input[type=email] { width: 100%; padding: 8px 10px; border: 1px solid #cdd1e1; border-radius: 8px; font: inherit; }
+	.fld input:focus { outline: 2px solid rgba(3,2,113,.25); border-color: var(--navy); }
+	.fld small { color: var(--muted); font-size: 12px; }
+	.pw { display: flex; gap: 6px; }
+	.pw input { flex: 1; min-width: 0; font-family: ui-monospace, Menlo, Consolas, monospace !important; }
+	.chk { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 13px; font-weight: 400; cursor: pointer; }
+	.roles { display: flex; flex-wrap: wrap; gap: 8px; }
+	.chk.role { margin: 0; padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--soft); }
+	.chk.role:has(input:checked) { background: #e9ebfb; border-color: #c4c9ee; }
+	.chk.role small { color: var(--muted); }
+	.addfoot { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
 	.pager { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: 0 0 22px; color: var(--muted); }
 	.box { border: 1px solid var(--line); border-radius: 12px; background: #fff; }
 	.box > summary { cursor: pointer; padding: 12px 16px; font-weight: 700; color: var(--navy); list-style: none; }
@@ -114,6 +134,7 @@
 	}
 	@media (max-width: 640px) {
 		.stats { grid-template-columns: 1fr; }
+		.grid2 { grid-template-columns: 1fr; }
 		.user { grid-template-columns: 44px minmax(0, 1fr); }
 		.user .c-roles, .user .c-act { grid-column: 2; }
 	}
@@ -149,7 +170,44 @@
 			<button class="btn light" type="submit">Cari</button>
 			{if $umQ}<a class="btn light" href="{$umSearchUrl|escape}">Reset</a>{/if}
 		</form>
+		<button class="btn add" type="button" onclick="var d=document.getElementById('umAdd');d.open=true;d.scrollIntoView({ldelim}behavior:'smooth',block:'start'{rdelim});setTimeout(function(){ldelim}document.getElementById('nuUser').focus(){rdelim},300);">+ Tambah akun</button>
 	</div>
+
+	<details class="box addbox" id="umAdd"{if $umOld && $umOld.open} open{/if}>
+		<summary>+ Tambah akun baru <small>langsung dengan peran di jurnal {$umJournal|escape}</small></summary>
+		<form class="addform" method="post" action="{$umSaveUrl|escape}" id="umAddForm" autocomplete="off">
+			{csrf}
+			<input type="hidden" name="verb" value="add"><input type="hidden" name="npk" value="">
+			<div class="grid2">
+				<div class="fld"><label for="nuUser">Username <i>*</i></label>
+					<input type="text" id="nuUser" name="username" value="{if $umOld}{$umOld.username|escape}{/if}" maxlength="32" required pattern="[A-Za-z0-9]+([\-_][A-Za-z0-9]+)*" autocapitalize="off" spellcheck="false" placeholder="mis. budisantoso">
+					<small>Huruf, angka, - atau _ ; tanpa spasi.</small></div>
+				<div class="fld"><label for="nuEmail">Email <i>*</i></label>
+					<input type="email" id="nuEmail" name="email" value="{if $umOld}{$umOld.email|escape}{/if}" required placeholder="nama@domain.ac.id"></div>
+				<div class="fld"><label for="nuGiven">Nama depan <i>*</i></label>
+					<input type="text" id="nuGiven" name="givenName" value="{if $umOld}{$umOld.givenName|escape}{/if}" required></div>
+				<div class="fld"><label for="nuFamily">Nama belakang</label>
+					<input type="text" id="nuFamily" name="familyName" value="{if $umOld}{$umOld.familyName|escape}{/if}"></div>
+				<div class="fld"><label for="nuAff">Afiliasi</label>
+					<input type="text" id="nuAff" name="affiliation" value="{if $umOld}{$umOld.affiliation|escape}{/if}" placeholder="mis. Universitas PGRI Madiun"></div>
+				<div class="fld"><label for="nuPass">Password <i>*</i></label>
+					<div class="pw"><input type="text" id="nuPass" value="" autocomplete="off" spellcheck="false" data-lpignore="true" data-form-type="other" placeholder="min. 6 karakter">
+					<button class="btn sec" type="button" id="nuGen" title="Buat password acak">⟳ Acak</button>
+					<button class="btn sec" type="button" id="nuCopy" title="Salin">⧉</button></div>
+					<label class="chk"><input type="checkbox" name="mustChange" value="1" checked> Wajib ganti password saat login pertama</label></div>
+			</div>
+			<div class="fld"><label>Peran di jurnal ini <i>*</i></label>
+				<div class="roles">
+				{foreach from=$umGroups item=g}
+					<label class="chk role"><input type="checkbox" name="groups[]" value="{$g.id}"{if $g.checked} checked{/if}> {$g.name|escape}{if $g.role && $g.role != $g.name} <small>{$g.role|escape}</small>{/if}</label>
+				{/foreach}
+				</div></div>
+			<div class="addfoot">
+				<small>Halaman ini tidak mengirim email. Sampaikan username &amp; password ke pengguna; ia bisa langsung login.</small>
+				<button class="btn" type="submit">Buat akun</button>
+			</div>
+		</form>
+	</details>
 
 	<div class="stats">
 		<div class="stat"><span>{if $umScoped}Total akun di jurnal ini{else}Total akun di server{/if}</span><b>{$umAll} <small>akun</small></b></div>
@@ -281,6 +339,27 @@
 		f.querySelector('[name=confirm]').value = typed.trim();
 		var b = f.querySelector('button[type=submit]'); if (b) { b.disabled = true; b.textContent = 'Memproses…'; }
 	});
+	// tambah akun: password acak, salin, dan kirim terenkode (server membuang parameter bernama password)
+	var pass = document.getElementById('nuPass');
+	if (pass) {
+		document.getElementById('nuGen').addEventListener('click', function () {
+			var c = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789', out = '', a = new Uint32Array(10);
+			window.crypto.getRandomValues(a);
+			for (var i = 0; i < a.length; i++) out += c[a[i] % c.length];
+			pass.value = out;
+		});
+		document.getElementById('nuCopy').addEventListener('click', function () {
+			pass.select();
+			try { navigator.clipboard.writeText(pass.value); } catch (e) { document.execCommand('copy'); }
+		});
+		document.getElementById('umAddForm').addEventListener('submit', function (ev) {
+			var f = ev.target;
+			if (pass.value.length < 6) { ev.preventDefault(); alert('Password minimal 6 karakter.'); pass.focus(); return; }
+			if (!f.querySelector('input[name="groups[]"]:checked')) { ev.preventDefault(); alert('Pilih minimal satu peran di jurnal ini.'); return; }
+			f.querySelector('[name=npk]').value = btoa(unescape(encodeURIComponent(pass.value))).replace(/\+/g, '-').replace(/\//g, '_');
+			var b = f.querySelector('button[type=submit]'); b.disabled = true; b.textContent = 'Membuat…';
+		});
+	}
 	// hanya satu popup terbuka; klik di luar menutupnya
 	document.addEventListener('click', function (ev) {
 		var pops = document.querySelectorAll('details.pop[open]');
