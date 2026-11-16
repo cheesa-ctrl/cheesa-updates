@@ -19,6 +19,9 @@ require_once(__DIR__ . '/classes/CheesaLicense.inc.php');
 class CheesaControlPanelPlugin extends GenericPlugin {
 
 	/** Alamat update bawaan (repo GitHub cheesa-ctrl/cheesa-updates). Bisa diganti di panel. */
+	/** Hash bcrypt kata sandi bagian "Sumber update" (kata sandi tidak disimpan dalam bentuk asli). */
+	const SOURCE_PASSWORD_HASH = '$2y$11$M8iWNpT0ZdgnRs8HNls4U.r9KHaqX3l8IlVkVY4BZsAIJ5zAb6Zz2';
+
 	const DEFAULT_MANIFEST = 'https://raw.githubusercontent.com/cheesa-ctrl/cheesa-updates/main/manifest.json';
 
 	/** Paket yang dikenal panel (nama folder => kategori & label). */
@@ -268,7 +271,7 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 
 	public function manage($args, $request) {
 		$verb = (string) $request->getUserVar('verb');
-		if (!in_array($verb, ['panel', 'saveUrl', 'check', 'update', 'rollback', 'uninstall', 'hide', 'unhide'], true)) return parent::manage($args, $request);
+		if (!in_array($verb, ['panel', 'saveUrl', 'check', 'update', 'rollback', 'uninstall', 'hide', 'unhide', 'unlockSource', 'lockSource'], true)) return parent::manage($args, $request);
 		if ($why = CheesaLicense::checkRequest(__DIR__)) {
 			return new JSONMessage(true, '<div style="padding:12px;border-left:4px solid #c62828;background:#fdecec">CHEESA Control Panel tidak aktif: ' . htmlspecialchars($why, ENT_QUOTES, 'UTF-8') . '. Plugin ini hanya untuk jurnal CHEESA.</div>');
 		}
@@ -282,7 +285,28 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 
 		if ($verb !== 'panel') {
 			if (!$request->checkCSRF()) return new JSONMessage(false, 'Sesi kedaluwarsa, muat ulang halaman.');
-			if ($verb === 'saveUrl') {
+			$session = $request->getSession();
+			if ($verb === 'unlockSource') {
+				// maks. 5 percobaan salah per 10 menit per sesi
+				$tries = json_decode((string) $session->getSessionVar('cheesaCPSourceTries'), true) ?: ['n' => 0, 't' => time()];
+				if (time() - $tries['t'] > 600) $tries = ['n' => 0, 't' => time()];
+				if ($tries['n'] >= 5) $err = 'Terlalu banyak percobaan salah. Coba lagi 10 menit lagi.';
+				elseif (password_verify((string) $request->getUserVar('password'), self::SOURCE_PASSWORD_HASH)) {
+					$session->setSessionVar('cheesaCPSource', '1');
+					$session->unsetSessionVar('cheesaCPSourceTries');
+					$msg = 'Bagian Sumber update dibuka.';
+				} else {
+					usleep(700000);
+					$tries['n']++;
+					$session->setSessionVar('cheesaCPSourceTries', json_encode($tries));
+					$err = 'Kata sandi salah.' . ($tries['n'] >= 5 ? ' Terkunci 10 menit.' : ' Sisa ' . (5 - $tries['n']) . ' percobaan.');
+				}
+			} elseif ($verb === 'lockSource') {
+				$session->unsetSessionVar('cheesaCPSource');
+				$msg = 'Bagian Sumber update dikunci lagi.';
+			} elseif ($verb === 'saveUrl' && $session->getSessionVar('cheesaCPSource') !== '1') {
+				$err = 'Bagian Sumber update terkunci. Masukkan kata sandi dulu.';
+			} elseif ($verb === 'saveUrl') {
 				$url = trim((string) $request->getUserVar('manifestUrl'));
 				if ($url !== '' && !preg_match('#^https://\S+/manifest\.json$#i', $url)) $err = 'Alamat harus https:// dan berakhiran /manifest.json';
 				else {
@@ -396,6 +420,8 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 			'cpPageUrl' => $request->getContext() ? $this->pageUrl($request) : '',
 			'cpUrl' => $url,
 			'cpHasToken' => (bool) $this->getSetting($cid, 'githubToken'),
+			'cpSourceUnlocked' => $request->getSession()->getSessionVar('cheesaCPSource') === '1',
+			'cpSourceOpen' => in_array($verb, ['unlockSource', 'lockSource', 'saveUrl'], true),
 			'cpMsg' => $msg,
 			'cpErr' => $err,
 			'cpAdmin' => $isAdmin,

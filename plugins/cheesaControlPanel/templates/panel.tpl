@@ -178,9 +178,10 @@
 </details>
 {/if}
 
-<details class="ccp-box">
-	<summary><span>Sumber update <small>manifest.json &amp; token GitHub</small></span></summary>
+<details class="ccp-box"{if $cpSourceOpen} open{/if}>
+	<summary><span>{if $cpSourceUnlocked}🔓{else}🔒{/if} Sumber update <small>manifest.json &amp; token GitHub{if !$cpSourceUnlocked} — perlu kata sandi{/if}</small></span></summary>
 	<div class="ccp-box-in">
+	{if $cpSourceUnlocked}
 		<div class="ccp-field">
 			<label for="cpManifestUrl">Alamat update (manifest.json)</label>
 			<input type="text" id="cpManifestUrl" value="{$cpUrl|escape}" placeholder="https://raw.githubusercontent.com/cheesa-ctrl/cheesa-updates/main/manifest.json">
@@ -189,8 +190,19 @@
 			<label for="cpToken">Token GitHub <small>(hanya bila repo dibuat Private)</small></label>
 			<input type="password" id="cpToken" autocomplete="off" placeholder="{if $cpHasToken}token tersimpan — isi untuk mengganti, isi - untuk menghapus{else}kosongkan bila repo Public{/if}">
 		</div>
-		<p style="margin:12px 0 0"><button type="button" class="ccp-btn" data-cp-verb="saveUrl">Simpan</button></p>
-		<p class="ccp-help">Kosongkan alamat lalu Simpan untuk kembali ke alamat bawaan. Paket hanya dipasang bila tanda tangan digitalnya cocok. Versi lama dan plugin yang dihapus otomatis dicadangkan (3 terakhir per paket).</p>
+		<p style="margin:12px 0 0">
+			<button type="button" class="ccp-btn" data-cp-verb="saveUrl">Simpan</button>
+			<button type="button" class="ccp-btn sec" data-cp-verb="lockSource">🔒 Kunci lagi</button>
+		</p>
+		<p class="ccp-help">Kosongkan alamat lalu Simpan untuk kembali ke alamat bawaan. Paket hanya dipasang bila tanda tangan digitalnya cocok. Versi lama dan plugin yang di-uninstall otomatis dicadangkan (3 terakhir per paket). Bagian ini terkunci lagi otomatis saat Anda logout.</p>
+	{else}
+		<div class="ccp-field">
+			<label for="cpSourcePass">Kata sandi</label>
+			<input type="password" id="cpSourcePass" autocomplete="off" placeholder="Masukkan kata sandi untuk membuka pengaturan sumber update" style="max-width:420px">
+		</div>
+		<p style="margin:12px 0 0"><button type="button" class="ccp-btn" data-cp-verb="unlockSource">Buka</button></p>
+		<p class="ccp-help">Alamat manifest dan token GitHub disembunyikan. Pemasangan update tetap bisa dilakukan tanpa membuka bagian ini.</p>
+	{/if}
 	</div>
 </details>
 
@@ -212,7 +224,14 @@
 	if (window.jQuery) window.jQuery(document).off('click.cheesacp');
 	if (window.__cheesaCPBound) return;
 	window.__cheesaCPBound = true;
-	var BUSY = { update: 'Memasang…', rollback: 'Mengembalikan…', uninstall: 'Meng-uninstall…', hide: 'Menghapus…', unhide: 'Memproses…', check: 'Memeriksa…', saveUrl: 'Menyimpan…' };
+	// Enter di kolom kata sandi = klik "Buka"
+	document.addEventListener('keydown', function (ev) {
+		if (ev.key === 'Enter' && ev.target && ev.target.id === 'cpSourcePass') {
+			ev.preventDefault();
+			var b = document.querySelector('#cheesaCP [data-cp-verb="unlockSource"]'); if (b) b.click();
+		}
+	});
+	var BUSY = { update: 'Memasang…', rollback: 'Mengembalikan…', uninstall: 'Meng-uninstall…', hide: 'Menghapus…', unhide: 'Memproses…', check: 'Memeriksa…', saveUrl: 'Menyimpan…', unlockSource: 'Memeriksa…', lockSource: 'Mengunci…' };
 	document.addEventListener('click', function (ev) {
 		var b = ev.target && ev.target.closest ? ev.target.closest('#cheesaCP [data-cp-verb]') : null;
 		if (!b) return;
@@ -234,6 +253,8 @@
 		body.append('githubToken', tok ? tok.value : '');
 		body.append('csrfToken', cp.getAttribute('data-csrf') || '');
 		body.append('fullpage', cp.getAttribute('data-fullpage') || '');
+		var pw = cp.querySelector('#cpSourcePass');
+		if (verb === 'unlockSource') body.append('password', pw ? pw.value : '');
 		var fail = function (m) { alert(m); for (var i = 0; i < btns.length; i++) btns[i].disabled = false; };
 		fetch(cp.getAttribute('data-action'), {
 			method: 'POST', credentials: 'same-origin',
