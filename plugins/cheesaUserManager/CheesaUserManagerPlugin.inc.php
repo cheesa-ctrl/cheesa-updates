@@ -4,8 +4,8 @@
  * @file plugins/generic/cheesaUserManager/CheesaUserManagerPlugin.inc.php
  *
  * CHEESA User Manager — ubah username, hapus akun, dan gabungkan akun dari satu halaman.
- * Halaman: /index.php/<jurnal>/cheesausers  — hanya untuk Site Administrator, karena akun pengguna
- * berlaku untuk semua jurnal di server yang sama.
+ * Halaman: /index.php/<jurnal>/cheesausers — Site Administrator (semua akun) dan Journal Manager/Editor
+ * (hanya akun yang terdaftar khusus di jurnalnya, karena akun berlaku untuk semua jurnal di server).
  */
 
 import('lib.pkp.classes.plugins.GenericPlugin');
@@ -26,7 +26,7 @@ class CheesaUserManagerPlugin extends GenericPlugin {
 	public function getDisplayName() { return 'CHEESA User Manager'; }
 
 	public function getDescription() {
-		return 'Ubah username, hapus akun yang tidak punya aktivitas, atau gabungkan akun ganda ke akun lain. Khusus Site Administrator; setiap tindakan dicatat.';
+		return 'Ubah username, hapus akun yang tidak punya aktivitas, atau gabungkan akun ganda ke akun lain. Untuk Site Administrator (semua akun) dan Journal Manager/Editor (akun jurnalnya sendiri); setiap tindakan dicatat.';
 	}
 
 	public function loadPageHandler($hookName, $params) {
@@ -45,7 +45,8 @@ class CheesaUserManagerPlugin extends GenericPlugin {
 	public function addBackendMenu($hookName, $args) {
 		try {
 			$request = Application::get()->getRequest();
-			if (!$request->getUser() || !Validation::isSiteAdmin()) return false;
+			$c = $request->getContext(); $u = $request->getUser();
+			if (!$u || !(Validation::isSiteAdmin() || ($c && $u->hasRole([ROLE_ID_MANAGER], (int) $c->getId())))) return false;
 			$tm = TemplateManager::getManager($request);
 			$menu = $tm->getState('menu');
 			if (!is_array($menu) || isset($menu['cheesaUsers'])) return false;
@@ -78,6 +79,7 @@ class CheesaUserManagerPlugin extends GenericPlugin {
 			'time' => date('Y-m-d H:i:s'),
 			'by' => $me ? $me->getUsername() : '-',
 			'ip' => $request->getRemoteAddr(),
+			'ctx' => $request->getContext() ? (int) $request->getContext()->getId() : 0,
 			'action' => $action,
 			'detail' => $detail,
 		]);

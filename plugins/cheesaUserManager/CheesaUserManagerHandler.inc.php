@@ -3,7 +3,10 @@
 /**
  * @file plugins/generic/cheesaUserManager/CheesaUserManagerHandler.inc.php
  *
- * Halaman /index.php/<jurnal>/cheesausers — khusus Site Administrator.
+ * Halaman /index.php/<jurnal>/cheesausers
+ *  - Site Administrator: semua akun di server.
+ *  - Journal Manager/Editor: hanya akun yang punya peran di jurnal ini, dan hanya bisa mengubah akun yang
+ *    TIDAK terdaftar di jurnal lain (akun dipakai bersama semua jurnal di server) serta bukan Manager/Admin.
  *  - index : cari & lihat akun (username, email, nama, peran, jejak aktivitas)
  *  - save  : POST verb=username | delete | merge  (CSRF + konfirmasi ketik username)
  *
@@ -72,19 +75,57 @@ class CheesaUserManagerHandler extends Handler {
 		];
 	}
 
+	/** Site Admin, atau Journal Manager/Editor jurnal yang sedang dibuka. */
+	private function canUse($request) {
+		if (Validation::isSiteAdmin()) return true;
+		$c = $request->getContext(); $u = $request->getUser();
+		return $c && $u && $u->hasRole([ROLE_ID_MANAGER], (int) $c->getId());
+	}
+
+	/** Subquery: user_id yang punya peran di jurnal $cid. */
+	private function inJournal($cid) {
+		return function ($s) use ($cid) {
+			$s->select('uug.user_id')->from('user_user_groups as uug')
+				->join('user_groups as ug', 'ug.user_group_id', '=', 'uug.user_group_id')
+				->where('ug.context_id', $cid);
+		};
+	}
+
+	/**
+	 * Alasan akun TIDAK boleh diubah oleh pengguna ini ('' = boleh).
+	 * Editor (bukan Site Admin) tidak boleh menyentuh akun Site Admin, Manager jurnal ini,
+	 * atau akun yang juga terdaftar di jurnal lain.
+	 */
+	private function lockReason($id, $me, array $info, $siteAdmin, $cid) {
+		if ($siteAdmin) return '';
+		if (!empty($info['admin'])) return 'Akun Site Administrator — hanya Site Admin yang bisa mengubahnya.';
+		if ($id === $me) return '';
+		$others = array_diff(isset($info['contexts']) ? $info['contexts'] : [], [$cid]);
+		if ($others) {
+			$paths = Capsule::table('journals')->whereIn('journal_id', $others)->pluck('path')->all();
+			return 'Akun ini juga terdaftar di jurnal lain (' . implode(', ', $paths) . ') — hanya Site Admin yang bisa mengubahnya.';
+		}
+		if (in_array($cid, isset($info['managerIn']) ? $info['managerIn'] : [], true)) return 'Akun Manager/Editor jurnal ini — hanya Site Admin yang bisa mengubahnya.';
+		return '';
+	}
+
 	/* ------------------------------------------------------------------ halaman */
 
 	public function index($args, $request) {
 		$plugin = self::$plugin;
 		$tm = TemplateManager::getManager($request);
-		if (!Validation::isSiteAdmin()) {
+		if (!$this->canUse($request)) {
 			$tm->assign($this->common($request) + ['umDenied' => true]);
 			return $tm->display($plugin->getTemplateResource('page.tpl'));
 		}
+		$siteAdmin = Validation::isSiteAdmin();
+		$cid = (int) $request->getContext()->getId();
 		$q = trim((string) $request->getUserVar('q'));
 		$page = max(1, (int) $request->getUserVar('p'));
 
 		$base = Capsule::table('users as u');
+		if (!$siteAdmin) $base->whereIn('u.user_id', $this->inJournal($cid));
+		$allQuery = clone $base;
 		if ($q !== '') {
 			$like = '%' . addcslashes($q, '%_\\') . '%';
 			$base->where(function ($w) use ($like, $q) {
@@ -116,7 +157,9 @@ class CheesaUserManagerHandler extends Handler {
 		foreach ($list as $r) {
 			$id = (int) $r->user_id;
 			$act = isset($activity[$id]) ? $activity[$id] : [];
-			$isAdmin = !empty($roles[$id]['admin']);
+			$info = isset($roles[$id]) ? $roles[$id] : [];
+			$isAdmin = !empty($info['admin']);
+			$lock = $this->lockReason($id, $me, $info, $siteAdmin, $cid);
 			$rows[] = [
 				'id' => $id,
 				'username' => $r->username,
@@ -130,8 +173,10 @@ class CheesaUserManagerHandler extends Handler {
 				'isMe' => $id === $me,
 				'activity' => $act,
 				'activityText' => implode(', ', array_map(function ($k, $n) { return $n . ' ' . $k; }, array_keys($act), $act)),
-				'canDelete' => !$act && !$isAdmin && $id !== $me,
-				'canMerge' => !$isAdmin && $id !== $me,
+				'lock' => $lock,
+				'canEditName' => $lock === '',
+				'canDelete' => !$act && !$isAdmin && $id !== $me && $lock === '',
+				'canMerge' => !$isAdmin && $id !== $me && $lock === '',
 			];
 		}
 
@@ -146,7 +191,8 @@ class CheesaUserManagerHandler extends Handler {
 			'umRows' => $rows,
 			'umQ' => $q,
 			'umTotal' => $total,
-			'umAll' => $q === '' ? $total : Capsule::table('users')->count(),
+			'umAll' => $q === '' ? $total : $allQuery->count(),
+			'umScoped' => !$siteAdmin,
 			'umPage' => $page,
 			'umPages' => $pages,
 			'umPrev' => $page > 1 ? $plugin->pageUrl($request, $keep + ['p' => $page - 1]) : '',
@@ -154,7 +200,9 @@ class CheesaUserManagerHandler extends Handler {
 			'umSearchUrl' => $plugin->pageUrl($request),
 			'umSaveUrl' => $request->getDispatcher()->url($request, ROUTE_PAGE, null, CheesaUserManagerPlugin::PAGE, 'save'),
 			'umFlash' => $flash,
-			'umLog' => array_slice($plugin->auditLog(), 0, 30),
+			'umLog' => array_slice($siteAdmin ? $plugin->auditLog() : array_values(array_filter($plugin->auditLog(), function ($l) use ($cid) {
+				return isset($l['ctx']) && (int) $l['ctx'] === $cid;   // editor hanya melihat catatan jurnalnya
+			})), 0, 30),
 		]);
 		$tm->display($plugin->getTemplateResource('page.tpl'));
 	}
@@ -167,8 +215,10 @@ class CheesaUserManagerHandler extends Handler {
 		$ok = '';
 		$err = '';
 		try {
-			if (!Validation::isSiteAdmin()) throw new Exception('Hanya Site Administrator yang boleh mengubah atau menghapus akun.');
+			if (!$this->canUse($request)) throw new Exception('Hanya Site Administrator atau Journal Manager/Editor jurnal ini yang boleh mengubah akun.');
 			if (!$request->isPost() || !$request->checkCSRF()) throw new Exception('Sesi formulir kedaluwarsa. Muat ulang halaman lalu coba lagi.');
+			$siteAdmin = Validation::isSiteAdmin();
+			$cid = (int) $request->getContext()->getId();
 			$verb = (string) $request->getUserVar('verb');
 			$userDao = DAORegistry::getDAO('UserDAO');
 			$user = $userDao->getById((int) $request->getUserVar('userId'), true);
@@ -176,6 +226,13 @@ class CheesaUserManagerHandler extends Handler {
 			$id = (int) $user->getId();
 			$old = $user->getUsername();
 			$me = (int) $request->getUser()->getId();
+			// periksa ulang hak atas akun ini di server (jangan percaya tombol di halaman)
+			$info = $this->roles([$id]);
+			$info = isset($info[$id]) ? $info[$id] : [];
+			if (!$siteAdmin) {
+				if ($id !== $me && !in_array($cid, isset($info['contexts']) ? $info['contexts'] : [], true)) throw new Exception('Akun ini tidak terdaftar di jurnal ini.');
+				if ($why = $this->lockReason($id, $me, $info, false, $cid)) throw new Exception($why);
+			}
 
 			if ($verb === 'username') {
 				$new = trim((string) $request->getUserVar('newUsername'));
@@ -214,6 +271,11 @@ class CheesaUserManagerHandler extends Handler {
 				$target = $targetName !== '' ? $userDao->getByUsername($targetName, true) : null;
 				if (!$target) throw new Exception('Akun tujuan "' . $targetName . '" tidak ditemukan.');
 				if ((int) $target->getId() === $id) throw new Exception('Akun tujuan tidak boleh sama dengan akun yang digabungkan.');
+				if (!$siteAdmin) {
+					$tInfo = $this->roles([(int) $target->getId()]);
+					$tCtx = isset($tInfo[(int) $target->getId()]['contexts']) ? $tInfo[(int) $target->getId()]['contexts'] : [];
+					if (!in_array($cid, $tCtx, true)) throw new Exception('Akun tujuan "' . $target->getUsername() . '" tidak terdaftar di jurnal ini. Hanya Site Admin yang bisa menggabungkan ke akun di luar jurnal ini.');
+				}
 				import('classes.user.UserAction');
 				$ua = new UserAction();
 				$ua->mergeUsers($id, (int) $target->getId());
@@ -275,10 +337,16 @@ class CheesaUserManagerHandler extends Handler {
 			$k = (int) $r->user_id;
 			$role = isset(self::ROLES[(int) $r->role_id]) ? self::ROLES[(int) $r->role_id] : 'Peran ' . $r->role_id;
 			if ((int) $r->role_id === ROLE_ID_SITE_ADMIN) { $out[$k]['admin'] = true; continue; }
+			$out[$k]['contexts'][(int) $r->context_id] = (int) $r->context_id;
+			if ((int) $r->role_id === ROLE_ID_MANAGER) $out[$k]['managerIn'][(int) $r->context_id] = (int) $r->context_id;
 			$label = $role . ((int) $r->context_id && isset($paths[$r->context_id]) ? ' · ' . $paths[$r->context_id] : '');
 			$out[$k]['list'][$label] = $label;
 		}
-		foreach ($out as $k => $v) $out[$k]['list'] = isset($v['list']) ? array_values($v['list']) : [];
+		foreach ($out as $k => $v) {
+			$out[$k]['list'] = isset($v['list']) ? array_values($v['list']) : [];
+			$out[$k]['contexts'] = isset($v['contexts']) ? array_values($v['contexts']) : [];
+			$out[$k]['managerIn'] = isset($v['managerIn']) ? array_values($v['managerIn']) : [];
+		}
 		return $out;
 	}
 

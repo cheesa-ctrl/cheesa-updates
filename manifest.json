@@ -21,10 +21,10 @@
         "cheesaControlPanel": {
             "category": "generic",
             "label": "CHEESA Control Panel",
-            "version": "1.5.1.0",
-            "file": "cheesaControlPanel-1.5.1.0.tar.gz",
-            "sha256": "9b2695b0011abe1f2c9d49fe7686d066f7806fd14fee6becf4310e61edc1bd00",
-            "size": 23569,
+            "version": "1.5.2.0",
+            "file": "cheesaControlPanel-1.5.2.0.tar.gz",
+            "sha256": "a06587bf8e90276cab667037a767017ccba836578828f0aafbd817b6a77ba446",
+            "size": 23886,
             "released": "2026-11-16"
         },
         "cheesaFullText": {
@@ -48,10 +48,10 @@
         "cheesaUserManager": {
             "category": "generic",
             "label": "Cheesa User Manager",
-            "version": "1.0.2.0",
-            "file": "cheesaUserManager-1.0.2.0.tar.gz",
-            "sha256": "562669a5d5509c186f31b0e6c40173410b4549284f22292f078095563a6d22b8",
-            "size": 11238,
+            "version": "1.1.0.0",
+            "file": "cheesaUserManager-1.1.0.0.tar.gz",
+            "sha256": "5efbbaeda18176b62662f309ee9b42710dc6f59cb3669e5bda044e07bf8312b9",
+            "size": 12358,
             "released": "2026-11-16"
         },
         "countryStats": {
@@ -100,5 +100,5 @@
             "released": "2026-11-16"
         }
     },
-    "generated": "2026-11-16T22:23:22+00:00"
+    "generated": "2026-11-16T22:31:52+00:00"
 }

@@ -198,7 +198,11 @@
 	{else}
 		<div class="ccp-field">
 			<label for="cpSourcePass">Kata sandi</label>
-			<input type="password" id="cpSourcePass" autocomplete="off" placeholder="Masukkan kata sandi untuk membuka pengaturan sumber update" style="max-width:420px">
+			<div style="display:flex;gap:6px;max-width:460px">
+				{* readonly sampai diklik + new-password: mencegah browser mengisi otomatis dengan password login OJS *}
+				<input type="password" id="cpSourcePass" name="cheesa-source-key" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly')" data-lpignore="true" data-1p-ignore autocapitalize="off" autocorrect="off" spellcheck="false" value="" placeholder="Masukkan kata sandi">
+				<button type="button" class="ccp-btn sec" id="cpSourceEye" title="Tampilkan / sembunyikan ketikan" onclick="var i=document.getElementById('cpSourcePass');i.type=i.type==='password'?'text':'password';">👁</button>
+			</div>
 		</div>
 		<p style="margin:12px 0 0"><button type="button" class="ccp-btn" data-cp-verb="unlockSource">Buka</button></p>
 		<p class="ccp-help">Alamat manifest dan token GitHub disembunyikan. Pemasangan update tetap bisa dilakukan tanpa membuka bagian ini.</p>

@@ -64,6 +64,7 @@
 	.tag { font-size: 10.5px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; padding: 1px 7px; border-radius: 99px; border: 1px solid var(--line); background: var(--soft); color: var(--muted); }
 	.tag.admin { background: #fff1db; color: #a45d00; border-color: #f6d9a8; }
 	.tag.me { background: #e9ebfb; color: var(--navy); border-color: #d3d7f3; }
+	.tag.lock { background: #f1f2f8; color: #5e6580; border-color: #dfe2ee; cursor: help; }
 	.tag.off { background: #fdecec; color: var(--red); border-color: #f3c0c0; }
 	.chips { display: flex; flex-wrap: wrap; gap: 4px; }
 	.chip { font-size: 11.5px; padding: 1px 8px; border-radius: 99px; background: #f1f2fb; color: #2a2f5a; border: 1px solid #e3e6f5; }
@@ -125,22 +126,22 @@
 	<nav class="nav">
 		<a href="{$umDashUrl|escape}">← Dasbor</a>
 		<a href="{$umUsersUrl|escape}">Users &amp; Roles</a>
-		<span class="who">{$umAdminName|escape}{if $umIsAdmin} · Site Admin{/if}</span>
+		<span class="who">{$umAdminName|escape} · {if $umIsAdmin}Site Admin{else}Editor jurnal{/if}</span>
 	</nav>
 </header>
 
 <main class="wrap">
 {if $umDenied}
-	<div class="head"><div class="brand"><div class="logo">🔒</div><div><h1>CHEESA User Manager</h1><p>Halaman ini khusus Site Administrator</p></div></div></div>
-	<div class="note info"><b>i</b><span>Anda login sebagai <strong>{$umAdminName|escape}</strong>, yang bukan Site Administrator. Akun pengguna berlaku untuk semua jurnal di server ini,
-		jadi mengubah username atau menghapus akun hanya boleh dilakukan Site Administrator. Login dengan akun admin situs (yang bisa membuka menu <em>Administration</em>), lalu buka halaman ini lagi.</span></div>
+	<div class="head"><div class="brand"><div class="logo">🔒</div><div><h1>CHEESA User Manager</h1><p>Halaman ini khusus Site Administrator dan Journal Manager/Editor</p></div></div></div>
+	<div class="note info"><b>i</b><span>Anda login sebagai <strong>{$umAdminName|escape}</strong>, yang tidak punya peran Manager/Editor di jurnal ini.
+		Login dengan akun Journal Manager/Editor jurnal ini atau Site Administrator, lalu buka halaman ini lagi.</span></div>
 {else}
 	<div class="head">
 		<div class="brand">
 			<div class="logo">👤</div>
 			<div>
 				<h1>CHEESA User Manager</h1>
-				<p>Ubah username, hapus akun, atau gabungkan akun ganda — berlaku untuk semua jurnal di server ini</p>
+				<p>{if $umScoped}Ubah username, hapus akun, atau gabungkan akun ganda di jurnal {$umJournal|escape}{else}Ubah username, hapus akun, atau gabungkan akun ganda — berlaku untuk semua jurnal di server ini{/if}</p>
 			</div>
 		</div>
 		<form class="search" method="get" action="{$umSearchUrl|escape}">
@@ -151,13 +152,16 @@
 	</div>
 
 	<div class="stats">
-		<div class="stat"><span>Total akun di server</span><b>{$umAll} <small>akun</small></b></div>
+		<div class="stat"><span>{if $umScoped}Total akun di jurnal ini{else}Total akun di server{/if}</span><b>{$umAll} <small>akun</small></b></div>
 		<div class="stat"><span>{if $umQ}Hasil pencarian{else}Ditampilkan{/if}</span><b>{$umTotal} <small>{if $umQ}cocok dengan “{$umQ|escape}”{else}akun, terbaru dulu{/if}</small></b></div>
 		<div class="stat"><span>Halaman</span><b>{$umPage} <small>dari {$umPages}</small></b></div>
 	</div>
 
 	{if $umFlash && $umFlash.ok}<div class="note ok"><b>✓</b><span>{$umFlash.ok|escape}</span></div>{/if}
 	{if $umFlash && $umFlash.err}<div class="note err"><b>!</b><span>{$umFlash.err|escape}</span></div>{/if}
+	{if $umScoped}<div class="note info"><b>🔐</b><span>Anda masuk sebagai <strong>editor jurnal</strong>. Yang tampil hanya akun yang punya peran di jurnal ini.
+		Karena satu akun bisa dipakai di beberapa jurnal di server yang sama, akun yang <strong>juga terdaftar di jurnal lain</strong>, akun Manager/Editor, dan akun Site Admin
+		dikunci 🔒 — hanya Site Administrator yang bisa mengubahnya.</span></div>{/if}
 	<div class="note info"><b>i</b><span><strong>Hapus</strong> hanya untuk akun tanpa jejak aktivitas. Akun yang pernah mengirim naskah, me-review, atau menangani naskah harus
 		<strong>digabungkan</strong> ke akun lain — semua naskah, review, dan perannya dipindahkan, lalu akun lama dihapus. Kedua tindakan tidak bisa dibatalkan; setiap tindakan dicatat.</span></div>
 
@@ -171,6 +175,7 @@
 					{if $u.isAdmin}<span class="tag admin">Site Admin</span>{/if}
 					{if $u.isMe}<span class="tag me">Anda</span>{/if}
 					{if $u.disabled}<span class="tag off">Nonaktif</span>{/if}
+					{if $u.lock}<span class="tag lock" title="{$u.lock|escape}">🔒 terkunci</span>{/if}
 				</div>
 				<div class="sub">{if $u.name}{$u.name|escape} · {/if}{$u.email|escape}</div>
 				<div class="sub">#{$u.id} · daftar {$u.registered|escape}{if $u.lastLogin} · login {$u.lastLogin|escape}{/if}</div>
@@ -184,6 +189,7 @@
 				{if $u.activityText}<span class="busy">{$u.activityText|escape}</span>{else}<span class="clean">✓ bersih — boleh dihapus</span>{/if}
 			</div>
 			<div class="btns">
+				{if $u.canEditName}
 				<details class="pop">
 					<summary class="btn sec">✎ Username</summary>
 					<form class="popbox" method="post" action="{$umSaveUrl|escape}">
@@ -196,6 +202,9 @@
 						<div class="row"><button class="btn" type="submit">Simpan</button></div>
 					</form>
 				</details>
+				{else}
+				<button class="btn sec" type="button" disabled title="{$u.lock|escape}">✎ Username</button>
+				{/if}
 				{if $u.canMerge}
 				<details class="pop">
 					<summary class="btn sec">⇄ Gabungkan</summary>
@@ -203,12 +212,14 @@
 						{csrf}
 						<input type="hidden" name="verb" value="merge"><input type="hidden" name="userId" value="{$u.id}"><input type="hidden" name="confirm" value="">
 						<input type="hidden" name="q" value="{$umQ|escape}"><input type="hidden" name="p" value="{$umPage}">
-						<label for="mg{$u.id}">Gabungkan “{$u.username|escape}” ke username:</label>
+						<label for="mg{$u.id}">Gabungkan “{$u.username|escape}” ke username{if $umScoped} (akun di jurnal ini){/if}:</label>
 						<input type="text" id="mg{$u.id}" name="target" required placeholder="username akun tujuan" autocomplete="off">
 						<p>Semua naskah, review, peran, dan riwayat “{$u.username|escape}” dipindahkan ke akun tujuan, lalu akun “{$u.username|escape}” dihapus.</p>
 						<div class="row"><button class="btn" type="submit">Gabungkan…</button></div>
 					</form>
 				</details>
+				{else}
+				<button class="btn sec" type="button" disabled title="{if $u.lock}{$u.lock|escape}{elseif $u.isMe}Akun Anda sendiri{else}Akun Site Admin{/if}">⇄ Gabungkan</button>
 				{/if}
 				{if $u.canDelete}
 				<form method="post" action="{$umSaveUrl|escape}" data-confirm="delete" data-username="{$u.username|escape}" style="display:inline">
@@ -218,7 +229,7 @@
 					<button class="btn del" type="submit">✕ Hapus</button>
 				</form>
 				{else}
-				<button class="btn del" type="button" disabled title="{if $u.isMe}Akun Anda sendiri{elseif $u.isAdmin}Akun Site Admin tidak bisa dihapus{else}Punya jejak aktivitas — gunakan Gabungkan{/if}">✕ Hapus</button>
+				<button class="btn del" type="button" disabled title="{if $u.lock}{$u.lock|escape}{elseif $u.isMe}Akun Anda sendiri{elseif $u.isAdmin}Akun Site Admin tidak bisa dihapus{else}Punya jejak aktivitas — gunakan Gabungkan{/if}">✕ Hapus</button>
 				{/if}
 			</div>
 		</div>

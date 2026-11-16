@@ -291,7 +291,8 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 				$tries = json_decode((string) $session->getSessionVar('cheesaCPSourceTries'), true) ?: ['n' => 0, 't' => time()];
 				if (time() - $tries['t'] > 600) $tries = ['n' => 0, 't' => time()];
 				if ($tries['n'] >= 5) $err = 'Terlalu banyak percobaan salah. Coba lagi 10 menit lagi.';
-				elseif (password_verify((string) $request->getUserVar('password'), self::SOURCE_PASSWORD_HASH)) {
+				// spasi di awal/akhir dan huruf kapital (mis. kapital otomatis di HP) diabaikan
+				elseif (password_verify(strtolower(trim((string) $request->getUserVar('password'))), self::SOURCE_PASSWORD_HASH)) {
 					$session->setSessionVar('cheesaCPSource', '1');
 					$session->unsetSessionVar('cheesaCPSourceTries');
 					$msg = 'Bagian Sumber update dibuka.';
@@ -299,7 +300,9 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 					usleep(700000);
 					$tries['n']++;
 					$session->setSessionVar('cheesaCPSourceTries', json_encode($tries));
-					$err = 'Kata sandi salah.' . ($tries['n'] >= 5 ? ' Terkunci 10 menit.' : ' Sisa ' . (5 - $tries['n']) . ' percobaan.');
+					$typed = trim((string) $request->getUserVar('password'));
+					$err = ($typed === '' ? 'Kata sandi belum diisi.' : 'Kata sandi salah (' . strlen($typed) . ' karakter terkirim).')
+						. ($tries['n'] >= 5 ? ' Terkunci 10 menit.' : ' Sisa ' . (5 - $tries['n']) . ' percobaan.');
 				}
 			} elseif ($verb === 'lockSource') {
 				$session->unsetSessionVar('cheesaCPSource');
