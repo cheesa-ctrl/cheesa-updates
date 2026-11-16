@@ -80,7 +80,16 @@
             "sha256": "213966e120c302b66e168ee0d9ebd101caf5384f0f2f38d1e4f26fc1711af947",
             "size": 21135,
             "released": "2026-11-10"
+        },
+        "ojtPlugin": {
+            "category": "generic",
+            "label": "Ojt Plugin",
+            "version": "2.2.0.0",
+            "file": "ojtPlugin-2.2.0.0.tar.gz",
+            "sha256": "e1030862427869701bfb92c75fdd666a52abde08810f8567315504b21e1d1a4e",
+            "size": 2324341,
+            "released": "2026-11-16"
         }
     },
-    "generated": "2026-11-16T08:56:33+00:00"
+    "generated": "2026-11-16T08:58:29+00:00"
 }
