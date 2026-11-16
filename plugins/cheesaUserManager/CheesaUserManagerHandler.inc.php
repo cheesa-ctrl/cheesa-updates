@@ -26,6 +26,12 @@ class CheesaUserManagerHandler extends Handler {
 
 	const PER_PAGE = 25;
 
+	/** Hash bcrypt kata sandi halaman (kata sandi tidak disimpan dalam bentuk asli). */
+	const PAGE_PASSWORD_HASH = '$2y$11$M8iWNpT0ZdgnRs8HNls4U.r9KHaqX3l8IlVkVY4BZsAIJ5zAb6Zz2';
+
+	/** Halaman terkunci lagi setelah sekian detik tanpa aktivitas. */
+	const UNLOCK_IDLE = 1800;
+
 	/** Tabel yang menandakan akun pernah dipakai bekerja: [kolom, label]. */
 	const ACTIVITY = [
 		'stage_assignments'   => ['user_id', 'penugasan naskah'],
@@ -55,7 +61,7 @@ class CheesaUserManagerHandler extends Handler {
 		parent::__construct();
 		// Manager boleh membuka halaman (untuk melihat pesan "khusus Site Administrator");
 		// semua data & aksi tetap hanya untuk Site Administrator (diperiksa di index() dan save()).
-		$this->addRoleAssignment([ROLE_ID_SITE_ADMIN, ROLE_ID_MANAGER], ['index', 'save']);
+		$this->addRoleAssignment([ROLE_ID_SITE_ADMIN, ROLE_ID_MANAGER], ['index', 'save', 'unlock', 'lock']);
 	}
 
 	public function authorize($request, &$args, $roleAssignments) {
@@ -73,6 +79,51 @@ class CheesaUserManagerHandler extends Handler {
 			'umAdminName' => $request->getUser()->getUsername(),
 			'umIsAdmin' => Validation::isSiteAdmin(),
 		];
+	}
+
+	/* ------------------------------------------------------------------ kunci kata sandi */
+
+	/** Terbuka bila kata sandi sudah dimasukkan dan belum lewat 30 menit tanpa aktivitas. */
+	private function isUnlocked($request, $touch = true) {
+		$session = $request->getSession();
+		$t = (int) $session->getSessionVar('cheesaUMUnlocked');
+		if (!$t || time() - $t > self::UNLOCK_IDLE) { $session->unsetSessionVar('cheesaUMUnlocked'); return false; }
+		if ($touch) $session->setSessionVar('cheesaUMUnlocked', (string) time());
+		return true;
+	}
+
+	public function unlock($args, $request) {
+		$plugin = self::$plugin;
+		$session = $request->getSession();
+		$err = '';
+		if (!$this->canUse($request)) $err = 'Hanya Site Administrator atau Journal Manager/Editor jurnal ini.';
+		elseif (!$request->isPost() || !$request->checkCSRF()) $err = 'Sesi formulir kedaluwarsa. Coba lagi.';
+		else {
+			$tries = json_decode((string) $session->getSessionVar('cheesaUMTries'), true) ?: ['n' => 0, 't' => time()];
+			if (time() - $tries['t'] > 600) $tries = ['n' => 0, 't' => time()];
+			// dikirim base64 di "umk": server ini membuang parameter yang bernama password
+			$enc = (string) $request->getUserVar('umk');
+			$typed = $enc !== '' ? (string) base64_decode(strtr($enc, '-_', '+/'), true) : '';
+			if ($tries['n'] >= 5) $err = 'Terlalu banyak percobaan salah. Coba lagi 10 menit lagi.';
+			elseif (password_verify(strtolower(trim($typed)), self::PAGE_PASSWORD_HASH)) {
+				$session->setSessionVar('cheesaUMUnlocked', (string) time());
+				$session->unsetSessionVar('cheesaUMTries');
+				$plugin->audit('buka halaman', 'kata sandi benar', $request);
+			} else {
+				usleep(700000);
+				$tries['n']++;
+				$session->setSessionVar('cheesaUMTries', json_encode($tries));
+				$err = (trim($typed) === '' ? 'Kata sandi belum diisi.' : 'Kata sandi salah.')
+					. ($tries['n'] >= 5 ? ' Terkunci 10 menit.' : ' Sisa ' . (5 - $tries['n']) . ' percobaan.');
+			}
+		}
+		if ($err) $session->setSessionVar('cheesaUMLockErr', $err);
+		$request->redirectUrl($plugin->pageUrl($request));
+	}
+
+	public function lock($args, $request) {
+		$request->getSession()->unsetSessionVar('cheesaUMUnlocked');
+		$request->redirectUrl(self::$plugin->pageUrl($request));
 	}
 
 	/** Site Admin, atau Journal Manager/Editor jurnal yang sedang dibuka. */
@@ -115,7 +166,19 @@ class CheesaUserManagerHandler extends Handler {
 		$plugin = self::$plugin;
 		$tm = TemplateManager::getManager($request);
 		if (!$this->canUse($request)) {
-			$tm->assign($this->common($request) + ['umDenied' => true]);
+			$tm->assign($this->common($request) + ['umDenied' => true, 'umLocked' => false]);
+			return $tm->display($plugin->getTemplateResource('page.tpl'));
+		}
+		if (!$this->isUnlocked($request)) {
+			$session = $request->getSession();
+			$lockErr = (string) $session->getSessionVar('cheesaUMLockErr');
+			$session->unsetSessionVar('cheesaUMLockErr');
+			$tm->assign($this->common($request) + [
+				'umDenied' => false,
+				'umLocked' => true,
+				'umLockErr' => $lockErr,
+				'umUnlockUrl' => $request->getDispatcher()->url($request, ROUTE_PAGE, null, CheesaUserManagerPlugin::PAGE, 'unlock'),
+			]);
 			return $tm->display($plugin->getTemplateResource('page.tpl'));
 		}
 		$siteAdmin = Validation::isSiteAdmin();
@@ -188,6 +251,8 @@ class CheesaUserManagerHandler extends Handler {
 		$keep = $q !== '' ? ['q' => $q] : [];
 		$tm->assign($this->common($request) + [
 			'umDenied' => false,
+			'umLocked' => false,
+			'umLockUrl' => $request->getDispatcher()->url($request, ROUTE_PAGE, null, CheesaUserManagerPlugin::PAGE, 'lock'),
 			'umRows' => $rows,
 			'umQ' => $q,
 			'umTotal' => $total,
@@ -221,6 +286,7 @@ class CheesaUserManagerHandler extends Handler {
 		$err = '';
 		try {
 			if (!$this->canUse($request)) throw new Exception('Hanya Site Administrator atau Journal Manager/Editor jurnal ini yang boleh mengubah akun.');
+			if (!$this->isUnlocked($request)) throw new Exception('Halaman terkunci (30 menit tanpa aktivitas). Masukkan kata sandi lagi, lalu ulangi tindakan Anda.');
 			if (!$request->isPost() || !$request->checkCSRF()) throw new Exception('Sesi formulir kedaluwarsa. Muat ulang halaman lalu coba lagi.');
 			$siteAdmin = Validation::isSiteAdmin();
 			$cid = (int) $request->getContext()->getId();

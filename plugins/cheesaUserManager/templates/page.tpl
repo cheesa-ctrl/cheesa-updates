@@ -118,6 +118,17 @@
 	.chk.mail { margin: 0; align-items: flex-start; padding: 8px 12px; border: 1px solid #d3d7f3; border-radius: 8px; background: #f4f5fd; }
 	.chk.mail input { margin-top: 3px; }
 	.addfoot { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
+	.lockwrap { display: grid; place-items: center; min-height: 60vh; }
+	.lockcard { width: min(420px, 100%); padding: 28px; background: #fff; border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 18px 40px rgba(3,2,113,.10); text-align: center; }
+	.lockcard .lockico { width: 56px; height: 56px; margin: 0 auto 10px; border-radius: 16px; display: grid; place-items: center; font-size: 26px;
+		background: linear-gradient(135deg, var(--navy) 0, var(--navy-2) 100%); box-shadow: 0 8px 20px rgba(3,2,113,.25); }
+	.lockcard h1 { margin: 0 0 4px; font-size: 19px; color: var(--navy); }
+	.lockcard p { margin: 0 0 16px; color: var(--muted); font-size: 13px; }
+	.lockcard .pw input { flex: 1; min-width: 0; padding: 10px 12px; border: 1px solid #cdd1e1; border-radius: 9px; font: inherit; font-size: 15px; }
+	.lockcard .pw input:focus { outline: 2px solid rgba(3,2,113,.25); border-color: var(--navy); }
+	.lockcard small { display: block; margin-top: 12px; color: var(--muted); font-size: 12px; }
+	.lockcard .note { text-align: left; }
+	.mask { -webkit-text-security: disc; text-security: disc; }
 	.pager { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: 0 0 22px; color: var(--muted); }
 	.box { border: 1px solid var(--line); border-radius: 12px; background: #fff; }
 	.box > summary { cursor: pointer; padding: 12px 16px; font-weight: 700; color: var(--navy); list-style: none; }
@@ -149,6 +160,7 @@
 	<nav class="nav">
 		<a href="{$umDashUrl|escape}">← Dasbor</a>
 		<a href="{$umUsersUrl|escape}">Users &amp; Roles</a>
+		{if !$umDenied && !$umLocked}<a href="{$umLockUrl|escape}" title="Kunci halaman ini sekarang">🔒 Kunci</a>{/if}
 		<span class="who">{$umAdminName|escape} · {if $umIsAdmin}Site Admin{else}Editor jurnal{/if}</span>
 	</nav>
 </header>
@@ -158,6 +170,23 @@
 	<div class="head"><div class="brand"><div class="logo">🔒</div><div><h1>CHEESA User Manager</h1><p>Halaman ini khusus Site Administrator dan Journal Manager/Editor</p></div></div></div>
 	<div class="note info"><b>i</b><span>Anda login sebagai <strong>{$umAdminName|escape}</strong>, yang tidak punya peran Manager/Editor di jurnal ini.
 		Login dengan akun Journal Manager/Editor jurnal ini atau Site Administrator, lalu buka halaman ini lagi.</span></div>
+{elseif $umLocked}
+	<div class="lockwrap">
+		<form class="lockcard" method="post" action="{$umUnlockUrl|escape}" id="umUnlock" autocomplete="off">
+			{csrf}
+			<input type="hidden" name="umk" value="">
+			<div class="lockico">🔒</div>
+			<h1>CHEESA User Manager</h1>
+			<p>Halaman ini dilindungi kata sandi. Masukkan kata sandi untuk mengelola akun.</p>
+			{if $umLockErr}<div class="note err"><b>!</b><span>{$umLockErr|escape}</span></div>{/if}
+			<div class="pw">
+				<input type="text" id="umKey" class="mask" autocomplete="off" data-lpignore="true" data-1p-ignore data-form-type="other" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Kata sandi" autofocus>
+				<button class="btn sec" type="button" title="Tampilkan / sembunyikan" onclick="document.getElementById('umKey').classList.toggle('mask')">👁</button>
+			</div>
+			<button class="btn" type="submit" style="width:100%;justify-content:center;margin-top:12px">Buka</button>
+			<small>Terkunci lagi otomatis setelah 30 menit tanpa aktivitas atau saat logout.</small>
+		</form>
+	</div>
 {else}
 	<div class="head">
 		<div class="brand">
@@ -347,6 +376,13 @@
 		}
 		f.querySelector('[name=confirm]').value = typed.trim();
 		var b = f.querySelector('button[type=submit]'); if (b) { b.disabled = true; b.textContent = 'Memproses…'; }
+	});
+	// buka kunci: kirim terenkode di "umk" (server membuang parameter bernama password)
+	var uf = document.getElementById('umUnlock');
+	if (uf) uf.addEventListener('submit', function () {
+		var v = document.getElementById('umKey').value;
+		uf.querySelector('[name=umk]').value = btoa(unescape(encodeURIComponent(v))).replace(/\+/g, '-').replace(/\//g, '_');
+		var b = uf.querySelector('button[type=submit]'); b.disabled = true; b.textContent = 'Memeriksa…';
 	});
 	// tambah akun: password acak, salin, dan kirim terenkode (server membuang parameter bernama password)
 	var pass = document.getElementById('nuPass');
