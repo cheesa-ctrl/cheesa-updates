@@ -44,7 +44,7 @@
 
 	/* daftar paket */
 	.ccp-list { display: grid; gap: 10px; margin: 0 0 18px; }
-	.ccp-item { display: grid; grid-template-columns: 44px minmax(0, 1fr) 130px 170px 300px; align-items: center; gap: 14px;
+	.ccp-item { display: grid; grid-template-columns: 44px minmax(0, 1fr) 120px 170px 400px; align-items: center; gap: 14px;
 		padding: 14px 16px; background: #fff; border: 1px solid var(--ccp-line); border-radius: 12px; transition: box-shadow .15s, border-color .15s; }
 	.ccp-item:hover { border-color: #cfd4e6; box-shadow: 0 6px 18px rgba(3,2,113,.07); }
 	.ccp-item.has-update { border-left: 4px solid var(--ccp-accent); }
@@ -74,6 +74,10 @@
 	.ccp-btn.sec:hover { border-color: var(--ccp-navy); background: #f6f7fd; }
 	.ccp-btn.del { background: #fff; color: var(--ccp-red) !important; border-color: #f0c4c4; }
 	.ccp-btn.del:hover { background: #fdecec; border-color: var(--ccp-red); }
+	.ccp-btn.ghost { background: transparent; color: var(--ccp-muted) !important; border-color: transparent; padding-left: 8px; padding-right: 8px; }
+	.ccp-btn.ghost:hover { background: #f1f2f8; border-color: #dfe2ee; color: #1d2140 !important; }
+	.ccp-hid { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--ccp-line); }
+	.ccp-hid:last-child { border-bottom: 0; }
 	.ccp-btn.go { background: var(--ccp-accent); border-color: var(--ccp-accent); }
 	.ccp-btn.go:hover { background: #d9860f; }
 	.ccp-btn[disabled] { opacity: .5; cursor: wait; }
@@ -93,7 +97,7 @@
 	.ccp-field input:focus { outline: 2px solid rgba(3,2,113,.25); border-color: var(--ccp-navy); }
 	.ccp-help { margin: 10px 0 0; font-size: 12.5px; color: var(--ccp-muted); }
 
-	@media (max-width: 980px) {
+	@media (max-width: 1100px) {
 		.ccp-item { grid-template-columns: 44px minmax(0, 1fr) minmax(0, 1fr); }
 		.ccp-item .ccp-info { grid-column: 2 / -1; }
 		.ccp-item .ccp-ver.inst { grid-column: 2; }
@@ -108,7 +112,7 @@
 		<div class="ccp-logo">C</div>
 		<div>
 			<h2>CHEESA Control Panel</h2>
-			<p>Update, kembalikan, dan hapus plugin CHEESA langsung dari OJS</p>
+			<p>Update, kembalikan, dan uninstall plugin CHEESA langsung dari OJS</p>
 		</div>
 	</div>
 	<div class="ccp-head-act">
@@ -146,18 +150,33 @@
 				<b>{$r.available|escape}</b>
 				{if $r.canUpdate} <span class="ccp-pill new">baru</span>{elseif $r.installed} <span class="ccp-pill ok">✓ terbaru</span>{/if}
 				{if $r.released}<small>{$r.released|escape}</small>{/if}
-			{else}<b class="none">tidak di manifest</b>{/if}
+			{else}<b class="none">tidak ada di GitHub</b>{/if}
 		</div>
 		<div class="ccp-actions">
 			{if $cpAdmin}
 				{if $r.canUpdate}<button type="button" class="ccp-btn{if !$r.installed} go{/if}" data-cp-verb="update" data-cp-package="{$r.name|escape}" data-cp-label="{$r.label|escape}">{if $r.installed}↑ Update{else}+ Pasang{/if}</button>{/if}
 				{if $r.backups}<button type="button" class="ccp-btn sec" data-cp-verb="rollback" data-cp-package="{$r.name|escape}" data-cp-label="{$r.label|escape}" title="Kembalikan cadangan terakhir ({$r.backups} tersimpan)">↺ Kembalikan</button>{/if}
-				{if $r.canDelete}<button type="button" class="ccp-btn del" data-cp-verb="uninstall" data-cp-package="{$r.name|escape}" data-cp-label="{$r.label|escape}" title="Hapus plugin ini dari server (dicadangkan dulu)">✕ Hapus</button>{/if}
+				{if $r.canDelete}<button type="button" class="ccp-btn del" data-cp-verb="uninstall" data-cp-package="{$r.name|escape}" data-cp-label="{$r.label|escape}" title="Copot plugin ini dari server (dicadangkan dulu, bisa dikembalikan)">⏏ Uninstall</button>{/if}
+				{if $r.canHide}<button type="button" class="ccp-btn ghost" data-cp-verb="hide" data-cp-package="{$r.name|escape}" data-cp-label="{$r.label|escape}" title="Hapus dari daftar ini saja — plugin di server tidak diubah">✕ Hapus</button>{/if}
 			{/if}
 		</div>
 	</div>
 {/foreach}
 </div>
+
+{if $cpHiddenRows}
+<details class="ccp-box">
+	<summary><span>Disembunyikan <small>{$cpHiddenRows|@count} paket dihapus dari daftar</small></span></summary>
+	<div class="ccp-box-in">
+		{foreach from=$cpHiddenRows item=r}
+		<div class="ccp-hid">
+			<span><strong>{$r.label|escape}</strong> <span class="ccp-path" style="display:inline">plugins/{$r.category|escape}/{$r.name|escape}</span>{if $r.installed} · <small>masih terpasang {$r.installed|escape}</small>{/if}</span>
+			{if $cpAdmin}<button type="button" class="ccp-btn sec" data-cp-verb="unhide" data-cp-package="{$r.name|escape}">Tampilkan lagi</button>{/if}
+		</div>
+		{/foreach}
+	</div>
+</details>
+{/if}
 
 <details class="ccp-box">
 	<summary><span>Sumber update <small>manifest.json &amp; token GitHub</small></span></summary>
@@ -193,7 +212,7 @@
 	if (window.jQuery) window.jQuery(document).off('click.cheesacp');
 	if (window.__cheesaCPBound) return;
 	window.__cheesaCPBound = true;
-	var BUSY = { update: 'Memasang…', rollback: 'Mengembalikan…', uninstall: 'Menghapus…', check: 'Memeriksa…', saveUrl: 'Menyimpan…' };
+	var BUSY = { update: 'Memasang…', rollback: 'Mengembalikan…', uninstall: 'Meng-uninstall…', hide: 'Menghapus…', unhide: 'Memproses…', check: 'Memeriksa…', saveUrl: 'Menyimpan…' };
 	document.addEventListener('click', function (ev) {
 		var b = ev.target && ev.target.closest ? ev.target.closest('#cheesaCP [data-cp-verb]') : null;
 		if (!b) return;
@@ -202,7 +221,8 @@
 		var verb = b.getAttribute('data-cp-verb'), pkg = b.getAttribute('data-cp-package') || '', label = b.getAttribute('data-cp-label') || pkg;
 		if (verb === 'update' && !confirm('Pasang update ' + label + '? Versi saat ini akan dicadangkan.')) return;
 		if (verb === 'rollback' && !confirm('Kembalikan ' + label + ' ke versi cadangan terakhir?')) return;
-		if (verb === 'uninstall' && !confirm('Hapus ' + label + ' dari server?\n\nPlugin dinonaktifkan lalu foldernya dihapus. Cadangan disimpan, jadi bisa dikembalikan dengan tombol "Kembalikan". Pengaturan dan data di database tidak dihapus.')) return;
+		if (verb === 'hide' && !confirm('Hapus ' + label + ' dari daftar ini?\n\nHanya barisnya yang hilang dari panel; plugin di server tidak diubah. Bisa ditampilkan lagi lewat bagian "Disembunyikan".')) return;
+		if (verb === 'uninstall' && !confirm('Uninstall ' + label + ' dari server?\n\nPlugin dinonaktifkan lalu foldernya dihapus. Cadangan disimpan, jadi bisa dikembalikan dengan tombol "Kembalikan". Pengaturan dan data di database tidak dihapus.')) return;
 		var btns = cp.querySelectorAll('button');
 		for (var i = 0; i < btns.length; i++) btns[i].disabled = true;
 		b.textContent = BUSY[verb] || 'Memproses…';

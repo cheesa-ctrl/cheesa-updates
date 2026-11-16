@@ -62,7 +62,8 @@ class CheesaUserManagerPlugin extends GenericPlugin {
 
 	public function getActions($request, $actionArgs) {
 		$actions = parent::getActions($request, $actionArgs);
-		if (!$this->getEnabled() || !Validation::isSiteAdmin()) return $actions;
+		if (!$this->getEnabled() || !$request->getContext()) return $actions;
+		// tautan selalu tampil bila plugin aktif; halamannya sendiri yang memeriksa Site Administrator
 		import('lib.pkp.classes.linkAction.request.RedirectAction');
 		array_unshift($actions, new LinkAction('cheesaUsersPage', new RedirectAction($this->pageUrl($request)), 'Buka Kelola Akun', null));
 		return $actions;

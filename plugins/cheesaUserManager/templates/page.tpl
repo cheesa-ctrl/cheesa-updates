@@ -125,11 +125,16 @@
 	<nav class="nav">
 		<a href="{$umDashUrl|escape}">← Dasbor</a>
 		<a href="{$umUsersUrl|escape}">Users &amp; Roles</a>
-		<span class="who">{$umAdminName|escape} · Site Admin</span>
+		<span class="who">{$umAdminName|escape}{if $umIsAdmin} · Site Admin{/if}</span>
 	</nav>
 </header>
 
 <main class="wrap">
+{if $umDenied}
+	<div class="head"><div class="brand"><div class="logo">🔒</div><div><h1>CHEESA User Manager</h1><p>Halaman ini khusus Site Administrator</p></div></div></div>
+	<div class="note info"><b>i</b><span>Anda login sebagai <strong>{$umAdminName|escape}</strong>, yang bukan Site Administrator. Akun pengguna berlaku untuk semua jurnal di server ini,
+		jadi mengubah username atau menghapus akun hanya boleh dilakukan Site Administrator. Login dengan akun admin situs (yang bisa membuka menu <em>Administration</em>), lalu buka halaman ini lagi.</span></div>
+{else}
 	<div class="head">
 		<div class="brand">
 			<div class="logo">👤</div>
@@ -242,6 +247,7 @@
 		</table>
 		{else}<p style="padding:0 16px 14px;color:#5e6580">Belum ada tindakan.</p>{/if}
 	</details>
+{/if}
 </main>
 
 <script>

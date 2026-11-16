@@ -160,9 +160,17 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 				'canUpdate' => $available && CheesaUpdater::isNewer($available, $installed),
 				'backups' => $backups,
 				'canDelete' => $installed && $name !== 'cheesaControlPanel',
+				'canHide' => $name !== 'cheesaControlPanel',
+				'inManifest' => (bool) $pkg,
 			];
 		}
 		return $rows;
+	}
+
+	/** @return array nama paket => tanggal disembunyikan */
+	private function hiddenList($cid) {
+		$h = $this->getSetting($cid, 'hiddenPackages');
+		return is_array($h) ? $h : [];
 	}
 
 	/** Kategori paket: dari manifest, daftar bawaan, atau cadangan (bila plugin sudah dihapus). */
@@ -260,7 +268,7 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 
 	public function manage($args, $request) {
 		$verb = (string) $request->getUserVar('verb');
-		if (!in_array($verb, ['panel', 'saveUrl', 'check', 'update', 'rollback', 'uninstall'], true)) return parent::manage($args, $request);
+		if (!in_array($verb, ['panel', 'saveUrl', 'check', 'update', 'rollback', 'uninstall', 'hide', 'unhide'], true)) return parent::manage($args, $request);
 		if ($why = CheesaLicense::checkRequest(__DIR__)) {
 			return new JSONMessage(true, '<div style="padding:12px;border-left:4px solid #c62828;background:#fdecec">CHEESA Control Panel tidak aktif: ' . htmlspecialchars($why, ENT_QUOTES, 'UTF-8') . '. Plugin ini hanya untuk jurnal CHEESA.</div>');
 		}
@@ -284,6 +292,16 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 					$this->updateSetting($cid, 'manifestUrl', $url === self::DEFAULT_MANIFEST ? '' : $url, 'string'); $msg = $url === '' ? 'Alamat update dikembalikan ke bawaan.' : 'Alamat update disimpan.'; }
 			} elseif (!$isAdmin) {
 				$err = 'Hanya Site Administrator atau Journal Manager/Editor jurnal ini yang boleh memasang update.';
+			} elseif ($verb === 'hide' || $verb === 'unhide') {
+				// "Hapus" = hanya menghapus baris dari daftar panel ini; plugin di server tidak diubah
+				$pkgName = (string) $request->getUserVar('package');
+				if (!preg_match('/^[A-Za-z][A-Za-z0-9_]{1,63}$/', $pkgName) || $pkgName === 'cheesaControlPanel') $err = 'Paket tidak valid.';
+				else {
+					$hidden = $this->hiddenList($cid);
+					if ($verb === 'hide') { $hidden[$pkgName] = date('Y-m-d'); $msg = $pkgName . ' dihapus dari daftar. Plugin di server tidak diubah; tampilkan lagi lewat "Disembunyikan" di bawah.'; }
+					else { unset($hidden[$pkgName]); $msg = $pkgName . ' ditampilkan lagi di daftar.'; }
+					$this->updateSetting($cid, 'hiddenPackages', $hidden, 'object');
+				}
 			}
 		}
 
@@ -356,18 +374,22 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 						$this->afterInstall($request, $cat, $name, true);
 						throw new Exception('setelah dihapus, beranda situs error (HTTP ' . $code . '), jadi plugin dikembalikan otomatis. Situs aman.');
 					}
-					$msg = $label . ' ' . $r['from'] . ' dihapus. Cadangannya disimpan: klik "Kembalikan" bila ingin memasangnya lagi. Pengaturan dan data plugin di database tidak ikut dihapus.';
-				} catch (\Throwable $e) { $err = 'Hapus gagal: ' . $e->getMessage(); }
+					$msg = $label . ' ' . $r['from'] . ' di-uninstall dari server. Cadangannya disimpan: klik "Kembalikan" bila ingin memasangnya lagi, atau "Hapus" untuk menghilangkannya dari daftar. Pengaturan dan data plugin di database tidak ikut dihapus.';
+				} catch (\Throwable $e) { $err = 'Uninstall gagal: ' . $e->getMessage(); }
 			}
 		} elseif (!$err && $verb === 'check' && $manifest) {
 			$msg = 'Daftar versi diperbarui.';
 		}
 
 		$problems = $isAdmin ? $u->preflight('generic') : [];
-		$rows = $this->rows($u, $manifest);
+		$allRows = $this->rows($u, $manifest);
+		$hidden = $this->hiddenList($cid);
+		$rows = []; $hiddenRows = [];
+		foreach ($allRows as $r) { if (isset($hidden[$r['name']])) $hiddenRows[] = $r; else $rows[] = $r; }
 		$tm = TemplateManager::getManager($request);
 		$tm->assign([
 			'cpRows' => $rows,
+			'cpHiddenRows' => $hiddenRows,
 			'cpCountInstalled' => count(array_filter($rows, function ($r) { return (bool) $r['installed']; })),
 			'cpCountUpdates' => count(array_filter($rows, function ($r) { return (bool) $r['canUpdate']; })),
 			'cpFullPage' => $request->getUserVar('fullpage') === '1',

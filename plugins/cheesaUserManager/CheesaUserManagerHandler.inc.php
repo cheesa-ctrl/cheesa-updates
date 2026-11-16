@@ -50,19 +50,37 @@ class CheesaUserManagerHandler extends Handler {
 
 	public function __construct() {
 		parent::__construct();
-		$this->addRoleAssignment([ROLE_ID_SITE_ADMIN], ['index', 'save']);
+		// Manager boleh membuka halaman (untuk melihat pesan "khusus Site Administrator");
+		// semua data & aksi tetap hanya untuk Site Administrator (diperiksa di index() dan save()).
+		$this->addRoleAssignment([ROLE_ID_SITE_ADMIN, ROLE_ID_MANAGER], ['index', 'save']);
 	}
 
 	public function authorize($request, &$args, $roleAssignments) {
-		import('lib.pkp.classes.security.authorization.PKPSiteAccessPolicy');
-		$this->addPolicy(new PKPSiteAccessPolicy($request, null, $roleAssignments));
+		import('lib.pkp.classes.security.authorization.ContextAccessPolicy');
+		$this->addPolicy(new ContextAccessPolicy($request, $roleAssignments));
 		return parent::authorize($request, $args, $roleAssignments);
+	}
+
+	private function common($request) {
+		$d = $request->getDispatcher();
+		return [
+			'umJournal' => $request->getContext() ? $request->getContext()->getLocalizedName() : '',
+			'umDashUrl' => $d->url($request, ROUTE_PAGE, null, 'submissions'),
+			'umUsersUrl' => $d->url($request, ROUTE_PAGE, null, 'management', 'settings', 'access'),
+			'umAdminName' => $request->getUser()->getUsername(),
+			'umIsAdmin' => Validation::isSiteAdmin(),
+		];
 	}
 
 	/* ------------------------------------------------------------------ halaman */
 
 	public function index($args, $request) {
 		$plugin = self::$plugin;
+		$tm = TemplateManager::getManager($request);
+		if (!Validation::isSiteAdmin()) {
+			$tm->assign($this->common($request) + ['umDenied' => true]);
+			return $tm->display($plugin->getTemplateResource('page.tpl'));
+		}
 		$q = trim((string) $request->getUserVar('q'));
 		$page = max(1, (int) $request->getUserVar('p'));
 
@@ -123,8 +141,8 @@ class CheesaUserManagerHandler extends Handler {
 		$flash = $flash ? json_decode($flash, true) : null;
 
 		$keep = $q !== '' ? ['q' => $q] : [];
-		$tm = TemplateManager::getManager($request);
-		$tm->assign([
+		$tm->assign($this->common($request) + [
+			'umDenied' => false,
 			'umRows' => $rows,
 			'umQ' => $q,
 			'umTotal' => $total,
@@ -137,10 +155,6 @@ class CheesaUserManagerHandler extends Handler {
 			'umSaveUrl' => $request->getDispatcher()->url($request, ROUTE_PAGE, null, CheesaUserManagerPlugin::PAGE, 'save'),
 			'umFlash' => $flash,
 			'umLog' => array_slice($plugin->auditLog(), 0, 30),
-			'umJournal' => $request->getContext() ? $request->getContext()->getLocalizedName() : '',
-			'umDashUrl' => $request->getDispatcher()->url($request, ROUTE_PAGE, null, 'submissions'),
-			'umUsersUrl' => $request->getDispatcher()->url($request, ROUTE_PAGE, null, 'management', 'settings', 'access'),
-			'umAdminName' => $request->getUser()->getUsername(),
 		]);
 		$tm->display($plugin->getTemplateResource('page.tpl'));
 	}
@@ -153,6 +167,7 @@ class CheesaUserManagerHandler extends Handler {
 		$ok = '';
 		$err = '';
 		try {
+			if (!Validation::isSiteAdmin()) throw new Exception('Hanya Site Administrator yang boleh mengubah atau menghapus akun.');
 			if (!$request->isPost() || !$request->checkCSRF()) throw new Exception('Sesi formulir kedaluwarsa. Muat ulang halaman lalu coba lagi.');
 			$verb = (string) $request->getUserVar('verb');
 			$userDao = DAORegistry::getDAO('UserDAO');
