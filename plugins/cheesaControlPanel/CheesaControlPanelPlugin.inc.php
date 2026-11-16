@@ -170,6 +170,19 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 		return $rows;
 	}
 
+	/**
+	 * Kata sandi "Sumber update" dari permintaan. Dikirim sebagai base64 di parameter "cpk"
+	 * (bukan "password"), karena sebagian server/filter keamanan membuang parameter bernama password.
+	 */
+	private function sourceKey($request) {
+		$enc = (string) $request->getUserVar('cpk');
+		if ($enc !== '') {
+			$dec = base64_decode(strtr($enc, '-_', '+/'), true);
+			if ($dec !== false) return $dec;
+		}
+		return (string) $request->getUserVar('password');
+	}
+
 	/** @return array nama paket => tanggal disembunyikan */
 	private function hiddenList($cid) {
 		$h = $this->getSetting($cid, 'hiddenPackages');
@@ -292,7 +305,7 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 				if (time() - $tries['t'] > 600) $tries = ['n' => 0, 't' => time()];
 				if ($tries['n'] >= 5) $err = 'Terlalu banyak percobaan salah. Coba lagi 10 menit lagi.';
 				// spasi di awal/akhir dan huruf kapital (mis. kapital otomatis di HP) diabaikan
-				elseif (password_verify(strtolower(trim((string) $request->getUserVar('password'))), self::SOURCE_PASSWORD_HASH)) {
+				elseif (password_verify(strtolower(trim($this->sourceKey($request))), self::SOURCE_PASSWORD_HASH)) {
 					$session->setSessionVar('cheesaCPSource', '1');
 					$session->unsetSessionVar('cheesaCPSourceTries');
 					$msg = 'Bagian Sumber update dibuka.';
@@ -300,7 +313,7 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 					usleep(700000);
 					$tries['n']++;
 					$session->setSessionVar('cheesaCPSourceTries', json_encode($tries));
-					$typed = trim((string) $request->getUserVar('password'));
+					$typed = trim($this->sourceKey($request));
 					$err = ($typed === '' ? 'Kata sandi belum diisi.' : 'Kata sandi salah (' . strlen($typed) . ' karakter terkirim).')
 						. ($tries['n'] >= 5 ? ' Terkunci 10 menit.' : ' Sisa ' . (5 - $tries['n']) . ' percobaan.');
 				}

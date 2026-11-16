@@ -95,6 +95,7 @@
 	.ccp-field label small { font-weight: 400; color: var(--ccp-muted); }
 	.ccp-field input { width: 100%; max-width: 640px; padding: 8px 10px; border: 1px solid #cdd1e1; border-radius: 8px; font-size: 13px; font-family: inherit; }
 	.ccp-field input:focus { outline: 2px solid rgba(3,2,113,.25); border-color: var(--ccp-navy); }
+	.ccp-mask { -webkit-text-security: disc; text-security: disc; }
 	.ccp-help { margin: 10px 0 0; font-size: 12.5px; color: var(--ccp-muted); }
 
 	@media (max-width: 1100px) {
@@ -200,8 +201,9 @@
 			<label for="cpSourcePass">Kata sandi</label>
 			<div style="display:flex;gap:6px;max-width:460px">
 				{* readonly sampai diklik + new-password: mencegah browser mengisi otomatis dengan password login OJS *}
-				<input type="password" id="cpSourcePass" name="cheesa-source-key" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly')" data-lpignore="true" data-1p-ignore autocapitalize="off" autocorrect="off" spellcheck="false" value="" placeholder="Masukkan kata sandi">
-				<button type="button" class="ccp-btn sec" id="cpSourceEye" title="Tampilkan / sembunyikan ketikan" onclick="var i=document.getElementById('cpSourcePass');i.type=i.type==='password'?'text':'password';">👁</button>
+				{* type=text + huruf disamarkan lewat CSS: browser tidak menganggapnya kolom login, jadi tidak mengisi otomatis / menawarkan simpan password *}
+				<input type="text" id="cpSourcePass" class="ccp-mask" autocomplete="off" data-lpignore="true" data-1p-ignore data-form-type="other" autocapitalize="off" autocorrect="off" spellcheck="false" value="" placeholder="Masukkan kata sandi">
+				<button type="button" class="ccp-btn sec" id="cpSourceEye" title="Tampilkan / sembunyikan ketikan" onclick="document.getElementById('cpSourcePass').classList.toggle('ccp-mask');">👁</button>
 			</div>
 		</div>
 		<p style="margin:12px 0 0"><button type="button" class="ccp-btn" data-cp-verb="unlockSource">Buka</button></p>
@@ -258,7 +260,12 @@
 		body.append('csrfToken', cp.getAttribute('data-csrf') || '');
 		body.append('fullpage', cp.getAttribute('data-fullpage') || '');
 		var pw = cp.querySelector('#cpSourcePass');
-		if (verb === 'unlockSource') body.append('password', pw ? pw.value : '');
+		if (verb === 'unlockSource') {
+			// base64 (aman-URL) di parameter "cpk": tidak ikut dibuang filter yang memblokir parameter "password"
+			var raw = pw ? pw.value : '';
+			var b64 = btoa(unescape(encodeURIComponent(raw))).replace(/\+/g, '-').replace(/\//g, '_');
+			body.append('cpk', b64);
+		}
 		var fail = function (m) { alert(m); for (var i = 0; i < btns.length; i++) btns[i].disabled = false; };
 		fetch(cp.getAttribute('data-action'), {
 			method: 'POST', credentials: 'same-origin',

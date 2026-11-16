@@ -21,10 +21,10 @@
         "cheesaControlPanel": {
             "category": "generic",
             "label": "CHEESA Control Panel",
-            "version": "1.5.2.0",
-            "file": "cheesaControlPanel-1.5.2.0.tar.gz",
-            "sha256": "a06587bf8e90276cab667037a767017ccba836578828f0aafbd817b6a77ba446",
-            "size": 23886,
+            "version": "1.5.3.0",
+            "file": "cheesaControlPanel-1.5.3.0.tar.gz",
+            "sha256": "5a3a865264748667dc5e97216cf5a2a6503c7a01613704e684e24dad14e5330c",
+            "size": 24214,
             "released": "2026-11-16"
         },
         "cheesaFullText": {
@@ -100,5 +100,5 @@
             "released": "2026-11-16"
         }
     },
-    "generated": "2026-11-16T22:31:52+00:00"
+    "generated": "2026-11-16T22:39:34+00:00"
 }
