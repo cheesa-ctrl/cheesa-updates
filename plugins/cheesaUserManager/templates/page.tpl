@@ -115,6 +115,8 @@
 	.chk.role { margin: 0; padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--soft); }
 	.chk.role:has(input:checked) { background: #e9ebfb; border-color: #c4c9ee; }
 	.chk.role small { color: var(--muted); }
+	.chk.mail { margin: 0; align-items: flex-start; padding: 8px 12px; border: 1px solid #d3d7f3; border-radius: 8px; background: #f4f5fd; }
+	.chk.mail input { margin-top: 3px; }
 	.addfoot { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
 	.pager { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: 0 0 22px; color: var(--muted); }
 	.box { border: 1px solid var(--line); border-radius: 12px; background: #fff; }
@@ -190,12 +192,18 @@
 					<input type="text" id="nuFamily" name="familyName" value="{if $umOld}{$umOld.familyName|escape}{/if}"></div>
 				<div class="fld"><label for="nuAff">Afiliasi</label>
 					<input type="text" id="nuAff" name="affiliation" value="{if $umOld}{$umOld.affiliation|escape}{/if}" placeholder="mis. Universitas PGRI Madiun"></div>
+				<div class="fld"><label for="nuOrcid">ORCID iD</label>
+					<input type="text" id="nuOrcid" name="orcid" value="{if $umOld}{$umOld.orcid|escape}{/if}" placeholder="0000-0000-0000-0000" spellcheck="false" autocapitalize="off">
+					<small>Boleh ditempel lengkap (https://orcid.org/…). Angka kontrol diperiksa.</small></div>
 				<div class="fld"><label for="nuPass">Password <i>*</i></label>
 					<div class="pw"><input type="text" id="nuPass" value="" autocomplete="off" spellcheck="false" data-lpignore="true" data-form-type="other" placeholder="min. 6 karakter">
 					<button class="btn sec" type="button" id="nuGen" title="Buat password acak">⟳ Acak</button>
 					<button class="btn sec" type="button" id="nuCopy" title="Salin">⧉</button></div>
 					<label class="chk"><input type="checkbox" name="mustChange" value="1" checked> Wajib ganti password saat login pertama</label></div>
 			</div>
+			<div class="fld"><label for="nuInt">Minat review <small>(reviewing interests)</small></label>
+				<input type="text" id="nuInt" name="interests" value="{if $umOld}{$umOld.interests|escape}{/if}" placeholder="mis. adsorpsi, katalis heterogen, pengolahan limbah cair">
+				<small>Pisahkan dengan koma. Muncul di profil pengguna dan membantu editor memilih reviewer.</small></div>
 			<div class="fld"><label>Peran di jurnal ini <i>*</i></label>
 				<div class="roles">
 				{foreach from=$umGroups item=g}
@@ -203,7 +211,8 @@
 				{/foreach}
 				</div></div>
 			<div class="addfoot">
-				<small>Halaman ini tidak mengirim email. Sampaikan username &amp; password ke pengguna; ia bisa langsung login.</small>
+				<label class="chk mail"><input type="checkbox" name="sendEmail" value="1"{if !$umOld || $umOld.sendEmail} checked{/if}>
+					<span>✉ Kirim email selamat datang berisi username &amp; password<br><small>Memakai template OJS “USER_REGISTER” (ubah di Settings › Workflow › Emails).</small></span></label>
 				<button class="btn" type="submit">Buat akun</button>
 			</div>
 		</form>

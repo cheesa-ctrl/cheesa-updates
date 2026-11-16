@@ -301,7 +301,8 @@ class CheesaUserManagerHandler extends Handler {
 		$old = [];
 		if ($err && (string) $request->getUserVar('verb') === 'add') {
 			// isian formulir dikembalikan (kecuali password) supaya tidak perlu mengetik ulang
-			foreach (['username', 'email', 'givenName', 'familyName', 'affiliation'] as $f) $old[$f] = (string) $request->getUserVar($f);
+			foreach (['username', 'email', 'givenName', 'familyName', 'affiliation', 'orcid', 'interests'] as $f) $old[$f] = (string) $request->getUserVar($f);
+			$old['sendEmail'] = (bool) $request->getUserVar('sendEmail');
 			$old['groups'] = array_map('intval', (array) $request->getUserVar('groups'));
 			$old['open'] = true;
 		}
@@ -324,6 +325,9 @@ class CheesaUserManagerHandler extends Handler {
 		$npk = (string) $request->getUserVar('npk');
 		$password = $npk !== '' ? (string) base64_decode(strtr($npk, '-_', '+/'), true) : '';
 		$mustChange = (bool) $request->getUserVar('mustChange');
+		$sendEmail = (bool) $request->getUserVar('sendEmail');
+		$orcid = $this->normalizeOrcid((string) $request->getUserVar('orcid'));
+		$interests = array_values(array_unique(array_filter(array_map('trim', preg_split('/[,;\n]+/', (string) $request->getUserVar('interests'))), 'strlen')));
 		$groups = array_unique(array_map('intval', (array) $request->getUserVar('groups')));
 
 		if (!preg_match('/^[a-z0-9]+([\-_][a-z0-9]+)*$/i', $username)) throw new Exception('Username hanya boleh huruf, angka, dan tanda - atau _ di antara huruf/angka (tanpa spasi).');
@@ -335,6 +339,7 @@ class CheesaUserManagerHandler extends Handler {
 		$min = (int) Config::getVar('security', 'min_password_length') ?: 6;
 		if (strlen($password) < $min) throw new Exception('Password minimal ' . $min . ' karakter.');
 		if (!$groups) throw new Exception('Pilih minimal satu peran di jurnal ini.');
+		if ($orcid === false) throw new Exception('ORCID iD tidak valid. Formatnya 0000-0000-0000-0000 (angka terakhir boleh X), dan angka kontrolnya harus cocok.');
 		$allowed = [];
 		foreach ($this->journalGroups($cid) as $g) $allowed[$g['id']] = true;
 		foreach ($groups as $gid) if (!isset($allowed[$gid])) throw new Exception('Peran yang dipilih tidak valid untuk jurnal ini.');
@@ -346,6 +351,7 @@ class CheesaUserManagerHandler extends Handler {
 		$user->setGivenName($given, $locale);
 		$user->setFamilyName($family, $locale);
 		if ($affiliation !== '') $user->setAffiliation($affiliation, $locale);
+		if ($orcid) $user->setOrcid($orcid);
 		$user->setPassword(Validation::encryptCredentials($username, $password));
 		$user->setMustChangePassword($mustChange);
 		$user->setDateRegistered(Core::getCurrentDate());
@@ -355,16 +361,65 @@ class CheesaUserManagerHandler extends Handler {
 		$newId = (int) $user->getId();
 		if (!$newId) throw new Exception('Akun gagal dibuat (database tidak mengembalikan ID).');
 
+		if ($interests) {
+			import('lib.pkp.classes.user.InterestManager');
+			(new InterestManager())->setInterestsForUser($user, $interests);
+		}
+
 		$ugDao = DAORegistry::getDAO('UserGroupDAO');
 		$names = [];
 		foreach ($groups as $gid) {
 			$ugDao->assignUserToGroup($newId, $gid);
 			foreach ($this->journalGroups($cid) as $g) if ($g['id'] === $gid) $names[] = $g['name'];
 		}
-		$plugin->audit('tambah akun', "#$newId $username <$email> — " . implode(', ', $names), $request);
+		$mailNote = '';
+		if ($sendEmail) {
+			$sent = false;
+			try { $sent = $this->sendWelcome($request, $user, $username, $password); }
+			catch (\Throwable $e) { error_log('cheesaUserManager mail: ' . $e->getMessage()); }
+			$mailNote = $sent ? ' Email selamat datang (berisi username & password) terkirim ke ' . $email . '.'
+				: ' Email GAGAL dikirim — periksa pengaturan email server, lalu sampaikan username & password secara manual.';
+		} else {
+			$mailNote = ' Email tidak dikirim; sampaikan username & password ke pengguna.';
+		}
+		$plugin->audit('tambah akun', "#$newId $username <$email> — " . implode(', ', $names) . ($sendEmail ? ' — email ' . (strpos($mailNote, 'GAGAL') ? 'gagal' : 'terkirim') : ''), $request);
 		return "Akun \"$username\" dibuat dengan peran " . implode(', ', $names) . '.'
 			. ($mustChange ? ' Pengguna wajib mengganti password saat login pertama.' : '')
-			. ' Sampaikan username dan password-nya ke pengguna (OJS tidak mengirim email otomatis dari halaman ini).';
+			. $mailNote;
+	}
+
+	/**
+	 * Email selamat datang memakai template bawaan OJS "USER_REGISTER"
+	 * (bisa diubah di Settings > Workflow > Emails), sama seperti tambah pengguna di Users & Roles.
+	 */
+	private function sendWelcome($request, $user, $username, $password) {
+		$context = $request->getContext();
+		import('lib.pkp.classes.mail.MailTemplate');
+		$mail = new MailTemplate('USER_REGISTER', null, $context, false);
+		if ($context && $context->getData('contactEmail')) $mail->setReplyTo($context->getData('contactEmail'), $context->getData('contactName'));
+		$mail->assignParams([
+			'username' => $username,
+			'password' => $password,
+			'userFullName' => $user->getFullName(),
+		]);
+		$mail->addRecipient($user->getEmail(), $user->getFullName());
+		return (bool) $mail->send();
+	}
+
+	/**
+	 * ORCID iD -> 'https://orcid.org/0000-0000-0000-0000'; '' bila kosong; false bila tidak valid.
+	 * Angka kontrol diperiksa (ISO 7064 MOD 11-2).
+	 */
+	private function normalizeOrcid($in) {
+		$in = trim($in);
+		if ($in === '') return '';
+		if (!preg_match('/(\d{4})-?(\d{4})-?(\d{4})-?(\d{3}[\dXx])\s*$/', $in, $m)) return false;
+		$id = $m[1] . $m[2] . $m[3] . strtoupper($m[4]);
+		$total = 0;
+		for ($i = 0; $i < 15; $i++) $total = ($total + (int) $id[$i]) * 2;
+		$check = (12 - $total % 11) % 11;
+		if (($check === 10 ? 'X' : (string) $check) !== $id[15]) return false;
+		return 'https://orcid.org/' . implode('-', str_split($id, 4));
 	}
 
 	/** @return array [['id'=>, 'name'=>, 'role'=>], ...] peran (user group) di jurnal ini */
