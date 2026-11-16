@@ -85,6 +85,7 @@
 
   /* ---------- 2. Kartu "Journal Issue" (cover) ---------- */
   function coverCard() {
+    if (CFG.coverCard === false) return;   // opsi tema: Kartu "Journal Issue" = Sembunyikan
     if (!isHome() || D.querySelector('.ch-cover-card, .jw-issue')) return;   // .jw-issue = widget Journal Issue sudah dipasang
     var img = D.querySelector('.current_issue .cover img, .current_issue .obj_issue_toc .cover img');
     var cols = columns();

@@ -68,6 +68,7 @@ class CheesaNoveltyThemePlugin extends ThemePlugin {
 			'label' => 'Lebar halaman',
 			'options' => [
 				['value' => 'full', 'label' => 'Penuh (header & isi selebar layar)'],
+				['value' => 'wide', 'label' => 'Lebar (maksimal 1440px, di tengah layar; tidak melebar saat browser di-zoom out)'],
 				['value' => 'boxed', 'label' => 'Kotak (maksimal 1160px, bawaan OJS)'],
 			],
 			'default' => 'full',
@@ -114,6 +115,13 @@ class CheesaNoveltyThemePlugin extends ThemePlugin {
 			'label' => 'Blok sidebar kiri per halaman (selain beranda)',
 			'description' => 'Satu baris per aturan: halaman | blok, blok, ... Halaman = bagian alamat setelah /cheesa/ (boleh beberapa, pisahkan koma). Tanda * = semua halaman lain. Nama blok = judul blok (Additional Information, Submission Menu, Published Volumes, Article Info, Actions, dll). Kosongkan untuk susunan bawaan.',
 			'default' => "* | Additional Information, Actions\narticle/view | Article Info, Published Volumes\nissue | Published Volumes, Additional Information\nabout/submissions, authorguidelines | Submission Menu, Additional Information, Actions",
+		]);
+		$this->addOption('chCoverCard', 'FieldOptions', [
+			'type' => 'radio',
+			'label' => 'Kartu "Journal Issue" (cover terbitan) di kolom kiri beranda',
+			'description' => 'Kartu ini dibuat oleh tema (bukan plugin terpisah), jadi diatur dari sini.',
+			'options' => [['value' => 'on', 'label' => 'Tampilkan'], ['value' => 'off', 'label' => 'Sembunyikan']],
+			'default' => 'on',
 		]);
 		$this->addOption('chCardStats', 'FieldOptions', [
 			'type' => 'radio',
@@ -216,7 +224,11 @@ class CheesaNoveltyThemePlugin extends ThemePlugin {
 		// warna pilihan pengelola tetap dipakai; bila terlalu gelap di atas warna utama,
 		// dipakai versi lebih terang dari warna yang SAMA (mis. biru -> biru muda) supaya ISSN, ikon & tombol terlihat
 		$hl = $this->_lighten($this->_color($this->getOption('chHeaderAccent'), '#ed991f'), $navy, 4.5);
-		if ($this->getOption('chLayout') !== 'boxed') {
+		if ($this->getOption('chLayout') === 'wide') {
+			// seperti Penuh, tetapi lebarnya dibatasi dan diletakkan di tengah (header & footer berwarna tetap selebar layar)
+			$this->addStyle('cheesa-wide', ':root body .pkp_structure_page{max-width:none!important;width:100%!important}'
+				. '@media (min-width:992px){:root body .pkp_structure_head .pkp_head_wrapper,:root body .pkp_structure_content,:root body .pkp_structure_footer{width:auto!important;max-width:1440px!important;margin-left:auto!important;margin-right:auto!important;padding-left:clamp(16px,3vw,40px)!important;padding-right:clamp(16px,3vw,40px)!important;box-sizing:border-box!important}}', ['inline' => true]);
+		} else if ($this->getOption('chLayout') !== 'boxed') {
 			$this->addStyle('cheesa-full', ':root body .pkp_structure_page{max-width:none!important;width:100%!important}'
 				. '@media (min-width:992px){:root body .pkp_structure_head .pkp_head_wrapper,:root body .pkp_structure_content,:root body .pkp_structure_footer{width:auto!important;max-width:none!important;margin-left:clamp(16px,4vw,80px)!important;margin-right:clamp(16px,4vw,80px)!important}}', ['inline' => true]);
 		}
@@ -241,6 +253,7 @@ class CheesaNoveltyThemePlugin extends ThemePlugin {
 			'reviewerUrl' => trim((string) $this->getOption('chReviewerUrl')),
 			'social' => $this->_lines($this->getOption('chSocial'), 2),
 			'regMenu' => $this->_regMenu($this->getOption('chRegisterMenu')),
+			'coverCard' => $this->getOption('chCoverCard') !== 'off',
 			'cardCitations' => $this->getOption('chCardCitations') !== 'off',
 			'indexing' => $this->_lines($this->getOption('chIndexing'), 3),
 			'upcoming' => $this->getOption('chUpcoming') !== 'off',
