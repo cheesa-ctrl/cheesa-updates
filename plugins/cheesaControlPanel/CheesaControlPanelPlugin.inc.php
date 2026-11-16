@@ -170,6 +170,14 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 		return $rows;
 	}
 
+	/** Panel terbuka bila kata sandi sudah dimasukkan dan belum 30 menit tanpa aktivitas. */
+	private function panelUnlocked($session, $touch = true) {
+		$t = (int) $session->getSessionVar('cheesaCPUnlocked');
+		if (!$t || time() - $t > 1800) { $session->unsetSessionVar('cheesaCPUnlocked'); return false; }
+		if ($touch) $session->setSessionVar('cheesaCPUnlocked', (string) time());
+		return true;
+	}
+
 	/**
 	 * Kata sandi "Sumber update" dari permintaan. Dikirim sebagai base64 di parameter "cpk"
 	 * (bukan "password"), karena sebagian server/filter keamanan membuang parameter bernama password.
@@ -284,7 +292,7 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 
 	public function manage($args, $request) {
 		$verb = (string) $request->getUserVar('verb');
-		if (!in_array($verb, ['panel', 'saveUrl', 'check', 'update', 'rollback', 'uninstall', 'hide', 'unhide', 'unlockSource', 'lockSource'], true)) return parent::manage($args, $request);
+		if (!in_array($verb, ['panel', 'saveUrl', 'check', 'update', 'rollback', 'uninstall', 'hide', 'unhide', 'unlockSource', 'lockSource', 'unlockPanel', 'lockPanel'], true)) return parent::manage($args, $request);
 		if ($why = CheesaLicense::checkRequest(__DIR__)) {
 			return new JSONMessage(true, '<div style="padding:12px;border-left:4px solid #c62828;background:#fdecec">CHEESA Control Panel tidak aktif: ' . htmlspecialchars($why, ENT_QUOTES, 'UTF-8') . '. Plugin ini hanya untuk jurnal CHEESA.</div>');
 		}
@@ -295,6 +303,45 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 		// boleh memasang: Site Admin, atau Journal Manager / Journal Editor (peran manager) di jurnal ini
 		$isAdmin = $siteAdmin || ($user && $cid && $user->hasRole([ROLE_ID_MANAGER], $cid));
 		$msg = ''; $err = '';
+
+		/* ---- kunci kata sandi untuk seluruh panel (modal & halaman penuh) ---- */
+		$session = $request->getSession();
+		$tm = TemplateManager::getManager($request);
+		$cpAction = $request->getRouter()->url($request, null, null, 'manage', null, ['plugin' => $this->getName(), 'category' => 'generic']);
+		$tm->assign([
+			'cpStyleTpl' => $this->getTemplateResource('style.tpl'),
+			'cpScriptTpl' => $this->getTemplateResource('script.tpl'),
+			'cpAction' => $cpAction,
+			'cpFullPage' => $request->getUserVar('fullpage') === '1',
+		]);
+		$lockErr = '';
+		if ($verb === 'unlockPanel' || $verb === 'lockPanel') {
+			if (!$request->checkCSRF()) return new JSONMessage(false, 'Sesi kedaluwarsa, muat ulang halaman.');
+			if ($verb === 'lockPanel') {
+				$session->unsetSessionVar('cheesaCPUnlocked');
+			} else {
+				// maks. 5 percobaan salah per 10 menit per sesi
+				$tries = json_decode((string) $session->getSessionVar('cheesaCPSourceTries'), true) ?: ['n' => 0, 't' => time()];
+				if (time() - $tries['t'] > 600) $tries = ['n' => 0, 't' => time()];
+				$typed = trim($this->sourceKey($request));
+				if ($tries['n'] >= 5) $lockErr = 'Terlalu banyak percobaan salah. Coba lagi 10 menit lagi.';
+				elseif (password_verify(strtolower($typed), self::SOURCE_PASSWORD_HASH)) {
+					$session->setSessionVar('cheesaCPUnlocked', (string) time());
+					$session->unsetSessionVar('cheesaCPSourceTries');
+				} else {
+					usleep(700000);
+					$tries['n']++;
+					$session->setSessionVar('cheesaCPSourceTries', json_encode($tries));
+					$lockErr = ($typed === '' ? 'Kata sandi belum diisi.' : 'Kata sandi salah.')
+						. ($tries['n'] >= 5 ? ' Terkunci 10 menit.' : ' Sisa ' . (5 - $tries['n']) . ' percobaan.');
+				}
+			}
+			$verb = 'panel';
+		}
+		if (!$this->panelUnlocked($session)) {
+			$tm->assign(['cpLockErr' => $lockErr]);
+			return new JSONMessage(true, $tm->fetch($this->getTemplateResource('lock.tpl')));
+		}
 
 		if ($verb !== 'panel') {
 			if (!$request->checkCSRF()) return new JSONMessage(false, 'Sesi kedaluwarsa, muat ulang halaman.');
@@ -320,7 +367,7 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 			} elseif ($verb === 'lockSource') {
 				$session->unsetSessionVar('cheesaCPSource');
 				$msg = 'Bagian Sumber update dikunci lagi.';
-			} elseif ($verb === 'saveUrl' && $session->getSessionVar('cheesaCPSource') !== '1') {
+			} elseif ($verb === 'saveUrl' && !$this->panelUnlocked($session, false)) {
 				$err = 'Bagian Sumber update terkunci. Masukkan kata sandi dulu.';
 			} elseif ($verb === 'saveUrl') {
 				$url = trim((string) $request->getUserVar('manifestUrl'));
@@ -436,7 +483,7 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 			'cpPageUrl' => $request->getContext() ? $this->pageUrl($request) : '',
 			'cpUrl' => $url,
 			'cpHasToken' => (bool) $this->getSetting($cid, 'githubToken'),
-			'cpSourceUnlocked' => $request->getSession()->getSessionVar('cheesaCPSource') === '1',
+			'cpSourceUnlocked' => true,   // seluruh panel sudah dilindungi kata sandi
 			'cpSourceOpen' => in_array($verb, ['unlockSource', 'lockSource', 'saveUrl'], true),
 			'cpMsg' => $msg,
 			'cpErr' => $err,
@@ -444,7 +491,7 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 			'cpProblems' => $problems,
 			'cpRecovery' => $siteAdmin ? $this->recoveryUrl($request) : '',
 			'cpGenerated' => $manifest && isset($manifest['generated']) ? $manifest['generated'] : '',
-			'cpAction' => $request->getRouter()->url($request, null, null, 'manage', null, ['plugin' => $this->getName(), 'category' => 'generic']),
+			'cpAction' => $cpAction,
 		]);
 		return new JSONMessage(true, $tm->fetch($this->getTemplateResource('panel.tpl')));
 	}
