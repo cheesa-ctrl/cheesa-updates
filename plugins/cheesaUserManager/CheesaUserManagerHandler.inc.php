@@ -181,6 +181,7 @@ class CheesaUserManagerHandler extends Handler {
 			]);
 			return $tm->display($plugin->getTemplateResource('page.tpl'));
 		}
+		import('lib.pkp.classes.security.Validation');
 		$siteAdmin = Validation::isSiteAdmin();
 		$cid = (int) $request->getContext()->getId();
 		$q = trim((string) $request->getUserVar('q'));
@@ -223,6 +224,8 @@ class CheesaUserManagerHandler extends Handler {
 			$info = isset($roles[$id]) ? $roles[$id] : [];
 			$isAdmin = !empty($info['admin']);
 			$lock = $this->lockReason($id, $me, $info, $siteAdmin, $cid);
+			// "Masuk sebagai" (login as): hanya Site Admin, hanya ke akun yang boleh ia kelola, bukan Site Admin lain / diri sendiri / akun nonaktif
+			$canLoginAs = $siteAdmin && $id !== $me && !(bool) $r->disabled && Validation::canAdminister($id, $me);
 			$rows[] = [
 				'id' => $id,
 				'username' => $r->username,
@@ -240,6 +243,7 @@ class CheesaUserManagerHandler extends Handler {
 				'canEditName' => $lock === '',
 				'canDelete' => !$act && !$isAdmin && $id !== $me && $lock === '',
 				'canMerge' => !$isAdmin && $id !== $me && $lock === '',
+				'canLoginAs' => $canLoginAs,
 			];
 		}
 
@@ -357,6 +361,22 @@ class CheesaUserManagerHandler extends Handler {
 				$ua->mergeUsers($id, (int) $target->getId());
 				$plugin->audit('gabungkan akun', "#$id $old → #" . $target->getId() . ' ' . $target->getUsername(), $request);
 				$ok = "Akun \"$old\" digabungkan ke \"" . $target->getUsername() . '". Semua naskah, review, dan peran dipindahkan; akun lama dihapus.';
+
+			} elseif ($verb === 'loginas') {
+				import('lib.pkp.classes.security.Validation');
+				if (!$siteAdmin) throw new Exception('Hanya Site Administrator yang bisa masuk sebagai pengguna lain.');
+				if ($id === $me) throw new Exception('Tidak bisa masuk sebagai akun Anda sendiri.');
+				if (!Validation::canAdminister($id, $me)) throw new Exception('Tidak bisa masuk sebagai akun ini (akun Site Administrator tidak diizinkan).');
+				if ($user->getDisabled()) throw new Exception('Akun "' . $old . '" nonaktif.');
+				$session = $request->getSession();
+				if ($session->getSessionVar('signedInAs')) throw new Exception('Anda sedang masuk sebagai pengguna lain. Keluar dulu lewat pemberitahuan OJS di atas halaman, baru coba lagi.');
+				// CATAT DULU atas nama admin asli, sebelum sesi berpindah — inilah jejak login-as yang bisa ditelusuri
+				$plugin->audit('masuk sebagai (login as)', '#' . $me . ' ' . $request->getUser()->getUsername() . ' → #' . $id . ' ' . $old . ' <' . $user->getEmail() . '>', $request);
+				$session->setSessionVar('signedInAs', (int) $me);
+				$session->setSessionVar('username', $user->getUsername());
+				$session->setUserId((int) $id);
+				DAORegistry::getDAO('SessionDAO')->updateObject($session);
+				return $request->redirectUrl($request->getDispatcher()->url($request, ROUTE_PAGE, null, 'submissions'));
 
 			} else {
 				throw new Exception('Aksi tidak dikenal.');

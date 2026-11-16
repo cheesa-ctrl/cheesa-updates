@@ -96,6 +96,8 @@
 	.popbox p { margin: 8px 0 10px; font-size: 12px; color: var(--muted); }
 	.popbox .row { display: flex; justify-content: flex-end; gap: 6px; }
 
+	.btn.login { background: #0b6b4f; border-color: #0b6b4f; }
+	.btn.login:hover { background: #095a42; }
 	.btn.add { background: var(--accent); border-color: var(--accent); }
 	.btn.add:hover { background: #d9860f; }
 	.addbox { margin: 0 0 16px; }
@@ -285,6 +287,14 @@
 				{if $u.activityText}<span class="busy">{$u.activityText|escape}</span>{else}<span class="clean">✓ bersih — boleh dihapus</span>{/if}
 			</div>
 			<div class="btns">
+				{if $u.canLoginAs}
+				<form method="post" action="{$umSaveUrl|escape}" data-confirm="loginas" data-username="{$u.username|escape}" style="display:inline">
+					{csrf}
+					<input type="hidden" name="verb" value="loginas"><input type="hidden" name="userId" value="{$u.id}">
+					<input type="hidden" name="q" value="{$umQ|escape}"><input type="hidden" name="p" value="{$umPage}">
+					<button class="btn login" type="submit" title="Buka OJS sebagai pengguna ini. Dicatat di log atas nama Anda.">🔑 Masuk sebagai</button>
+				</form>
+				{/if}
 				{if $u.canEditName}
 				<details class="pop">
 					<summary class="btn sec">✎ Username</summary>
@@ -365,6 +375,11 @@
 		var f = ev.target, kind = f.getAttribute('data-confirm');
 		if (!kind) return;
 		var u = f.getAttribute('data-username');
+		if (kind === 'loginas') {
+			if (!confirm('Masuk ke OJS sebagai "' + u + '"?\n\nAnda akan melihat dan memakai OJS sebagai pengguna ini. Tindakan ini dicatat di log atas nama Anda.\nUntuk kembali ke akun Anda, klik "Logout as" pada pemberitahuan OJS di bagian atas halaman.')) { ev.preventDefault(); return; }
+			var lb = f.querySelector('button[type=submit]'); if (lb) { lb.disabled = true; lb.textContent = 'Masuk…'; }
+			return;
+		}
 		var msg = kind === 'delete'
 			? 'HAPUS akun "' + u + '" secara permanen?\n\nKetik username-nya untuk konfirmasi:'
 			: 'GABUNGKAN akun "' + u + '" ke "' + (f.querySelector('[name=target]') || {}).value + '"?\nAkun "' + u + '" akan dihapus setelah semua datanya dipindahkan.\n\nKetik username "' + u + '" untuk konfirmasi:';
