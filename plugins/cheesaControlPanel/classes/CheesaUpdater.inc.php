@@ -202,6 +202,50 @@ class CheesaUpdater {
 		return $this->installedVersion($category, $name);
 	}
 
+	/**
+	 * Hapus (copot) satu plugin: folder plugin dicadangkan dulu, lalu dipindah ke folder kerja dan dihapus.
+	 * Cadangan ini bisa dikembalikan dengan rollback() (tombol "Kembalikan" / link pemulihan darurat).
+	 * @return array ['from' => versi yang dihapus, 'backup' => path cadangan]
+	 */
+	public function uninstall($category, $name) {
+		if (!in_array($category, self::CATEGORIES, true) || !preg_match('/^[A-Za-z][A-Za-z0-9_]{1,63}$/', $name)) throw new Exception('Paket tidak valid.');
+		$target = $this->pluginPath($category, $name);
+		if (!is_dir($target)) throw new Exception($name . ' tidak terpasang.');
+		if (!is_writable($this->pluginsDir . '/' . $category)) throw new Exception('Folder ' . $this->pluginsDir . '/' . $category . ' tidak bisa ditulis oleh server web.');
+		foreach ([$this->stageDir, $this->backupDir] as $d) {
+			if (!is_dir($d) && !@mkdir($d, 0775, true)) throw new Exception("Folder $d tidak bisa dibuat.");
+		}
+		$from = $this->installedVersion($category, $name);
+		$backup = $this->backupDir . '/' . $name . '-' . ($from ?: 'x') . '-' . date('Ymd-His');
+		$this->copyDir($target, $backup);
+		$trash = $this->stageDir . '/del-' . $name . '-' . bin2hex(random_bytes(3));
+		if (!@rename($target, $trash)) {
+			$this->rmDir($backup);
+			throw new Exception("Folder $target tidak bisa dipindahkan (periksa izin tulis). Tidak ada yang dihapus.");
+		}
+		$this->rmDir($trash);
+		$this->pruneBackups($name);
+		return ['from' => $from, 'backup' => $backup];
+	}
+
+	/** Kategori plugin menurut version.xml cadangan terakhir (untuk plugin yang sudah dihapus). */
+	public function backupCategory($name) {
+		$list = $this->backups($name);
+		if (!$list) return null;
+		$x = @file_get_contents(end($list) . '/version.xml');
+		return ($x && preg_match('#<type>\s*plugins\.([A-Za-z]+)\s*</type>#', $x, $m) && in_array($m[1], self::CATEGORIES, true)) ? $m[1] : null;
+	}
+
+	/** Nama paket yang punya cadangan. */
+	public function backupNames() {
+		$names = [];
+		foreach (glob($this->backupDir . '/*', GLOB_ONLYDIR) ?: [] as $d) {
+			$n = explode('-', basename($d))[0];
+			if (preg_match('/^[A-Za-z][A-Za-z0-9_]{1,63}$/', $n)) $names[$n] = true;
+		}
+		return array_keys($names);
+	}
+
 	public function backups($name) {
 		$list = glob($this->backupDir . '/' . $name . '-*', GLOB_ONLYDIR) ?: [];
 		sort($list);

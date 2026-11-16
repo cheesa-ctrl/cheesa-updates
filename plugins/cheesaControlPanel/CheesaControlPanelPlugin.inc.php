@@ -7,7 +7,7 @@
  * Memperbarui CHEESA Theme, Journal Widgets, Crossmark Button, dan panel ini sendiri langsung dari OJS,
  * tanpa mengunggah ulang plugin. Paket diambil dari manifest bertanda tangan digital (mis. di GitHub).
  *
- * Melihat daftar, memasang update / plugin baru, dan rollback: Site Admin serta Journal Manager / Journal Editor
+ * Melihat daftar, memasang update / plugin baru, menghapus plugin, dan rollback: Site Admin serta Journal Manager / Journal Editor
  * jurnal ini. Hanya paket bertanda tangan kunci CHEESA yang bisa dipasang. Link pemulihan darurat: hanya Site Admin.
  * (karena mengganti kode di server).
  */
@@ -86,13 +86,17 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 	/** Daftar paket: versi terpasang, versi tersedia, status. */
 	private function rows(CheesaUpdater $u, $manifest) {
 		$rows = [];
-		$names = array_unique(array_merge(array_keys(self::KNOWN), $manifest ? array_keys($manifest['packages']) : []));
+		$names = array_unique(array_merge(array_keys(self::KNOWN), $manifest ? array_keys($manifest['packages']) : [], $u->backupNames()));
 		foreach ($names as $name) {
 			$pkg = $manifest && isset($manifest['packages'][$name]) ? $manifest['packages'][$name] : null;
-			$cat = $pkg ? $pkg['category'] : self::KNOWN[$name][0];
+			$cat = $this->categoryOf($u, $manifest, $name);
+			if (!$cat) continue;
 			$installed = $u->installedVersion($cat, $name);
 			$available = $pkg ? $pkg['version'] : null;
-			if (!$installed && !$available) continue;
+			$backups = count($u->backups($name));
+			// paket yang hanya punya cadangan (sudah dihapus) tetap tampil, supaya bisa dikembalikan
+			if (!$installed && !$available && !$backups) continue;
+			if (!$pkg && !isset(self::KNOWN[$name]) && !$installed && !$backups) continue;
 			$rows[] = [
 				'name' => $name,
 				'label' => isset(self::KNOWN[$name]) ? self::KNOWN[$name][1] : ($pkg && !empty($pkg['label']) ? $pkg['label'] : $name),
@@ -101,10 +105,46 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 				'available' => $available,
 				'released' => $pkg && isset($pkg['released']) ? $pkg['released'] : '',
 				'canUpdate' => $available && CheesaUpdater::isNewer($available, $installed),
-				'backups' => count($u->backups($name)),
+				'backups' => $backups,
+				'canDelete' => $installed && $name !== 'cheesaControlPanel',
 			];
 		}
 		return $rows;
+	}
+
+	/** Kategori paket: dari manifest, daftar bawaan, atau cadangan (bila plugin sudah dihapus). */
+	private function categoryOf(CheesaUpdater $u, $manifest, $name) {
+		if ($manifest && isset($manifest['packages'][$name])) return $manifest['packages'][$name]['category'];
+		if (isset(self::KNOWN[$name])) return self::KNOWN[$name][0];
+		return $u->backupCategory($name);
+	}
+
+	/** @return string[] nama jurnal (selain jurnal $exceptId) yang memakai tema $name; 'situs' bila dipakai halaman situs */
+	private function themeUsers($name, $exceptId) {
+		$who = [];
+		$site = Application::get()->getRequest()->getSite();
+		if ($site && $site->getData('themePluginPath') === $name) $who[] = 'halaman situs (Administration > Site Settings)';
+		$res = Application::getContextDAO()->getAll();
+		while ($c = $res->next()) {
+			if ($c->getData('themePluginPath') === $name) $who[] = $c->getLocalizedName() . ((int) $c->getId() === (int) $exceptId ? ' (jurnal ini)' : '');
+		}
+		return $who;
+	}
+
+	/**
+	 * Plugin dimuat untuk membaca/mengubah status "enabled".
+	 * @return array [plugin|null, string[] nama jurnal lain yang masih mengaktifkannya]
+	 */
+	private function pluginUsage($category, $name, $cid) {
+		$plugin = PluginRegistry::loadPlugin($category, $name);
+		$others = [];
+		if ($plugin) {
+			$res = Application::getContextDAO()->getAll();
+			while ($c = $res->next()) {
+				if ((int) $c->getId() !== (int) $cid && $plugin->getSetting((int) $c->getId(), 'enabled')) $others[] = $c->getLocalizedName();
+			}
+		}
+		return [$plugin, $others];
 	}
 
 	/** Status HTTP beranda jurnal (0 bila tidak bisa dicek, mis. server tidak boleh memanggil dirinya sendiri). */
@@ -163,7 +203,7 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 
 	public function manage($args, $request) {
 		$verb = (string) $request->getUserVar('verb');
-		if (!in_array($verb, ['panel', 'saveUrl', 'check', 'update', 'rollback'], true)) return parent::manage($args, $request);
+		if (!in_array($verb, ['panel', 'saveUrl', 'check', 'update', 'rollback', 'uninstall'], true)) return parent::manage($args, $request);
 		if ($why = CheesaLicense::checkRequest(__DIR__)) {
 			return new JSONMessage(true, '<div style="padding:12px;border-left:4px solid #c62828;background:#fdecec">CHEESA Control Panel tidak aktif: ' . htmlspecialchars($why, ENT_QUOTES, 'UTF-8') . '. Plugin ini hanya untuk jurnal CHEESA.</div>');
 		}
@@ -221,11 +261,46 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 				} catch (\Throwable $e) { $err = 'Update gagal: ' . $e->getMessage(); }
 			}
 		} elseif (!$err && $isAdmin && $verb === 'rollback') {
-			$cat = $manifest && isset($manifest['packages'][$name]) ? $manifest['packages'][$name]['category'] : (isset(self::KNOWN[$name]) ? self::KNOWN[$name][0] : '');
+			$cat = preg_match('/^[A-Za-z][A-Za-z0-9_]{1,63}$/', $name) ? $this->categoryOf($u, $manifest, $name) : null;
 			if (!$cat) $err = 'Paket tidak dikenal.';
 			else {
-				try { $v = $u->rollback($cat, $name); $this->afterInstall($request, $cat, $name, true); $msg = 'Dikembalikan ke versi ' . $v . '.'; }
+				try {
+					$wasInstalled = (bool) $u->installedVersion($cat, $name);
+					$v = $u->rollback($cat, $name); $this->afterInstall($request, $cat, $name, true);
+					$msg = 'Dikembalikan ke versi ' . $v . '.' . ($wasInstalled ? '' : ' Plugin terpasang lagi; aktifkan di tab Installed Plugins.');
+				}
 				catch (\Throwable $e) { $err = 'Rollback gagal: ' . $e->getMessage(); }
+			}
+		} elseif (!$err && $isAdmin && $verb === 'uninstall') {
+			$cat = preg_match('/^[A-Za-z][A-Za-z0-9_]{1,63}$/', $name) ? $this->categoryOf($u, $manifest, $name) : null;
+			$label = isset(self::KNOWN[$name]) ? self::KNOWN[$name][1] : ($manifest && !empty($manifest['packages'][$name]['label']) ? $manifest['packages'][$name]['label'] : $name);
+			if (!$cat || !$u->installedVersion($cat, $name)) $err = 'Paket tidak dikenal atau tidak terpasang.';
+			elseif ($name === 'cheesaControlPanel') $err = 'CHEESA Control Panel tidak bisa menghapus dirinya sendiri. Hapus lewat Settings > Website > Plugins (login sebagai Site Administrator).';
+			else {
+				try {
+					if ($cat === 'themes' && ($who = $this->themeUsers($name, $cid))) {
+						throw new Exception('tema ini masih dipakai oleh: ' . implode(', ', $who) . '. Ganti tema di Appearance > Theme lebih dulu.');
+					}
+					list($plugin, $others) = $this->pluginUsage($cat, $name, $cid);
+					if ($others) {
+						throw new Exception('plugin ini masih aktif di jurnal lain: ' . implode(', ', $others) . '. Plugin dipakai bersama satu server, jadi menghapusnya akan ikut menghapus dari jurnal tersebut. Nonaktifkan dulu di jurnal itu.');
+					}
+					// matikan di jurnal ini & tingkat situs, supaya tidak ada status "aktif" yang tertinggal
+					if ($plugin) foreach (array_unique([(int) $cid, CONTEXT_SITE]) as $id) {
+						if ($plugin->getSetting($id, 'enabled')) $plugin->updateSetting($id, 'enabled', false, 'bool');
+					}
+					$r = $u->uninstall($cat, $name);
+					$versionDao = DAORegistry::getDAO('VersionDAO');
+					if (method_exists($versionDao, 'disableVersion')) $versionDao->disableVersion('plugins.' . $cat, $name);
+					$this->afterInstall($request, $cat, $name, false);
+					$code = $this->healthCheck($request);
+					if ($code >= 500) {
+						$u->rollback($cat, $name);
+						$this->afterInstall($request, $cat, $name, true);
+						throw new Exception('setelah dihapus, beranda situs error (HTTP ' . $code . '), jadi plugin dikembalikan otomatis. Situs aman.');
+					}
+					$msg = $label . ' ' . $r['from'] . ' dihapus. Cadangannya disimpan: klik "Kembalikan" bila ingin memasangnya lagi. Pengaturan dan data plugin di database tidak ikut dihapus.';
+				} catch (\Throwable $e) { $err = 'Hapus gagal: ' . $e->getMessage(); }
 			}
 		} elseif (!$err && $verb === 'check' && $manifest) {
 			$msg = 'Daftar versi diperbarui.';

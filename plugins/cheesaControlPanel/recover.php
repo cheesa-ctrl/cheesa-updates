@@ -49,6 +49,8 @@ foreach (glob($filesDir . '/cheesaControlPanel/backups/*', GLOB_ONLYDIR) ?: [] a
 	if (isset($rows[$n])) { $rows[$n]['count']++; $rows[$n]['last'] = basename($d); continue; }
 	$cat = $known[$n] ?? null;
 	if (!$cat) foreach (CheesaUpdater::CATEGORIES as $c) if (is_dir("$base/plugins/$c/$n")) { $cat = $c; break; }
+	// plugin yang sudah dihapus: kategori dibaca dari version.xml cadangannya (<type>plugins.generic</type>)
+	if (!$cat && preg_match('#<type>\s*plugins\.([A-Za-z]+)\s*</type>#', (string) @file_get_contents($d . '/version.xml'), $tm) && in_array($tm[1], CheesaUpdater::CATEGORIES, true)) $cat = $tm[1];
 	if ($cat) $rows[$n] = ['cat' => $cat, 'count' => 1, 'last' => basename($d), 'now' => $u->installedVersion($cat, $n)];
 }
 $h = function ($s) { return htmlspecialchars((string) $s, ENT_QUOTES, 'UTF-8'); };
@@ -57,7 +59,7 @@ $h = function ($s) { return htmlspecialchars((string) $s, ENT_QUOTES, 'UTF-8'); 
 <style>body{font-family:system-ui,sans-serif;max-width:760px;margin:40px auto;padding:0 16px;color:#1d2140}h1{color:#030271}table{width:100%;border-collapse:collapse}th,td{padding:9px;border-bottom:1px solid #e3e6ef;text-align:left}th{background:#030271;color:#fff}.m{padding:10px 12px;border-left:4px solid #ed991f;background:#fff8ec;margin:0 0 16px}button{padding:6px 12px;border:0;border-radius:4px;background:#030271;color:#fff;font-weight:600;cursor:pointer}</style>
 </head><body>
 <h1>Pemulihan darurat CHEESA</h1>
-<p>Gunakan halaman ini bila situs atau dasbor OJS tidak bisa dibuka setelah update. Tombol di bawah mengembalikan cadangan terakhir.</p>
+<p>Gunakan halaman ini bila situs atau dasbor OJS tidak bisa dibuka setelah update atau setelah plugin dihapus. Tombol di bawah mengembalikan cadangan terakhir.</p>
 <?php if ($msg): ?><div class="m"><?= $h($msg) ?> Buka kembali situs Anda (Ctrl+F5).</div><?php endif; ?>
 <?php if (!$rows): ?><p>Belum ada cadangan.</p><?php else: ?>
 <table><tr><th>Paket</th><th>Versi sekarang</th><th>Cadangan terakhir</th><th></th></tr>
