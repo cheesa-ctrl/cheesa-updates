@@ -1,0 +1,99 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Article Statistics Display Plugin\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-01 00:00+0000\n"
+"PO-Revision-Date: 2024-01-01 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: tr_TR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "plugins.generic.articleStatisticsDisplay.displayName"
+msgstr "Makale İstatistik Gösterimi"
+
+msgid "plugins.generic.articleStatisticsDisplay.description"
+msgstr "Makale görüntüleme sayılarını ve galley (PDF, HTML vb.) indirme istatistiklerini makale sayfalarında, sayı içindekilerde ve anasayfada gösterir. Yapılandırılabilir seçeneklerle şık rozet tarzında istatistikler sunar."
+
+msgid "plugins.generic.articleStatisticsDisplay.settings.title"
+msgstr "Makale İstatistik Gösterim Ayarları"
+
+msgid "plugins.generic.articleStatisticsDisplay.settings.generalSettings"
+msgstr "Genel Ayarlar"
+
+msgid "plugins.generic.articleStatisticsDisplay.settings.articleDetailSettings"
+msgstr "Makale Detay Sayfası Ayarları"
+
+msgid "plugins.generic.articleStatisticsDisplay.settings.displayLocations"
+msgstr "Gösterim Konumları"
+
+msgid "plugins.generic.articleStatisticsDisplay.settings.displayLocationsDescription"
+msgstr "İstatistiklerin derginizde nerede gösterileceğini seçin."
+
+msgid "plugins.generic.articleStatisticsDisplay.settings.showInArticleDetail"
+msgstr "Makale detay sayfasında göster"
+
+msgid "plugins.generic.articleStatisticsDisplay.settings.showInIssueToc"
+msgstr "Sayı içindekiler listesinde göster"
+
+msgid "plugins.generic.articleStatisticsDisplay.settings.showInHomepage"
+msgstr "Anasayfada göster (güncel sayı)"
+
+msgid "plugins.generic.articleStatisticsDisplay.settings.statisticsTypes"
+msgstr "İstatistik Türleri"
+
+msgid "plugins.generic.articleStatisticsDisplay.settings.statisticsTypesDescription"
+msgstr "Hangi istatistiklerin gösterileceğini seçin."
+
+msgid "plugins.generic.articleStatisticsDisplay.settings.showAbstractViews"
+msgstr "Özet/Abstract görüntüleme sayısını göster"
+
+msgid "plugins.generic.articleStatisticsDisplay.settings.showGalleyDownloads"
+msgstr "Galley (PDF, HTML vb.) indirme sayısını göster"
+
+msgid "plugins.generic.articleStatisticsDisplay.settings.displayStyle"
+msgstr "Gösterim Stili"
+
+msgid "plugins.generic.articleStatisticsDisplay.settings.displayStyleDescription"
+msgstr "İstatistiklerin nasıl görüntüleneceğini seçin."
+
+msgid "plugins.generic.articleStatisticsDisplay.style.badge"
+msgstr "Rozet Stili (Renkli rozetler)"
+
+msgid "plugins.generic.articleStatisticsDisplay.style.inline"
+msgstr "Satır İçi Stil (Temiz metin)"
+
+msgid "plugins.generic.articleStatisticsDisplay.statistics"
+msgstr "Makale İstatistikleri"
+
+msgid "plugins.generic.articleStatisticsDisplay.abstractViews"
+msgstr "Özet Görüntüleme"
+
+msgid "plugins.generic.articleStatisticsDisplay.downloads"
+msgstr "İndirme"
+
+msgid "plugins.generic.articleStatisticsDisplay.views"
+msgstr "Görüntüleme"
+
+msgid "plugins.generic.articleStatisticsDisplay.pdfDownloads"
+msgstr "PDF İndirme"
+
+msgid "plugins.generic.articleStatisticsDisplay.htmlViews"
+msgstr "HTML Görüntüleme"
+
+msgid "plugins.generic.articleStatisticsDisplay.settings.articlePosition"
+msgstr "Makale Sayfası Pozisyonu"
+
+msgid "plugins.generic.articleStatisticsDisplay.settings.articlePositionDescription"
+msgstr "İstatistiklerin makale detay sayfasında nerede gösterileceğini seçin."
+
+msgid "plugins.generic.articleStatisticsDisplay.position.underTitle"
+msgstr "Makale başlığının altında"
+
+msgid "plugins.generic.articleStatisticsDisplay.position.underAbstract"
+msgstr "Özet metninin altında"
+
+msgid "plugins.generic.articleStatisticsDisplay.position.sidebar"
+msgstr "Makale yan çubuğu (dikey düzen)"

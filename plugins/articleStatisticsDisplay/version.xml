@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE version SYSTEM "../../../lib/pkp/dtd/pluginVersion.dtd">
+<!--
+  - plugins/generic/articleStatisticsDisplay/version.xml
+  -
+  - Copyright (c) 2026 Kerim Sarıgül
+  - Distributed under the GNU GPL v3.
+  -
+  - Article Statistics Display plugin version information.
+  -->
+<version>
+    <application>articleStatisticsDisplay</application>
+    <type>plugins.generic</type>
+    <release>1.2.4.0</release>
+    <date>2025-01-31</date>
+    <lazy-load>1</lazy-load>
+    <class>ArticleStatisticsDisplayPlugin</class>
+</version>

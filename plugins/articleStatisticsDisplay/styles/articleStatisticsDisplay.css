@@ -1,0 +1,367 @@
+/**
+ * Article Statistics Display Plugin - Styles
+ * 
+ * Copyright (c) 2026 Kerim Sarıgül
+ * Distributed under the GNU GPL v3.
+ *
+ * Modern, aesthetic design for all themes
+ */
+
+/* ========================================
+   COMMON STYLES
+   ======================================== */
+
+.asd-stats {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    margin: 15px 0;
+    padding: 0 !important;
+}
+
+.asd-icon {
+    font-style: normal;
+    display: inline-block;
+}
+
+.asd-label {
+    font-weight: 500;
+    color: #555;
+}
+
+.asd-count {
+    font-weight: 700;
+}
+
+/* Hide JSON data */
+.asd-galley-data {
+    display: none !important;
+}
+
+/* ========================================
+   BADGE STYLE
+   Card with colored badges
+   ======================================== */
+
+.asd-style-badge {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 16px 20px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+}
+
+.asd-style-badge .asd-stat {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: all 0.2s ease;
+}
+
+/* Abstract Views - Blue Badge */
+.asd-style-badge .asd-abstract-views {
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    border: 1px solid #90caf9;
+    color: #1565c0;
+}
+
+.asd-style-badge .asd-abstract-views:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(25, 118, 210, 0.25);
+}
+
+.asd-style-badge .asd-abstract-views .asd-icon {
+    font-size: 1.1em;
+}
+
+.asd-style-badge .asd-abstract-views .asd-label {
+    color: #1565c0;
+}
+
+.asd-style-badge .asd-abstract-views .asd-count {
+    color: #0d47a1;
+    font-size: 1.15em;
+}
+
+/* Galley Downloads - Green Badge */
+.asd-style-badge .asd-galley-downloads {
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+    border: 1px solid #a5d6a7;
+    color: #2e7d32;
+}
+
+.asd-style-badge .asd-galley-downloads:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.25);
+}
+
+.asd-style-badge .asd-galley-downloads .asd-icon {
+    font-size: 1.1em;
+}
+
+.asd-style-badge .asd-galley-downloads .asd-label {
+    color: #2e7d32;
+}
+
+.asd-style-badge .asd-galley-downloads .asd-count {
+    color: #1b5e20;
+    font-size: 1.15em;
+}
+
+/* ========================================
+   INLINE STYLE
+   Clean card with inline text
+   ======================================== */
+
+.asd-style-inline {
+    background: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
+    border: 1px solid #e0e0e0;
+    border-left: 4px solid #1976d2;
+    border-radius: 8px;
+    padding: 14px 20px !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+.asd-style-inline .asd-stat-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #444;
+    font-size: 0.95em;
+}
+
+.asd-style-inline .asd-stat-inline .asd-icon {
+    font-size: 1.1em;
+}
+
+.asd-style-inline .asd-stat-inline .asd-label {
+    color: #666;
+}
+
+.asd-style-inline .asd-stat-inline .asd-count {
+    color: #1565c0;
+    font-size: 1.1em;
+    margin-left: 4px;
+}
+
+/* Separator between items */
+.asd-style-inline .asd-stat-inline:not(:last-child)::after {
+    content: "";
+    display: inline-block;
+    width: 1px;
+    height: 20px;
+    background: #ddd;
+    margin-left: 20px;
+    vertical-align: middle;
+}
+
+/* ========================================
+   SUMMARY VIEW (Issue TOC / Homepage)
+   Compact button style - next to PDF galley
+   ======================================== */
+
+/* Initially hidden - JS will show after moving to correct position */
+.asd-stats-summary {
+    display: none !important;
+}
+
+/* Once moved to galleys container, show it */
+.galleys_links .asd-stats-summary,
+.galleys .asd-stats-summary,
+.galley-links .asd-stats-summary,
+.article-summary-galleys .asd-stats-summary,
+.asd-stats-summary.asd-moved {
+    display: inline !important;
+}
+
+/* Fix for Bootstrap theme - prevent cutting off galley buttons */
+.obj_article_summary .galleys,
+.obj_article_summary .galleys_links,
+.article_summary .galleys {
+    overflow: visible !important;
+}
+
+/* Fix Bootstrap btn-group radius issue */
+.btn-group .galley-link,
+.btn-group .obj_galley_link,
+.btn-group > a:last-of-type {
+    border-top-right-radius: 4px !important;
+    border-bottom-right-radius: 4px !important;
+}
+
+/* Ensure stats don't break btn-group styling */
+.btn-group .asd-stat-compact {
+    margin-left: 8px;
+}
+
+.asd-stat-compact {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 12px;
+    margin: 2px 4px 2px 0;
+    border-radius: 5px;
+    font-size: 0.9em;
+    vertical-align: middle;
+    background: #f0f4f8;
+    border: 1px solid #d0d7de;
+    color: #24292f;
+}
+
+.asd-stat-compact.asd-views {
+    background: #e3f2fd;
+    border-color: #90caf9;
+    color: #1565c0;
+}
+
+.asd-stat-compact.asd-downloads {
+    background: #e8f5e9;
+    border-color: #a5d6a7;
+    color: #2e7d32;
+}
+
+.asd-stat-compact .asd-icon {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.asd-stat-compact .asd-count {
+    font-weight: 700;
+    font-size: 1.05em;
+}
+
+/* ========================================
+   SIDEBAR / VERTICAL LAYOUT
+   Each stat on its own line
+   ======================================== */
+
+.asd-stats.asd-vertical {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    padding: 12px !important;
+}
+
+.asd-stats.asd-vertical.asd-style-badge {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0 !important;
+}
+
+.asd-stats.asd-vertical.asd-style-badge::before {
+    display: none;
+}
+
+.asd-stats.asd-vertical .asd-stat {
+    display: flex !important;
+    width: 100%;
+    justify-content: space-between;
+    padding: 10px 12px;
+    margin: 0;
+    border-radius: 6px;
+}
+
+.asd-stats.asd-vertical .asd-stat .asd-label {
+    flex: 1;
+}
+
+.asd-stats.asd-vertical .asd-stat .asd-count {
+    text-align: right;
+    min-width: 50px;
+}
+
+/* Inline style vertical */
+.asd-stats.asd-vertical.asd-style-inline {
+    border-left: none;
+    background: transparent;
+    padding: 0 !important;
+}
+
+.asd-stats.asd-vertical.asd-style-inline .asd-stat-inline {
+    display: flex !important;
+    width: 100%;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+}
+
+.asd-stats.asd-vertical.asd-style-inline .asd-stat-inline::after {
+    display: none !important;
+}
+
+.asd-stats.asd-vertical.asd-style-inline .asd-stat-inline .asd-count {
+    margin-left: auto;
+}
+
+/* Sidebar wrapper */
+.asd-sidebar-item {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 768px) {
+    .asd-style-badge,
+    .asd-style-inline {
+        padding: 12px 14px !important;
+    }
+    
+    .asd-style-badge .asd-stat {
+        padding: 8px 12px;
+        font-size: 0.85em;
+    }
+    
+    .asd-style-inline {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .asd-style-inline .asd-stat-inline:not(:last-child)::after {
+        display: none;
+    }
+    
+    .asd-style-button {
+        flex-direction: row;
+    }
+    
+    .asd-style-button .asd-btn {
+        padding: 6px 10px;
+        font-size: 0.8em;
+    }
+}
+
+/* ========================================
+   PRINT STYLES
+   ======================================== */
+
+@media print {
+    .asd-stats {
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+        background: #fff !important;
+    }
+    
+    .asd-galley-superscript,
+    .asd-galley-badge {
+        display: none !important;
+    }
+}

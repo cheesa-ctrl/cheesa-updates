@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE site SYSTEM "../../../lib/pkp/dtd/pluginSettings.dtd">
+<!--
+  - plugins/generic/articleStatisticsDisplay/settings.xml
+  -
+  - Copyright (c) 2026 Kerim Sarıgül
+  - Distributed under the GNU GPL v3.
+  -
+  - Default settings for the Article Statistics Display plugin.
+  -->
+<site>
+    <setting type="bool">
+        <setting_name>showInArticleDetail</setting_name>
+        <setting_value>1</setting_value>
+    </setting>
+    <setting type="bool">
+        <setting_name>showInIssueToc</setting_name>
+        <setting_value>1</setting_value>
+    </setting>
+    <setting type="bool">
+        <setting_name>showInHomepage</setting_name>
+        <setting_value>1</setting_value>
+    </setting>
+    <setting type="bool">
+        <setting_name>showAbstractViews</setting_name>
+        <setting_value>1</setting_value>
+    </setting>
+    <setting type="bool">
+        <setting_name>showGalleyDownloads</setting_name>
+        <setting_value>1</setting_value>
+    </setting>
+    <setting type="string">
+        <setting_name>displayStyle</setting_name>
+        <setting_value>badge</setting_value>
+    </setting>
+</site>

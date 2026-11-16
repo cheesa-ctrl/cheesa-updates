@@ -9,6 +9,15 @@
             "size": 40730,
             "released": "2026-11-15"
         },
+        "articleStatisticsDisplay": {
+            "category": "generic",
+            "label": "Article Statistics Display",
+            "version": "1.2.4.0",
+            "file": "articleStatisticsDisplay-1.2.4.0.tar.gz",
+            "sha256": "180746a3ed83d1909b4f289bd7bf9c048b02dca9f565fb4724f3a02907e42e4f",
+            "size": 12595,
+            "released": "2026-11-16"
+        },
         "cheesaControlPanel": {
             "category": "generic",
             "label": "CHEESA Control Panel",
@@ -73,5 +82,5 @@
             "released": "2026-11-10"
         }
     },
-    "generated": "2026-11-16T08:50:34+00:00"
+    "generated": "2026-11-16T08:56:33+00:00"
 }
