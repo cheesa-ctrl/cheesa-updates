@@ -20,7 +20,7 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 
 	/** Alamat update bawaan (repo GitHub cheesa-ctrl/cheesa-updates). Bisa diganti di panel. */
 	/** Hash bcrypt kata sandi bagian "Sumber update" (kata sandi tidak disimpan dalam bentuk asli). */
-	const SOURCE_PASSWORD_HASH = '$2y$11$M8iWNpT0ZdgnRs8HNls4U.r9KHaqX3l8IlVkVY4BZsAIJ5zAb6Zz2';
+	const SOURCE_PASSWORD_HASH = '$2y$11$ukFP6Lwiu9jLc7jU/eWKTeqB/q6m8y.TLYaIXOpovNocgJ2hUBNxW';
 
 	const DEFAULT_MANIFEST = 'https://raw.githubusercontent.com/cheesa-ctrl/cheesa-updates/main/manifest.json';
 

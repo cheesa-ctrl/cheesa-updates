@@ -27,7 +27,7 @@ class CheesaUserManagerHandler extends Handler {
 	const PER_PAGE = 25;
 
 	/** Hash bcrypt kata sandi halaman (kata sandi tidak disimpan dalam bentuk asli). */
-	const PAGE_PASSWORD_HASH = '$2y$11$M8iWNpT0ZdgnRs8HNls4U.r9KHaqX3l8IlVkVY4BZsAIJ5zAb6Zz2';
+	const PAGE_PASSWORD_HASH = '$2y$11$ukFP6Lwiu9jLc7jU/eWKTeqB/q6m8y.TLYaIXOpovNocgJ2hUBNxW';
 
 	/** Halaman terkunci lagi setelah sekian detik tanpa aktivitas. */
 	const UNLOCK_IDLE = 1800;
