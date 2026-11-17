@@ -90,6 +90,7 @@
 
 	{if $epFlash && $epFlash.ok}<div class="note ok"><b>✓</b><span>{$epFlash.ok|escape}</span></div>{/if}
 	{if $epFlash && $epFlash.err}<div class="note err"><b>!</b><span>{$epFlash.err|escape}</span></div>{/if}
+	{if $epDataErr}<div class="note info"><b>i</b><span>{$epDataErr|escape}</span></div>{/if}
 
 	<div class="card">
 		<div class="toggle">

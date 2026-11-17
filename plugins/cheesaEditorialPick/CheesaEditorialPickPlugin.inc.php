@@ -14,7 +14,7 @@ import('lib.pkp.classes.plugins.BlockPlugin');
 
 class CheesaEditorialPickPlugin extends BlockPlugin {
 
-	const PAGE = 'editorialpick';
+	const PAGE = 'cheesapick';
 
 	public function register($category, $path, $mainContextId = null) {
 		$success = parent::register($category, $path, $mainContextId);

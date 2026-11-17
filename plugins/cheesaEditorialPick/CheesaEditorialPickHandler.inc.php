@@ -41,18 +41,17 @@ class CheesaEditorialPickHandler extends Handler {
 		}
 
 		$q = trim((string) $request->getUserVar('q'));
-		$pickIds = $plugin->getPickIds($cid);
-		$pickSet = array_flip($pickIds);
-
-		// pilihan sekarang (urut), hanya yang valid
-		$picked = [];
-		foreach ($plugin->getPickedSubmissions($cid) as $s) $picked[] = $this->row($s, $cid, true);
-
-		// artikel terbit yang BELUM dipilih (bisa difilter judul)
-		$available = [];
-		foreach ($this->publishedSubmissions($cid, $q) as $s) {
-			if (isset($pickSet[(int) $s->getId()])) continue;
-			$available[] = $this->row($s, $cid, false);
+		$picked = []; $available = []; $dataErr = '';
+		try {
+			$pickSet = array_flip($plugin->getPickIds($cid));
+			foreach ($plugin->getPickedSubmissions($cid) as $s) $picked[] = $this->row($s, $cid, true);
+			foreach ($this->publishedSubmissions($cid, $q) as $s) {
+				if (isset($pickSet[(int) $s->getId()])) continue;
+				$available[] = $this->row($s, $cid, false);
+			}
+		} catch (\Throwable $e) {
+			error_log('cheesaEditorialPick index: ' . $e->getMessage());
+			$dataErr = 'Sebagian data artikel gagal dimuat: ' . $e->getMessage();
 		}
 
 		$session = $request->getSession();
@@ -70,6 +69,7 @@ class CheesaEditorialPickHandler extends Handler {
 			'epSaveUrl' => $request->getDispatcher()->url($request, ROUTE_PAGE, null, CheesaEditorialPickPlugin::PAGE, 'save'),
 			'epSearchUrl' => $plugin->pageUrl($request),
 			'epFlash' => $flash,
+			'epDataErr' => $dataErr,
 		]);
 		$tm->display($plugin->getTemplateResource('manage.tpl'));
 	}
