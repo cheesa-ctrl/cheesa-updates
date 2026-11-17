@@ -295,10 +295,13 @@ class CheesaUserManagerHandler extends Handler {
 				if ($urls['author'] !== '') $reg = array_merge($reg, $this->fetchRegistrations($urls['author'], 'Author', $cid));
 			} catch (\Throwable $e) { $regErr = $e->getMessage(); }
 		}
+		// sembunyikan pendaftar yang sudah punya akun; tampilkan hanya yang baru
+		$regDup = count(array_filter($reg, function ($r) { return $r['exists']; }));
+		$reg = array_values(array_filter($reg, function ($r) { return !$r['exists']; }));
 		$keepQ = $q !== '' ? ['q' => $q] : [];
 		$tm->assign([
 			'umRegConfigured' => $regConfigured, 'umRegShown' => $regShown, 'umReg' => $reg, 'umRegErr' => $regErr,
-			'umRegNew' => count(array_filter($reg, function ($r) { return !$r['exists']; })),
+			'umRegNew' => count($reg), 'umRegDup' => $regDup,
 			'umRegUrls' => $urls,
 			'umRegShowUrl' => $plugin->pageUrl($request, $keepQ + ['reg' => '1']),
 			'umRegHideUrl' => $plugin->pageUrl($request, $keepQ),

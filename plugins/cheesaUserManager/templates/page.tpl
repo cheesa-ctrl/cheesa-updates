@@ -262,7 +262,7 @@
 	</details>
 
 	<details class="box regbox" id="umReg"{if $umRegShown} open{/if}>
-		<summary>📥 Pendaftaran masuk{if $umRegShown && $umReg} <small>{$umRegNew} belum punya akun / {$umReg|@count} baris</small>{/if}</summary>
+		<summary>📥 Pendaftaran masuk{if $umRegShown} <small>{$umReg|@count} pendaftaran baru{if $umRegDup} · {$umRegDup} sudah punya akun (disembunyikan){/if}</small>{/if}</summary>
 		<div class="regin">
 			<form class="regurls" method="post" action="{$umSaveUrl|escape}">
 				{csrf}
@@ -284,7 +284,7 @@
 			{else}
 				{if $umRegErr}<div class="note err"><b>!</b><span>Gagal membaca Google Sheet: {$umRegErr|escape}</span></div>{/if}
 				<p style="margin:0 0 12px"><a class="btn sec" href="{$umRegShowUrl|escape}">↻ Segarkan</a> <a class="btn sec" href="{$umRegHideUrl|escape}">Tutup</a></p>
-				{if !$umReg}<p class="reghint">Tidak ada baris pendaftaran di sheet.</p>{else}
+				{if !$umReg}<p class="reghint">{if $umRegDup}Semua pendaftar ({$umRegDup}) sudah punya akun — tidak ada yang perlu dibuat.{else}Tidak ada baris pendaftaran di sheet.{/if}</p>{else}
 				<div class="reglist">
 				{foreach from=$umReg item=r}
 					<div class="regrow{if $r.exists} is-dup{/if}">
