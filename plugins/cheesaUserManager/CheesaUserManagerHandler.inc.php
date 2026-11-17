@@ -285,7 +285,7 @@ class CheesaUserManagerHandler extends Handler {
 			})), 0, 30),
 		]);
 		// ---- pendaftaran dari Google Sheet (diambil hanya saat diminta: ?reg=1) ----
-		$urls = $this->regUrls();
+		$urls = $this->regUrls($cid);
 		$regConfigured = $urls['editor'] !== '' || $urls['author'] !== '';
 		$regShown = (string) $request->getUserVar('reg') === '1' && $regConfigured;
 		$reg = []; $regErr = '';
@@ -327,11 +327,10 @@ class CheesaUserManagerHandler extends Handler {
 				return $request->redirectUrl($plugin->pageUrl($request, ['q' => trim((string) $request->getUserVar('username'))]));
 			}
 			if ($verb === 'regUrls') {
-				if (!$siteAdmin) throw new Exception('Hanya Site Administrator yang bisa mengatur sumber pendaftaran.');
 				foreach (['editor' => 'regUrlEditor', 'author' => 'regUrlAuthor'] as $k => $setting) {
 					$v = trim((string) $request->getUserVar('url_' . $k));
 					if ($v !== '' && !preg_match('#^https://docs\.google\.com/spreadsheets/#i', $v)) throw new Exception('URL ' . $k . ' harus diawali https://docs.google.com/spreadsheets/ (link Publish-to-web CSV).');
-					$plugin->updateSetting(CONTEXT_SITE, $setting, $v, 'string');
+					$plugin->updateSetting($cid, $setting, $v, 'string');
 				}
 				$request->getSession()->setSessionVar('cheesaUM', json_encode(['ok' => 'Sumber pendaftaran disimpan.', 'err' => '']));
 				return $request->redirectUrl($plugin->pageUrl($request, ['reg' => '1']));
@@ -549,11 +548,11 @@ class CheesaUserManagerHandler extends Handler {
 	/* ------------------------------------------------------------------ impor pendaftaran dari Google Sheet */
 
 	/** URL CSV tersimpan (hanya Site Admin yang boleh mengubah). */
-	private function regUrls() {
+	private function regUrls($cid) {
 		$p = self::$plugin;
 		return [
-			'editor' => trim((string) $p->getSetting(CONTEXT_SITE, 'regUrlEditor')),
-			'author' => trim((string) $p->getSetting(CONTEXT_SITE, 'regUrlAuthor')),
+			'editor' => trim((string) $p->getSetting($cid, 'regUrlEditor')),
+			'author' => trim((string) $p->getSetting($cid, 'regUrlAuthor')),
 		];
 	}
 

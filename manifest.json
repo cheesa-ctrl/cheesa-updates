@@ -48,10 +48,10 @@
         "cheesaUserManager": {
             "category": "generic",
             "label": "Cheesa User Manager",
-            "version": "1.7.0.0",
-            "file": "cheesaUserManager-1.7.0.0.tar.gz",
-            "sha256": "8ee8d17495a9459b94fb50073b02acdfea1e05d6dbc55cd8a744f2c4e6b074eb",
-            "size": 21686,
+            "version": "1.7.1.0",
+            "file": "cheesaUserManager-1.7.1.0.tar.gz",
+            "sha256": "c81091e3a9128ab67b60bf2430817cf3e0a7983583f453eafabeac86a72f9d17",
+            "size": 21637,
             "released": "2026-11-17"
         },
         "countryStats": {
@@ -100,5 +100,5 @@
             "released": "2026-11-16"
         }
     },
-    "generated": "2026-11-17T07:32:41+00:00"
+    "generated": "2026-11-17T07:40:51+00:00"
 }

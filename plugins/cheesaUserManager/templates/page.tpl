@@ -261,11 +261,9 @@
 		</form>
 	</details>
 
-	{if $umRegConfigured || $umIsAdmin}
 	<details class="box regbox" id="umReg"{if $umRegShown} open{/if}>
 		<summary>📥 Pendaftaran masuk{if $umRegShown && $umReg} <small>{$umRegNew} belum punya akun / {$umReg|@count} baris</small>{/if}</summary>
 		<div class="regin">
-			{if $umIsAdmin}
 			<form class="regurls" method="post" action="{$umSaveUrl|escape}">
 				{csrf}
 				<input type="hidden" name="verb" value="regUrls">
@@ -274,13 +272,12 @@
 				<div class="fld"><label>Link CSV pendaftaran Author</label>
 					<input type="text" name="url_author" value="{$umRegUrls.author|escape}" placeholder="https://docs.google.com/spreadsheets/d/e/.../pub?output=csv" spellcheck="false"></div>
 				<p style="margin:10px 0 0"><button class="btn sec" type="submit">Simpan sumber</button>
-					<small style="color:var(--muted)"> Pakai link File → Share → Publish to web → CSV. Hanya Site Admin.</small></p>
+					<small style="color:var(--muted)"> Pakai link File → Share → Publish to web → CSV (per jurnal ini).</small></p>
 			</form>
 			<hr style="border:0;border-top:1px solid var(--line);margin:16px 0">
-			{/if}
 
 			{if !$umRegConfigured}
-				<p class="reghint">Belum ada sumber pendaftaran. {if $umIsAdmin}Isi link CSV di atas lalu Simpan.{else}Minta Site Admin mengisi link CSV pendaftaran.{/if}</p>
+				<p class="reghint">Belum ada sumber pendaftaran. Isi link CSV di atas lalu klik Simpan sumber.</p>
 			{elseif !$umRegShown}
 				<p style="margin:0"><a class="btn" href="{$umRegShowUrl|escape}">Muat pendaftaran dari Google Sheet</a>
 					<small style="color:var(--muted)"> Data ditarik langsung dari sheet Anda (hanya-baca) saat tombol ini ditekan.</small></p>
@@ -311,7 +308,6 @@
 			{/if}
 		</div>
 	</details>
-	{/if}
 
 	<div class="stats">
 		<div class="stat"><span>{if $umScoped}Total akun di jurnal ini{else}Total akun di server{/if}</span><b>{$umAll} <small>akun</small></b></div>
