@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @file plugins/generic/cheesaEditorialPick/CheesaEditorialPickPlugin.inc.php
+ * @file plugins/generic/cheesaEditorialPick/CheesaEditorialPickGenericPlugin.inc.php
  *
  * CHEESA Editorial Pick — menampilkan artikel pilihan editor sebagai baris kartu
  * ber-cover di beranda. Dibuat khusus untuk CHEESA, tanpa lisensi.
@@ -16,7 +16,7 @@
 
 import('lib.pkp.classes.plugins.GenericPlugin');
 
-class CheesaEditorialPickPlugin extends GenericPlugin {
+class CheesaEditorialPickGenericPlugin extends GenericPlugin {
 
 	const PAGE = 'cheesapick';
 
@@ -118,9 +118,9 @@ class CheesaEditorialPickPlugin extends GenericPlugin {
 
 	public function loadPageHandler($hookName, $params) {
 		if ($params[0] !== self::PAGE) return false;
-		$this->import('CheesaEditorialPickHandler');
-		CheesaEditorialPickHandler::$plugin = $this;
-		define('HANDLER_CLASS', 'CheesaEditorialPickHandler');
+		$this->import('CheesaEditorialPickGenericHandler');
+		CheesaEditorialPickGenericHandler::$plugin = $this;
+		define('HANDLER_CLASS', 'CheesaEditorialPickGenericHandler');
 		return true;
 	}
 

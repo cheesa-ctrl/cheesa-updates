@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @file plugins/blocks/cheesaEditorialPick/CheesaEditorialPickHandler.inc.php
+ * @file plugins/blocks/cheesaEditorialPick/CheesaEditorialPickGenericHandler.inc.php
  *
  * Halaman kelola CHEESA Editorial Pick: /index.php/<jurnal>/editorialpick
  * Hanya Site Admin / Journal Manager / Editor jurnal ini. Semua perubahan POST + CSRF.
@@ -9,9 +9,9 @@
 
 import('classes.handler.Handler');
 
-class CheesaEditorialPickHandler extends Handler {
+class CheesaEditorialPickGenericHandler extends Handler {
 
-	/** @var CheesaEditorialPickPlugin */
+	/** @var CheesaEditorialPickGenericPlugin */
 	public static $plugin;
 
 	const AVAILABLE_LIMIT = 200;
@@ -66,7 +66,7 @@ class CheesaEditorialPickHandler extends Handler {
 			'epAvailableLimit' => self::AVAILABLE_LIMIT,
 			'epQ' => $q,
 			'epShowCards' => $plugin->showCards($cid),
-			'epSaveUrl' => $request->getDispatcher()->url($request, ROUTE_PAGE, null, CheesaEditorialPickPlugin::PAGE, 'save'),
+			'epSaveUrl' => $request->getDispatcher()->url($request, ROUTE_PAGE, null, CheesaEditorialPickGenericPlugin::PAGE, 'save'),
 			'epSearchUrl' => $plugin->pageUrl($request),
 			'epFlash' => $flash,
 			'epDataErr' => $dataErr,

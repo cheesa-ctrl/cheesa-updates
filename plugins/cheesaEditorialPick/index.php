@@ -2,5 +2,5 @@
 /**
  * @file plugins/blocks/cheesaEditorialPick/index.php
  */
-require_once('CheesaEditorialPickPlugin.inc.php');
-return new CheesaEditorialPickPlugin();
+require_once('CheesaEditorialPickGenericPlugin.inc.php');
+return new CheesaEditorialPickGenericPlugin();
