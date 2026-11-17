@@ -225,7 +225,9 @@ class CheesaUserManagerHandler extends Handler {
 			$isAdmin = !empty($info['admin']);
 			$lock = $this->lockReason($id, $me, $info, $siteAdmin, $cid);
 			// "Masuk sebagai" (login as): hanya Site Admin, hanya ke akun yang boleh ia kelola, bukan Site Admin lain / diri sendiri / akun nonaktif
-			$canLoginAs = $siteAdmin && $id !== $me && !(bool) $r->disabled && Validation::canAdminister($id, $me);
+			// Login-as: untuk Site Admin dan Journal Manager/Editor (peran Manager) — bukan Section Editor dsb,
+			// karena peran selain Manager tidak bisa membuka halaman ini. Scope target dijaga canAdminister + lock.
+			$canLoginAs = $id !== $me && !(bool) $r->disabled && $lock === '' && Validation::canAdminister($id, $me);
 			$rows[] = [
 				'id' => $id,
 				'username' => $r->username,
@@ -364,9 +366,10 @@ class CheesaUserManagerHandler extends Handler {
 
 			} elseif ($verb === 'loginas') {
 				import('lib.pkp.classes.security.Validation');
-				if (!$siteAdmin) throw new Exception('Hanya Site Administrator yang bisa masuk sebagai pengguna lain.');
+				// hanya Site Admin atau Journal Manager/Editor (peran Manager) yang boleh — canUse() sudah menjamin ini
+				if (!$siteAdmin && !$request->getUser()->hasRole([ROLE_ID_MANAGER], $cid)) throw new Exception('Hanya Site Administrator atau Journal Manager/Editor yang bisa masuk sebagai pengguna lain.');
 				if ($id === $me) throw new Exception('Tidak bisa masuk sebagai akun Anda sendiri.');
-				if (!Validation::canAdminister($id, $me)) throw new Exception('Tidak bisa masuk sebagai akun ini (akun Site Administrator tidak diizinkan).');
+				if (!Validation::canAdminister($id, $me)) throw new Exception('Tidak bisa masuk sebagai akun ini (akun Site Administrator atau akun di luar jurnal Anda tidak diizinkan).');
 				if ($user->getDisabled()) throw new Exception('Akun "' . $old . '" nonaktif.');
 				$session = $request->getSession();
 				if ($session->getSessionVar('signedInAs')) throw new Exception('Anda sedang masuk sebagai pengguna lain. Keluar dulu lewat pemberitahuan OJS di atas halaman, baru coba lagi.');
