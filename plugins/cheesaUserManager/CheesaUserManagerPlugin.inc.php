@@ -26,7 +26,7 @@ class CheesaUserManagerPlugin extends GenericPlugin {
 	public function getDisplayName() { return 'CHEESA User Manager'; }
 
 	public function getDescription() {
-		return 'Tambah akun, ubah username, masuk sebagai pengguna (login as — dicatat di log), hapus akun tanpa aktivitas, atau gabungkan akun ganda ke akun lain. Untuk Site Administrator (semua akun) dan Journal Manager/Editor (akun jurnalnya sendiri); setiap tindakan dicatat.';
+		return 'Tambah akun, ubah username, masuk sebagai pengguna (login as — dicatat di log), hapus akun tanpa aktivitas, atau gabungkan akun ganda ke akun lain, serta impor pendaftaran dari Google Sheet. Untuk Site Administrator (semua akun) dan Journal Manager/Editor (akun jurnalnya sendiri); setiap tindakan dicatat.';
 	}
 
 	public function loadPageHandler($hookName, $params) {

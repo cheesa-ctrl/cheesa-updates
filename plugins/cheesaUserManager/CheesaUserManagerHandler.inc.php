@@ -26,6 +26,10 @@ class CheesaUserManagerHandler extends Handler {
 
 	const PER_PAGE = 25;
 
+	/** Batas aman saat membaca CSV Google (anti-DoS). */
+	const REG_MAX_ROWS = 600;
+	const REG_MAX_BYTES = 1048576;
+
 	/** Hash bcrypt kata sandi halaman (kata sandi tidak disimpan dalam bentuk asli). */
 	const PAGE_PASSWORD_HASH = '$2y$11$ukFP6Lwiu9jLc7jU/eWKTeqB/q6m8y.TLYaIXOpovNocgJ2hUBNxW';
 
@@ -280,7 +284,26 @@ class CheesaUserManagerHandler extends Handler {
 				return isset($l['ctx']) && (int) $l['ctx'] === $cid;   // editor hanya melihat catatan jurnalnya
 			})), 0, 30),
 		]);
-		$tm->display($plugin->getTemplateResource('page.tpl'));
+		// ---- pendaftaran dari Google Sheet (diambil hanya saat diminta: ?reg=1) ----
+		$urls = $this->regUrls();
+		$regConfigured = $urls['editor'] !== '' || $urls['author'] !== '';
+		$regShown = (string) $request->getUserVar('reg') === '1' && $regConfigured;
+		$reg = []; $regErr = '';
+		if ($regShown) {
+			try {
+				if ($urls['editor'] !== '') $reg = array_merge($reg, $this->fetchRegistrations($urls['editor'], 'Editor', $cid));
+				if ($urls['author'] !== '') $reg = array_merge($reg, $this->fetchRegistrations($urls['author'], 'Author', $cid));
+			} catch (\Throwable $e) { $regErr = $e->getMessage(); }
+		}
+		$keepQ = $q !== '' ? ['q' => $q] : [];
+		$tm->assign([
+			'umRegConfigured' => $regConfigured, 'umRegShown' => $regShown, 'umReg' => $reg, 'umRegErr' => $regErr,
+			'umRegNew' => count(array_filter($reg, function ($r) { return !$r['exists']; })),
+			'umRegUrls' => $urls,
+			'umRegShowUrl' => $plugin->pageUrl($request, $keepQ + ['reg' => '1']),
+			'umRegHideUrl' => $plugin->pageUrl($request, $keepQ),
+		]);
+				$tm->display($plugin->getTemplateResource('page.tpl'));
 	}
 
 	/* ------------------------------------------------------------------ aksi */
@@ -302,6 +325,16 @@ class CheesaUserManagerHandler extends Handler {
 				$ok = $this->addUser($request, $cid);
 				$request->getSession()->setSessionVar('cheesaUM', json_encode(['ok' => $ok, 'err' => '']));
 				return $request->redirectUrl($plugin->pageUrl($request, ['q' => trim((string) $request->getUserVar('username'))]));
+			}
+			if ($verb === 'regUrls') {
+				if (!$siteAdmin) throw new Exception('Hanya Site Administrator yang bisa mengatur sumber pendaftaran.');
+				foreach (['editor' => 'regUrlEditor', 'author' => 'regUrlAuthor'] as $k => $setting) {
+					$v = trim((string) $request->getUserVar('url_' . $k));
+					if ($v !== '' && !preg_match('#^https://docs\.google\.com/spreadsheets/#i', $v)) throw new Exception('URL ' . $k . ' harus diawali https://docs.google.com/spreadsheets/ (link Publish-to-web CSV).');
+					$plugin->updateSetting(CONTEXT_SITE, $setting, $v, 'string');
+				}
+				$request->getSession()->setSessionVar('cheesaUM', json_encode(['ok' => 'Sumber pendaftaran disimpan.', 'err' => '']));
+				return $request->redirectUrl($plugin->pageUrl($request, ['reg' => '1']));
 			}
 			$user = $userDao->getById((int) $request->getUserVar('userId'), true);
 			if (!$user) throw new Exception('Akun tidak ditemukan.');
@@ -390,7 +423,7 @@ class CheesaUserManagerHandler extends Handler {
 		$old = [];
 		if ($err && (string) $request->getUserVar('verb') === 'add') {
 			// isian formulir dikembalikan (kecuali password) supaya tidak perlu mengetik ulang
-			foreach (['username', 'email', 'givenName', 'familyName', 'affiliation', 'orcid', 'interests'] as $f) $old[$f] = (string) $request->getUserVar($f);
+			foreach (['username', 'email', 'givenName', 'familyName', 'affiliation', 'orcid', 'interests', 'phone'] as $f) $old[$f] = (string) $request->getUserVar($f);
 			$old['sendEmail'] = (bool) $request->getUserVar('sendEmail');
 			$old['groups'] = array_map('intval', (array) $request->getUserVar('groups'));
 			$old['open'] = true;
@@ -410,6 +443,7 @@ class CheesaUserManagerHandler extends Handler {
 		$given = trim((string) $request->getUserVar('givenName'));
 		$family = trim((string) $request->getUserVar('familyName'));
 		$affiliation = trim((string) $request->getUserVar('affiliation'));
+		$phone = trim((string) $request->getUserVar('phone'));
 		// password dikirim base64 di "npk" (server ini membuang parameter yang bernama password)
 		$npk = (string) $request->getUserVar('npk');
 		$password = $npk !== '' ? (string) base64_decode(strtr($npk, '-_', '+/'), true) : '';
@@ -441,6 +475,7 @@ class CheesaUserManagerHandler extends Handler {
 		$user->setFamilyName($family, $locale);
 		if ($affiliation !== '') $user->setAffiliation($affiliation, $locale);
 		if ($orcid) $user->setOrcid($orcid);
+		if ($phone !== '') $user->setData('phone', $phone);
 		$user->setPassword(Validation::encryptCredentials($username, $password));
 		$user->setMustChangePassword($mustChange);
 		$user->setDateRegistered(Core::getCurrentDate());
@@ -509,6 +544,85 @@ class CheesaUserManagerHandler extends Handler {
 		$check = (12 - $total % 11) % 11;
 		if (($check === 10 ? 'X' : (string) $check) !== $id[15]) return false;
 		return 'https://orcid.org/' . implode('-', str_split($id, 4));
+	}
+
+	/* ------------------------------------------------------------------ impor pendaftaran dari Google Sheet */
+
+	/** URL CSV tersimpan (hanya Site Admin yang boleh mengubah). */
+	private function regUrls() {
+		$p = self::$plugin;
+		return [
+			'editor' => trim((string) $p->getSetting(CONTEXT_SITE, 'regUrlEditor')),
+			'author' => trim((string) $p->getSetting(CONTEXT_SITE, 'regUrlAuthor')),
+		];
+	}
+
+	/**
+	 * Ambil & parse satu CSV Google (hanya-baca). Host dibatasi docs.google.com (anti-SSRF),
+	 * https saja, dengan batas waktu, ukuran, dan jumlah baris.
+	 */
+	private function fetchRegistrations($url, $defaultRole, $cid) {
+		$url = trim($url);
+		if ($url === '') return [];
+		if (!preg_match('#^https://docs\.google\.com/spreadsheets/#i', $url)) throw new Exception('URL harus https://docs.google.com/spreadsheets/...');
+		$res = Application::get()->getHttpClient()->request('GET', $url, ['timeout' => 12, 'http_errors' => true, 'allow_redirects' => ['max' => 5], 'headers' => ['Accept' => 'text/csv']]);
+		$body = (string) $res->getBody();
+		if (strlen($body) > self::REG_MAX_BYTES) $body = substr($body, 0, self::REG_MAX_BYTES);
+		$body = preg_replace('/^\xEF\xBB\xBF/', '', $body);
+		$fh = fopen('php://temp', 'r+');
+		fwrite($fh, $body);
+		rewind($fh);
+		$header = fgetcsv($fh);
+		if (!$header) { fclose($fh); return []; }
+		$idx = [];
+		foreach ($header as $i => $h) $idx[strtolower(trim((string) $h))] = $i;
+		$col = function ($row, $names) use ($idx) {
+			foreach ((array) $names as $n) {
+				$n = strtolower($n);
+				if (isset($idx[$n]) && isset($row[$idx[$n]])) return trim((string) $row[$idx[$n]]);
+			}
+			return '';
+		};
+		$out = []; $n = 0;
+		while (($row = fgetcsv($fh)) !== false) {
+			if (++$n > self::REG_MAX_ROWS) break;
+			$email = $col($row, 'institutional email');
+			$name = $col($row, 'full name');
+			if ($email === '' && $name === '') continue;
+			$role = $col($row, 'role registration');
+			if ($role === '') $role = $defaultRole;
+			$out[] = $this->normalizeReg(
+				$name, $email, $col($row, 'affiliation'),
+				$col($row, ['topic / field of expertise', 'topic/field of expertise', 'field of expertise', 'expertise']),
+				$col($row, ['orcid id', 'orcid']), $col($row, ['phone number', 'phone']), $role, $cid
+			);
+		}
+		fclose($fh);
+		return $out;
+	}
+
+	/** Ubah satu baris CSV menjadi struktur siap-isi (usul username, pecah nama, cocokkan peran, cek dobel). */
+	private function normalizeReg($name, $email, $aff, $expertise, $orcid, $phone, $role, $cid) {
+		$core = trim(explode(',', $name)[0]);
+		$parts = preg_split('/\s+/', $core, -1, PREG_SPLIT_NO_EMPTY);
+		$family = count($parts) > 1 ? array_pop($parts) : '';
+		$given = $parts ? implode(' ', $parts) : $core;
+		if ($given === '') $given = $name;
+		$local = strtolower(preg_replace('/@.*$/', '', $email));
+		$uname = preg_replace('/^[^a-z]+/', '', preg_replace('/[^a-z0-9_]/', '', str_replace(['.', '-'], '_', $local)));
+		$exists = $email !== '' && Capsule::table('users')->whereRaw('LOWER(email) = ?', [strtolower($email)])->exists();
+		$gid = 0; $gname = '';
+		$want = strtolower(trim($role));
+		if ($want !== '') foreach ($this->journalGroups($cid) as $g) {
+			$gl = strtolower($g['name']);
+			if (strpos($gl, $want) !== false && strpos($gl, 'manager') === false) { $gid = $g['id']; $gname = $g['name']; break; }
+		}
+		return [
+			'name' => $name, 'given' => $given, 'family' => $family, 'email' => $email,
+			'username' => $uname, 'affiliation' => $aff, 'expertise' => $expertise,
+			'orcid' => $orcid, 'phone' => $phone, 'role' => $role,
+			'groupId' => $gid, 'groupName' => $gname, 'exists' => $exists,
+		];
 	}
 
 	/** @return array [['id'=>, 'name'=>, 'role'=>], ...] peran (user group) di jurnal ini */

@@ -98,6 +98,16 @@
 
 	.btn.login { background: #0b6b4f; border-color: #0b6b4f; }
 	.btn.login:hover { background: #095a42; }
+	.regbox[open] { border-color: #c4c9ee; box-shadow: 0 8px 24px rgba(3,2,113,.08); }
+	.regin { padding: 4px 16px 16px; border-top: 1px solid var(--line); }
+	.reghint { color: var(--muted); font-size: 13px; }
+	.reglist { display: grid; gap: 8px; }
+	.regrow { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+	.regrow.is-dup { background: var(--soft); opacity: .8; }
+	.regname { font-weight: 700; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+	.tag.dup { background: #fdecec; color: var(--red); border-color: #f3c0c0; }
+	.regact { flex: 0 0 auto; }
+	@media (max-width: 640px) { .regrow { flex-direction: column; align-items: stretch; } }
 	.btn.add { background: var(--accent); border-color: var(--accent); }
 	.btn.add:hover { background: #d9860f; }
 	.addbox { margin: 0 0 16px; }
@@ -226,6 +236,8 @@
 				<div class="fld"><label for="nuOrcid">ORCID iD</label>
 					<input type="text" id="nuOrcid" name="orcid" value="{if $umOld}{$umOld.orcid|escape}{/if}" placeholder="0000-0000-0000-0000" spellcheck="false" autocapitalize="off">
 					<small>Boleh ditempel lengkap (https://orcid.org/…). Angka kontrol diperiksa.</small></div>
+				<div class="fld"><label for="nuPhone">Nomor telepon</label>
+					<input type="text" id="nuPhone" name="phone" value="{if $umOld}{$umOld.phone|escape}{/if}" placeholder="mis. 08123456789" spellcheck="false"></div>
 				<div class="fld"><label for="nuPass">Password <i>*</i></label>
 					<div class="pw"><input type="text" id="nuPass" value="" autocomplete="off" spellcheck="false" data-lpignore="true" data-form-type="other" placeholder="min. 6 karakter">
 					<button class="btn sec" type="button" id="nuGen" title="Buat password acak">⟳ Acak</button>
@@ -248,6 +260,58 @@
 			</div>
 		</form>
 	</details>
+
+	{if $umRegConfigured || $umIsAdmin}
+	<details class="box regbox" id="umReg"{if $umRegShown} open{/if}>
+		<summary>📥 Pendaftaran masuk{if $umRegShown && $umReg} <small>{$umRegNew} belum punya akun / {$umReg|@count} baris</small>{/if}</summary>
+		<div class="regin">
+			{if $umIsAdmin}
+			<form class="regurls" method="post" action="{$umSaveUrl|escape}">
+				{csrf}
+				<input type="hidden" name="verb" value="regUrls">
+				<div class="fld"><label>Link CSV pendaftaran Editor &amp; Reviewer</label>
+					<input type="text" name="url_editor" value="{$umRegUrls.editor|escape}" placeholder="https://docs.google.com/spreadsheets/d/e/.../pub?output=csv" spellcheck="false"></div>
+				<div class="fld"><label>Link CSV pendaftaran Author</label>
+					<input type="text" name="url_author" value="{$umRegUrls.author|escape}" placeholder="https://docs.google.com/spreadsheets/d/e/.../pub?output=csv" spellcheck="false"></div>
+				<p style="margin:10px 0 0"><button class="btn sec" type="submit">Simpan sumber</button>
+					<small style="color:var(--muted)"> Pakai link File → Share → Publish to web → CSV. Hanya Site Admin.</small></p>
+			</form>
+			<hr style="border:0;border-top:1px solid var(--line);margin:16px 0">
+			{/if}
+
+			{if !$umRegConfigured}
+				<p class="reghint">Belum ada sumber pendaftaran. {if $umIsAdmin}Isi link CSV di atas lalu Simpan.{else}Minta Site Admin mengisi link CSV pendaftaran.{/if}</p>
+			{elseif !$umRegShown}
+				<p style="margin:0"><a class="btn" href="{$umRegShowUrl|escape}">Muat pendaftaran dari Google Sheet</a>
+					<small style="color:var(--muted)"> Data ditarik langsung dari sheet Anda (hanya-baca) saat tombol ini ditekan.</small></p>
+			{else}
+				{if $umRegErr}<div class="note err"><b>!</b><span>Gagal membaca Google Sheet: {$umRegErr|escape}</span></div>{/if}
+				<p style="margin:0 0 12px"><a class="btn sec" href="{$umRegShowUrl|escape}">↻ Segarkan</a> <a class="btn sec" href="{$umRegHideUrl|escape}">Tutup</a></p>
+				{if !$umReg}<p class="reghint">Tidak ada baris pendaftaran di sheet.</p>{else}
+				<div class="reglist">
+				{foreach from=$umReg item=r}
+					<div class="regrow{if $r.exists} is-dup{/if}">
+						<div class="reginfo">
+							<div class="regname">{$r.name|escape} <span class="tag">{$r.role|escape}</span>{if $r.exists} <span class="tag dup">sudah ada akun</span>{/if}</div>
+							<div class="sub">{$r.email|escape}{if $r.affiliation} · {$r.affiliation|escape}{/if}</div>
+							{if $r.expertise}<div class="sub">Minat: {$r.expertise|escape}</div>{/if}
+							{if $r.orcid || $r.phone}<div class="sub">{if $r.orcid}ORCID {$r.orcid|escape}{/if}{if $r.phone} · ☎ {$r.phone|escape}{/if}</div>{/if}
+						</div>
+						<div class="regact">
+							{if $r.exists}<button class="btn sec" type="button" disabled title="Email ini sudah punya akun OJS">sudah ada</button>
+							{else}<button class="btn login reg-fill" type="button"
+								data-u="{$r.username|escape}" data-e="{$r.email|escape}" data-g="{$r.given|escape}" data-f="{$r.family|escape}"
+								data-aff="{$r.affiliation|escape}" data-orcid="{$r.orcid|escape}" data-int="{$r.expertise|escape}"
+								data-phone="{$r.phone|escape}" data-gid="{$r.groupId}">Isi formulir →</button>{/if}
+						</div>
+					</div>
+				{/foreach}
+				</div>
+				{/if}
+			{/if}
+		</div>
+	</details>
+	{/if}
 
 	<div class="stats">
 		<div class="stat"><span>{if $umScoped}Total akun di jurnal ini{else}Total akun di server{/if}</span><b>{$umAll} <small>akun</small></b></div>
@@ -420,6 +484,26 @@
 			var b = f.querySelector('button[type=submit]'); b.disabled = true; b.textContent = 'Membuat…';
 		});
 	}
+	// prefill formulir Tambah akun dari baris pendaftaran Google Sheet
+	document.addEventListener('click', function (ev) {
+		var b = ev.target && ev.target.closest ? ev.target.closest('.reg-fill') : null;
+		if (!b) return;
+		var set = function (id, v) { var el = document.getElementById(id); if (el) el.value = v || ''; };
+		set('nuUser', b.getAttribute('data-u'));
+		set('nuEmail', b.getAttribute('data-e'));
+		set('nuGiven', b.getAttribute('data-g'));
+		set('nuFamily', b.getAttribute('data-f'));
+		set('nuAff', b.getAttribute('data-aff'));
+		set('nuOrcid', b.getAttribute('data-orcid'));
+		set('nuInt', b.getAttribute('data-int'));
+		set('nuPhone', b.getAttribute('data-phone'));
+		var gid = b.getAttribute('data-gid');
+		var boxes = document.querySelectorAll('input[name="groups[]"]');
+		for (var i = 0; i < boxes.length; i++) boxes[i].checked = (!!gid && gid !== '0' && boxes[i].value === gid);
+		var d = document.getElementById('umAdd'); if (d) { d.open = true; d.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+		var ps = document.getElementById('nuPass'), gen = document.getElementById('nuGen');
+		if (gen && ps && !ps.value) gen.click();
+	});
 	// hanya satu popup terbuka; klik di luar menutupnya
 	document.addEventListener('click', function (ev) {
 		var pops = document.querySelectorAll('details.pop[open]');
