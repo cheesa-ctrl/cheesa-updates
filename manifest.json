@@ -28,12 +28,12 @@
             "released": "2026-11-17"
         },
         "cheesaEditorialPick": {
-            "category": "blocks",
+            "category": "generic",
             "label": "Cheesa Editorial Pick",
-            "version": "1.0.2.0",
-            "file": "cheesaEditorialPick-1.0.2.0.tar.gz",
-            "sha256": "536b6bc8d9071ae2301c9623a8583296f12d9552a76c39f8fbf5cb7b8c02a70e",
-            "size": 9247,
+            "version": "1.0.3.0",
+            "file": "cheesaEditorialPick-1.0.3.0.tar.gz",
+            "sha256": "2a9b221332bb88ed8ebfe5f8e11f9420db85dc4b2010112f6ed7a3fbe658871d",
+            "size": 9016,
             "released": "2026-11-17"
         },
         "cheesaFullText": {
@@ -109,5 +109,5 @@
             "released": "2026-11-16"
         }
     },
-    "generated": "2026-11-17T22:35:29+00:00"
+    "generated": "2026-11-17T22:56:03+00:00"
 }

@@ -1,18 +1,22 @@
 <?php
 
 /**
- * @file plugins/blocks/cheesaEditorialPick/CheesaEditorialPickPlugin.inc.php
+ * @file plugins/generic/cheesaEditorialPick/CheesaEditorialPickPlugin.inc.php
  *
- * CHEESA Editorial Pick — menampilkan artikel pilihan editor sebagai blok sidebar
- * dan (opsional) baris kartu ber-cover di beranda. Dibuat khusus untuk CHEESA, tanpa lisensi.
+ * CHEESA Editorial Pick — menampilkan artikel pilihan editor sebagai baris kartu
+ * ber-cover di beranda. Dibuat khusus untuk CHEESA, tanpa lisensi.
+ *
+ * Plugin GENERIC: OJS memuat kategori generic sebelum routing, sehingga hook
+ * LoadHandler (halaman kelola) terdaftar tepat waktu — berbeda dengan block plugin
+ * yang dimuat belakangan dan menyebabkan halaman kelola 404.
  *
  * Pilihan artikel disimpan di pengaturan plugin ('articles' = daftar id submission, urut).
- * Halaman kelola: /index.php/<jurnal>/editorialpick (Manager / Editor jurnal).
+ * Halaman kelola: /index.php/<jurnal>/cheesapick (Manager / Editor jurnal).
  */
 
-import('lib.pkp.classes.plugins.BlockPlugin');
+import('lib.pkp.classes.plugins.GenericPlugin');
 
-class CheesaEditorialPickPlugin extends BlockPlugin {
+class CheesaEditorialPickPlugin extends GenericPlugin {
 
 	const PAGE = 'cheesapick';
 
@@ -29,7 +33,6 @@ class CheesaEditorialPickPlugin extends BlockPlugin {
 		return $success;
 	}
 
-	public function getName() { return 'cheesaEditorialPick'; }
 	public function getDisplayName() { return 'CHEESA Editorial Pick'; }
 	public function getDescription() {
 		return 'Menampilkan artikel pilihan editor sebagai blok sidebar dan baris kartu di beranda. Khusus jurnal CHEESA, tanpa lisensi.';
@@ -90,20 +93,6 @@ class CheesaEditorialPickPlugin extends BlockPlugin {
 			$out[] = $submission;
 		}
 		return $out;
-	}
-
-	/* ------------------------------------------------------------------ blok sidebar */
-
-	public function getContents($templateMgr, $request = null) {
-		$submissions = $this->getPickedSubmissions();
-		if (!$submissions) return '';
-		$templateMgr->assign('editorialPick', $submissions);
-		$templateMgr->assign('issueDao', DAORegistry::getDAO('IssueDAO'));
-		return parent::getContents($templateMgr, $request);
-	}
-
-	function getBlockTemplateFilename() {
-		return 'block.tpl';
 	}
 
 	/* ------------------------------------------------------------------ baris kartu beranda */
