@@ -39,7 +39,7 @@
 	.chep-deck {
 		display: flex; align-items: stretch;
 		overflow-x: auto; overflow-y: visible;
-		padding: 34px 34px 40px; margin: -14px -34px 0;
+		padding: 30px 6px 34px; margin: -14px 0 0; max-width: 100%;
 		scroll-snap-type: x proximity;
 		scrollbar-color: var(--nv-accent, #ed991f) #e9ecf4;
 	}
@@ -94,7 +94,7 @@
 
 	/* layar sempit: matikan tumpukan, jadikan geser biasa */
 	@media (max-width: 767px) {
-		.chep-deck { padding: 20px 16px 26px; margin: 0 -16px; gap: 14px; }
+		.chep-deck { padding: 18px 2px 24px; margin: 0; gap: 14px; }
 		.chep-card { width: 250px; }
 		.chep-card:not(.is-first) { margin-inline-start: 0; box-shadow: 0 6px 16px -6px rgba(3, 2, 113, .28); }
 		.chep-card:hover { transform: translateY(-6px); }
