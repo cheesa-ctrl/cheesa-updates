@@ -25,7 +25,7 @@ msgid "plugins.generic.journalHero.pages.home"
 msgstr "Journal homepage only"
 
 msgid "plugins.generic.journalHero.pages.all"
-msgstr "All public pages"
+msgstr "All public pages (including pages added by other plugins)"
 
 msgid "plugins.generic.journalHero.position"
 msgstr "Position"
@@ -341,4 +341,10 @@ msgstr "Image link (optional)"
 
 msgid "plugins.generic.journalHero.mediaLink.description"
 msgstr "Where the single image leads. Leave empty: the cover links to its issue, a logo has no link."
+
+msgid "plugins.generic.journalHero.extraPages"
+msgstr "Extra pages (with “Journal homepage only”)"
+
+msgid "plugins.generic.journalHero.extraPages.description"
+msgstr "Page names from the address, separated by commas. Example: for …/index.php/cheesa/countrystats/publicpage write countrystats (or countrystats/publicpage for that page only)."
 

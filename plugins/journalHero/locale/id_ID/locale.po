@@ -25,7 +25,7 @@ msgid "plugins.generic.journalHero.pages.home"
 msgstr "Beranda jurnal saja"
 
 msgid "plugins.generic.journalHero.pages.all"
-msgstr "Semua halaman publik"
+msgstr "Semua halaman publik (termasuk halaman dari plugin lain)"
 
 msgid "plugins.generic.journalHero.position"
 msgstr "Posisi"
@@ -341,4 +341,10 @@ msgstr "Link gambar (opsional)"
 
 msgid "plugins.generic.journalHero.mediaLink.description"
 msgstr "Tujuan saat gambar diklik. Kosongkan: sampul menuju terbitannya, logo tanpa link."
+
+msgid "plugins.generic.journalHero.extraPages"
+msgstr "Halaman tambahan (bila memilih “Beranda jurnal saja”)"
+
+msgid "plugins.generic.journalHero.extraPages.description"
+msgstr "Nama halaman dari alamat, dipisah koma. Contoh: untuk …/index.php/cheesa/countrystats/publicpage tulis countrystats (atau countrystats/publicpage untuk halaman itu saja)."
 

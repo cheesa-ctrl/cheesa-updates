@@ -17,6 +17,7 @@ class JournalHeroPlugin extends GenericPlugin {
 	const DEFAULTS = [
 		'style' => 'carousel',          // carousel | profile
 		'pages' => 'home',              // home | all
+		'extraPages' => '',             // extra page names when pages = home, e.g. "countrystats, about"
 		'position' => 'afterHeader',    // beforeHeader | beforeMenu | afterHeader | beforeContent
 		'hideSiteName' => false,
 		'hideSelectors' => '.ch-issn > a',
@@ -88,7 +89,11 @@ class JournalHeroPlugin extends GenericPlugin {
 		$templateMgr = $args[0];
 		$template = $args[1];
 
-		if (strpos((string) $template, 'frontend/pages/') !== 0) return false;
+		$template = (string) $template;
+		// Public pages only: OJS frontend pages, or pages rendered by other plugins
+		// (their template names look like "plugins-...:templates/x.tpl").
+		// Back-office templates (dashboard/, management/, ...) are skipped.
+		if (strpos($template, 'frontend/pages/') !== 0 && strpos($template, ':') === false) return false;
 
 		$request = Application::get()->getRequest();
 		$context = $request->getContext();
@@ -96,7 +101,14 @@ class JournalHeroPlugin extends GenericPlugin {
 		$contextId = $context->getId();
 
 		if ($this->getHeroSetting($contextId, 'pages') === 'home' && $template !== 'frontend/pages/indexJournal.tpl') {
-			return false;
+			// Extra pages by their URL name: /index.php/{journal}/{page}/...
+			$extra = array_filter(array_map(function ($p) { return strtolower(trim($p, " \t/")); },
+				preg_split('/[\s,]+/', (string) $this->getHeroSetting($contextId, 'extraPages'))), 'strlen');
+			$page = strtolower((string) $request->getRequestedPage());
+			$op = strtolower((string) $request->getRequestedOp());
+			if (!$extra || (!in_array($page, $extra, true) && !in_array($page . '/' . $op, $extra, true))) {
+				return false;
+			}
 		}
 
 		$baseUrl = $request->getBaseUrl() . '/' . $this->getPluginPath();
@@ -165,6 +177,8 @@ class JournalHeroPlugin extends GenericPlugin {
 	 */
 	public function injectHero($output, $html, $position) {
 		if ($this->_injected || strpos($output, '<body') === false) return $output;
+		// Only on public pages that use the OJS frontend header (never the back office)
+		if (strpos($output, 'pkp_structure_head') === false) return $output;
 
 		$patterns = [
 			// Before the whole site header

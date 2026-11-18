@@ -21,6 +21,9 @@
 		{fbvFormSection title="plugins.generic.journalHero.pages"}
 			{fbvElement type="select" id="pages" from=$pagesOptions selected=$pages translate=false size=$fbvStyles.size.MEDIUM}
 		{/fbvFormSection}
+		{fbvFormSection title="plugins.generic.journalHero.extraPages" description="plugins.generic.journalHero.extraPages.description"}
+			{fbvElement type="text" id="extraPages" value=$extraPages}
+		{/fbvFormSection}
 		{fbvFormSection title="plugins.generic.journalHero.position" description="plugins.generic.journalHero.position.description"}
 			{fbvElement type="select" id="position" from=$positionOptions selected=$position translate=false size=$fbvStyles.size.MEDIUM}
 		{/fbvFormSection}
