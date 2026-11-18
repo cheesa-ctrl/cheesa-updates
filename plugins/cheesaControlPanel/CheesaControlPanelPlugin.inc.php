@@ -157,6 +157,7 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 				'name' => $name,
 				'label' => isset(self::KNOWN[$name]) ? self::KNOWN[$name][1] : ($pkg && !empty($pkg['label']) ? $pkg['label'] : $name),
 				'category' => $cat,
+				'strayCats' => $this->strayCats($u, $name, $cat),
 				'installed' => $installed,
 				'available' => $available,
 				'released' => $pkg && isset($pkg['released']) ? $pkg['released'] : '',
@@ -198,6 +199,17 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 	}
 
 	/** Kategori paket: dari manifest, daftar bawaan, atau cadangan (bila plugin sudah dihapus). */
+	/** Kategori LAIN yang juga punya folder plugin bernama sama = salinan ganda/nyasar. */
+	private function strayCats(CheesaUpdater $u, $name, $canonical) {
+		$out = [];
+		if (!$canonical) return $out;
+		foreach (CheesaUpdater::CATEGORIES as $cat) {
+			if ($cat === $canonical) continue;
+			if ($u->installedVersion($cat, $name) !== null) $out[] = $cat;
+		}
+		return $out;
+	}
+
 	private function categoryOf(CheesaUpdater $u, $manifest, $name) {
 		if ($manifest && isset($manifest['packages'][$name])) return $manifest['packages'][$name]['category'];
 		if (isset(self::KNOWN[$name])) return self::KNOWN[$name][0];
@@ -292,7 +304,7 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 
 	public function manage($args, $request) {
 		$verb = (string) $request->getUserVar('verb');
-		if (!in_array($verb, ['panel', 'saveUrl', 'check', 'update', 'rollback', 'uninstall', 'hide', 'unhide', 'unlockSource', 'lockSource', 'unlockPanel', 'lockPanel'], true)) return parent::manage($args, $request);
+		if (!in_array($verb, ['panel', 'saveUrl', 'check', 'update', 'rollback', 'uninstall', 'cleanstray', 'hide', 'unhide', 'unlockSource', 'lockSource', 'unlockPanel', 'lockPanel'], true)) return parent::manage($args, $request);
 		if ($why = CheesaLicense::checkRequest(__DIR__)) {
 			return new JSONMessage(true, '<div style="padding:12px;border-left:4px solid #c62828;background:#fdecec">CHEESA Control Panel tidak aktif: ' . htmlspecialchars($why, ENT_QUOTES, 'UTF-8') . '. Plugin ini hanya untuk jurnal CHEESA.</div>');
 		}
@@ -463,6 +475,32 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 					}
 					$msg = $label . ' ' . $r['from'] . ' di-uninstall dari server. Cadangannya disimpan: klik "Kembalikan" bila ingin memasangnya lagi, atau "Hapus" untuk menghilangkannya dari daftar. Pengaturan dan data plugin di database tidak ikut dihapus.';
 				} catch (\Throwable $e) { $err = 'Uninstall gagal: ' . $e->getMessage(); }
+			}
+		} elseif (!$err && $isAdmin && $verb === 'cleanstray') {
+			$canonical = preg_match('/^[A-Za-z][A-Za-z0-9_]{1,63}$/', $name) ? $this->categoryOf($u, $manifest, $name) : null;
+			$label = isset(self::KNOWN[$name]) ? self::KNOWN[$name][1] : ($manifest && !empty($manifest['packages'][$name]['label']) ? $manifest['packages'][$name]['label'] : $name);
+			$strays = $this->strayCats($u, $name, $canonical);
+			if (!$canonical) $err = 'Paket tidak dikenal.';
+			elseif ($name === 'cheesaControlPanel') $err = 'Tidak bisa membersihkan salinan CHEESA Control Panel dari sini.';
+			elseif (!$strays) $err = 'Tidak ada salinan ganda untuk ' . $label . '.';
+			else {
+				try {
+					$done = [];
+					foreach ($strays as $sc) {
+						$r = $u->uninstall($sc, $name);
+						$versionDao = DAORegistry::getDAO('VersionDAO');
+						if (method_exists($versionDao, 'disableVersion')) $versionDao->disableVersion('plugins.' . $sc, $name);
+						$done[] = $sc . ' (v' . ($r['from'] ?: '?') . ')';
+					}
+					$this->afterInstall($request, $canonical, $name, false);
+					$code = $this->healthCheck($request);
+					if ($code >= 500) {
+						foreach ($strays as $sc) { try { $u->rollback($sc, $name); } catch (\Throwable $e) {} }
+						$this->afterInstall($request, $canonical, $name, true);
+						throw new Exception('setelah dibersihkan, beranda situs error (HTTP ' . $code . '), jadi salinan dikembalikan otomatis. Situs aman.');
+					}
+					$msg = 'Salinan ganda ' . $label . ' dihapus dari kategori: ' . implode(', ', $done) . '. Cadangan disimpan (bisa dikembalikan lewat "Kembalikan"). Salinan utama di kategori ' . $canonical . ' tidak diubah.';
+				} catch (\Throwable $e) { $err = 'Pembersihan gagal: ' . $e->getMessage(); }
 			}
 		} elseif (!$err && $verb === 'check' && $manifest) {
 			$msg = 'Daftar versi diperbarui.';

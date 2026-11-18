@@ -13,7 +13,7 @@
 			var b = document.querySelector('#cheesaCP [data-cp-verb="' + (ev.target.id === 'cpPanelKey' ? 'unlockPanel' : 'unlockSource') + '"]'); if (b) b.click();
 		}
 	});
-	var BUSY = { update: 'Memasang…', rollback: 'Mengembalikan…', uninstall: 'Meng-uninstall…', hide: 'Menghapus…', unhide: 'Memproses…', check: 'Memeriksa…', saveUrl: 'Menyimpan…', unlockSource: 'Memeriksa…', lockSource: 'Mengunci…', unlockPanel: 'Memeriksa…', lockPanel: 'Mengunci…' };
+	var BUSY = { update: 'Memasang…', rollback: 'Mengembalikan…', uninstall: 'Meng-uninstall…', cleanstray: 'Membersihkan…', hide: 'Menghapus…', unhide: 'Memproses…', check: 'Memeriksa…', saveUrl: 'Menyimpan…', unlockSource: 'Memeriksa…', lockSource: 'Mengunci…', unlockPanel: 'Memeriksa…', lockPanel: 'Mengunci…' };
 	document.addEventListener('click', function (ev) {
 		var b = ev.target && ev.target.closest ? ev.target.closest('#cheesaCP [data-cp-verb]') : null;
 		if (!b) return;
@@ -23,6 +23,7 @@
 		if (verb === 'update' && !confirm('Pasang update ' + label + '? Versi saat ini akan dicadangkan.')) return;
 		if (verb === 'rollback' && !confirm('Kembalikan ' + label + ' ke versi cadangan terakhir?')) return;
 		if (verb === 'hide' && !confirm('Hapus ' + label + ' dari daftar ini?\n\nHanya barisnya yang hilang dari panel; plugin di server tidak diubah. Bisa ditampilkan lagi lewat bagian "Disembunyikan".')) return;
+		if (verb === 'cleanstray' && !confirm('Bersihkan salinan ganda ' + label + '?\n\nFolder plugin yang berada di kategori yang salah akan dihapus (dicadangkan dulu, bisa dikembalikan). Salinan utama tidak diubah.')) return;
 		if (verb === 'uninstall' && !confirm('Uninstall ' + label + ' dari server?\n\nPlugin dinonaktifkan lalu foldernya dihapus. Cadangan disimpan, jadi bisa dikembalikan dengan tombol "Kembalikan". Pengaturan dan data di database tidak dihapus.')) return;
 		var btns = cp.querySelectorAll('button');
 		for (var i = 0; i < btns.length; i++) btns[i].disabled = true;

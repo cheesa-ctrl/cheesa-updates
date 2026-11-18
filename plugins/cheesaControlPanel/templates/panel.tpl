@@ -57,6 +57,7 @@
 				{if $r.backups}<button type="button" class="ccp-btn sec" data-cp-verb="rollback" data-cp-package="{$r.name|escape}" data-cp-label="{$r.label|escape}" title="Kembalikan cadangan terakhir ({$r.backups} tersimpan)">↺ Kembalikan</button>{/if}
 				{if $r.canDelete}<button type="button" class="ccp-btn del" data-cp-verb="uninstall" data-cp-package="{$r.name|escape}" data-cp-label="{$r.label|escape}" title="Copot plugin ini dari server (dicadangkan dulu, bisa dikembalikan)">⏏ Uninstall</button>{/if}
 				{if $r.canHide}<button type="button" class="ccp-btn ghost" data-cp-verb="hide" data-cp-package="{$r.name|escape}" data-cp-label="{$r.label|escape}" title="Hapus dari daftar ini saja — plugin di server tidak diubah">✕ Hapus</button>{/if}
+				{if $r.strayCats}<button type="button" class="ccp-btn del" data-cp-verb="cleanstray" data-cp-package="{$r.name|escape}" data-cp-label="{$r.label|escape}" title="Ada salinan ganda di kategori: {foreach from=$r.strayCats item=sc name=sx}{$sc|escape}{if !$smarty.foreach.sx.last}, {/if}{/foreach}. Hapus salinan yang salah kategori ini (dicadangkan dulu); salinan utama tidak diubah.">⚠ Bersihkan ganda</button>{/if}
 			{/if}
 		</div>
 	</div>
