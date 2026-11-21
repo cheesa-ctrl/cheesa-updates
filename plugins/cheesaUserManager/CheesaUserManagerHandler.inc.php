@@ -426,7 +426,7 @@ class CheesaUserManagerHandler extends Handler {
 		$old = [];
 		if ($err && (string) $request->getUserVar('verb') === 'add') {
 			// isian formulir dikembalikan (kecuali password) supaya tidak perlu mengetik ulang
-			foreach (['username', 'email', 'givenName', 'familyName', 'affiliation', 'orcid', 'interests', 'phone', 'country'] as $f) $old[$f] = (string) $request->getUserVar($f);
+			foreach (['username', 'email', 'givenName', 'familyName', 'affiliation', 'orcid', 'interests', 'phone', 'country', 'preferredPublicName'] as $f) $old[$f] = (string) $request->getUserVar($f);
 			$old['sendEmail'] = (bool) $request->getUserVar('sendEmail');
 			$old['groups'] = array_map('intval', (array) $request->getUserVar('groups'));
 			$old['open'] = true;
@@ -455,6 +455,7 @@ class CheesaUserManagerHandler extends Handler {
 		$orcid = $this->normalizeOrcid((string) $request->getUserVar('orcid'));
 		$interests = array_values(array_unique(array_filter(array_map('trim', preg_split('/[,;\n]+/', (string) $request->getUserVar('interests'))), 'strlen')));
 		$country = strtoupper(trim((string) $request->getUserVar('country')));
+		$pubName = trim((string) $request->getUserVar('preferredPublicName'));
 		$groups = array_unique(array_map('intval', (array) $request->getUserVar('groups')));
 
 		if (!preg_match('/^[a-z0-9]+([\-_][a-z0-9]+)*$/i', $username)) throw new Exception('Username hanya boleh huruf, angka, dan tanda - atau _ di antara huruf/angka (tanpa spasi).');
@@ -478,6 +479,7 @@ class CheesaUserManagerHandler extends Handler {
 		$user->setEmail($email);
 		$user->setGivenName($given, $locale);
 		$user->setFamilyName($family, $locale);
+		if ($pubName !== '') $user->setPreferredPublicName($pubName, $locale);
 		if ($affiliation !== '') $user->setAffiliation($affiliation, $locale);
 		if ($orcid) $user->setOrcid($orcid);
 		if ($country !== '') $user->setCountry($country);

@@ -231,6 +231,9 @@
 					<input type="text" id="nuGiven" name="givenName" value="{if $umOld}{$umOld.givenName|escape}{/if}" required></div>
 				<div class="fld"><label for="nuFamily">Nama belakang</label>
 					<input type="text" id="nuFamily" name="familyName" value="{if $umOld}{$umOld.familyName|escape}{/if}"></div>
+					<div class="fld"><label for="nuPubName">Nama publik pilihan <small>(preferred public name)</small></label>
+						<input type="text" id="nuPubName" name="preferredPublicName" value="{if $umOld}{$umOld.preferredPublicName|escape}{/if}" placeholder="mis. Prof. Dr. Budi Santoso, M.T.">
+						<small>Cara nama ingin ditampilkan — boleh memakai sapaan, nama tengah, atau gelar. Kosongkan untuk memakai Nama depan + belakang.</small></div>
 				<div class="fld"><label for="nuAff">Afiliasi</label>
 					<input type="text" id="nuAff" name="affiliation" value="{if $umOld}{$umOld.affiliation|escape}{/if}" placeholder="mis. Universitas PGRI Madiun"></div>
 				<div class="fld"><label for="nuOrcid">ORCID iD</label>
