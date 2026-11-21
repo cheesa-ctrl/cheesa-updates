@@ -273,6 +273,7 @@ class CheesaUserManagerHandler extends Handler {
 				return $g;
 			}, $this->journalGroups($cid)),
 			'umOld' => $flash && isset($flash['old']) ? $flash['old'] : [],
+			'umCountries' => $this->countryList(),
 			'umPage' => $page,
 			'umPages' => $pages,
 			'umPrev' => $page > 1 ? $plugin->pageUrl($request, $keep + ['p' => $page - 1]) : '',
@@ -425,7 +426,7 @@ class CheesaUserManagerHandler extends Handler {
 		$old = [];
 		if ($err && (string) $request->getUserVar('verb') === 'add') {
 			// isian formulir dikembalikan (kecuali password) supaya tidak perlu mengetik ulang
-			foreach (['username', 'email', 'givenName', 'familyName', 'affiliation', 'orcid', 'interests', 'phone'] as $f) $old[$f] = (string) $request->getUserVar($f);
+			foreach (['username', 'email', 'givenName', 'familyName', 'affiliation', 'orcid', 'interests', 'phone', 'country'] as $f) $old[$f] = (string) $request->getUserVar($f);
 			$old['sendEmail'] = (bool) $request->getUserVar('sendEmail');
 			$old['groups'] = array_map('intval', (array) $request->getUserVar('groups'));
 			$old['open'] = true;
@@ -453,6 +454,7 @@ class CheesaUserManagerHandler extends Handler {
 		$sendEmail = (bool) $request->getUserVar('sendEmail');
 		$orcid = $this->normalizeOrcid((string) $request->getUserVar('orcid'));
 		$interests = array_values(array_unique(array_filter(array_map('trim', preg_split('/[,;\n]+/', (string) $request->getUserVar('interests'))), 'strlen')));
+		$country = strtoupper(trim((string) $request->getUserVar('country')));
 		$groups = array_unique(array_map('intval', (array) $request->getUserVar('groups')));
 
 		if (!preg_match('/^[a-z0-9]+([\-_][a-z0-9]+)*$/i', $username)) throw new Exception('Username hanya boleh huruf, angka, dan tanda - atau _ di antara huruf/angka (tanpa spasi).');
@@ -465,6 +467,7 @@ class CheesaUserManagerHandler extends Handler {
 		if (strlen($password) < $min) throw new Exception('Password minimal ' . $min . ' karakter.');
 		if (!$groups) throw new Exception('Pilih minimal satu peran di jurnal ini.');
 		if ($orcid === false) throw new Exception('ORCID iD tidak valid. Formatnya 0000-0000-0000-0000 (angka terakhir boleh X), dan angka kontrolnya harus cocok.');
+		if ($country !== '' && !isset($this->countryList()[$country])) throw new Exception('Negara tidak valid. Pilih dari daftar.');
 		$allowed = [];
 		foreach ($this->journalGroups($cid) as $g) $allowed[$g['id']] = true;
 		foreach ($groups as $gid) if (!isset($allowed[$gid])) throw new Exception('Peran yang dipilih tidak valid untuk jurnal ini.');
@@ -477,6 +480,7 @@ class CheesaUserManagerHandler extends Handler {
 		$user->setFamilyName($family, $locale);
 		if ($affiliation !== '') $user->setAffiliation($affiliation, $locale);
 		if ($orcid) $user->setOrcid($orcid);
+		if ($country !== '') $user->setCountry($country);
 		if ($phone !== '') $user->setData('phone', $phone);
 		$user->setPassword(Validation::encryptCredentials($username, $password));
 		$user->setMustChangePassword($mustChange);
@@ -628,6 +632,22 @@ class CheesaUserManagerHandler extends Handler {
 	}
 
 	/** @return array [['id'=>, 'name'=>, 'role'=>], ...] peran (user group) di jurnal ini */
+	/** Negara: kode ISO alpha-2 => nama lokal, urut A-Z. Untuk form Tambah Akun. */
+	private function countryList() {
+		static $cache = null;
+		if ($cache !== null) return $cache;
+		$out = [];
+		try {
+			$factory = null;
+			if (function_exists('app')) { try { $factory = app(\Sokil\IsoCodes\IsoCodesFactory::class); } catch (\Throwable $e) {} }
+			if (!$factory && class_exists('\Sokil\IsoCodes\IsoCodesFactory')) $factory = new \Sokil\IsoCodes\IsoCodesFactory();
+			if ($factory) foreach ($factory->getCountries() as $c) { $code = $c->getAlpha2(); if ($code) $out[$code] = $c->getLocalName(); }
+		} catch (\Throwable $e) {}
+		if (!$out) $out = ['ID'=>'Indonesia','MY'=>'Malaysia','SG'=>'Singapore','BN'=>'Brunei Darussalam','TH'=>'Thailand','PH'=>'Philippines','VN'=>'Viet Nam','IN'=>'India','PK'=>'Pakistan','BD'=>'Bangladesh','JP'=>'Japan','CN'=>'China','KR'=>'Korea, Republic of','TW'=>'Taiwan','AU'=>'Australia','US'=>'United States','GB'=>'United Kingdom','NL'=>'Netherlands','DE'=>'Germany','FR'=>'France','IT'=>'Italy','ES'=>'Spain','TR'=>'Turkey','SA'=>'Saudi Arabia','AE'=>'United Arab Emirates','EG'=>'Egypt','NG'=>'Nigeria','ZA'=>'South Africa','BR'=>'Brazil','CA'=>'Canada'];
+		asort($out);
+		return $cache = $out;
+	}
+
 	private function journalGroups($cid) {
 		static $cache = [];
 		if (isset($cache[$cid])) return $cache[$cid];

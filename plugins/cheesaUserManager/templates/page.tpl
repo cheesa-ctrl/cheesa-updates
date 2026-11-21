@@ -238,6 +238,13 @@
 					<small>Boleh ditempel lengkap (https://orcid.org/…). Angka kontrol diperiksa.</small></div>
 				<div class="fld"><label for="nuPhone">Nomor telepon</label>
 					<input type="text" id="nuPhone" name="phone" value="{if $umOld}{$umOld.phone|escape}{/if}" placeholder="mis. 08123456789" spellcheck="false"></div>
+					<div class="fld"><label for="nuCountry">Negara</label>
+						<select id="nuCountry" name="country">
+							<option value="">— pilih negara —</option>
+							{foreach from=$umCountries key=code item=cname}
+								<option value="{$code|escape}"{if $umOld}{if $umOld.country == $code} selected{/if}{elseif $code == 'ID'} selected{/if}>{$cname|escape}</option>
+							{/foreach}
+						</select></div>
 				<div class="fld"><label for="nuPass">Password <i>*</i></label>
 					<div class="pw"><input type="text" id="nuPass" value="" autocomplete="off" spellcheck="false" data-lpignore="true" data-form-type="other" placeholder="min. 6 karakter">
 					<button class="btn sec" type="button" id="nuGen" title="Buat password acak">⟳ Acak</button>
