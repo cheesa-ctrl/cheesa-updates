@@ -17,7 +17,7 @@ class CheesaMailerHandler extends Handler {
 	// kata sandi sama dengan panel CHEESA lain ("cheesactrl-janganlupa-111")
 	const PAGE_PASSWORD_HASH = '$2y$11$ukFP6Lwiu9jLc7jU/eWKTeqB/q6m8y.TLYaIXOpovNocgJ2hUBNxW';
 	const UNLOCK_IDLE   = 1800;     // 30 menit tanpa aktivitas -> terkunci lagi
-	const BATCH         = 20;       // email per permintaan (hindari timeout)
+	const BATCH         = 8;        // email per permintaan (kecil agar tahan email lambat)
 	const MAX_RECIPIENTS = 2000;    // batas penerima per sekali kirim
 	const DAILY_CAP     = 3000;     // batas total email per hari (per situs)
 	const THROTTLE_US   = 150000;   // jeda antar email (0,15 detik)
@@ -211,6 +211,7 @@ class CheesaMailerHandler extends Handler {
 		$id = (string) $request->getUserVar('jobId');
 		$job = $plugin->getJob($id);
 		if (!$job) return $this->json(['error' => 'Pekerjaan kirim tidak ditemukan atau sudah selesai.']);
+		@set_time_limit(120);
 
 		$from = $this->fromAddress($request);
 		$c = $request->getContext();

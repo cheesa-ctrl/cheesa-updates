@@ -340,7 +340,7 @@ var CM_CFG = {ldelim}
 					bar.style.width=Math.round(res.processed/res.total*100)+'%';
 					tx.textContent='Terkirim '+res.sent+' / '+res.total+(res.failed?(' \u00b7 '+res.failed+' gagal'):'');
 					if(res.done){ tx.innerHTML='\u2713 Selesai. '+res.sent+' terkirim, '+res.failed+' gagal. Muat ulang untuk unduh daftar terbaru.'; }
-					else setTimeout(rloop,500);
+					else setTimeout(rloop,300);
 				}).catch(function(){ tx.textContent='Koneksi terputus lagi. Muat ulang lalu klik Lanjutkan kembali.'; rb.disabled=false; });
 			})();
 		});
