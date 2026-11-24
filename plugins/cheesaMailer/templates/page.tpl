@@ -171,6 +171,20 @@
 		</div>
 	</div>
 
+	{if $cmLast}
+	<div class="card">
+		<h1 style="font-size:16px;">Hasil pengiriman terakhir</h1>
+		<p class="sub">“{$cmLast.subject|escape}”</p>
+		<p>Terkirim: <b style="color:#1f8a4c">{$cmLast.sent}</b> &middot; Gagal: <b style="color:#c62828">{$cmLast.failed}</b> &middot; Diproses: {$cmLast.processed}/{$cmLast.total}
+		{if $cmLast.done} &middot; <b style="color:#1f8a4c">selesai</b>{else} &middot; <b style="color:#c62828">terhenti</b>{/if}</p>
+		<div class="actions">
+			<a class="btn ghost" href="{$cmDownloadUrl|escape}">⬇ Unduh daftar (CSV)</a>
+			{if $cmResumeId}<button type="button" class="btn" id="cmResumeBtn">▶ Lanjutkan yang terhenti</button>{/if}
+		</div>
+		<div id="cmResumeProg" style="display:none;margin-top:12px;"><div class="bar"><div id="cmResumeBar"></div></div><div class="meta" id="cmResumeText"></div></div>
+	</div>
+	{/if}
+
 	{if $cmLog}
 	<div class="card">
 		<h1 style="font-size:16px;">Catatan pengiriman terakhir</h1>
@@ -191,6 +205,7 @@ var CM_CFG = {ldelim}
 	batch: "{$cmBatchUrl}",
 	test:  "{$cmTestUrl}",
 	upload: "{$cmUploadUrl}",
+	resumeId: "{$cmResumeId}",
 	tpl: {$cmTplJson nofilter}
 {rdelim};
 </script>
@@ -310,6 +325,25 @@ var CM_CFG = {ldelim}
 				sendBtn.disabled=false; testBtn.disabled=false;
 			} else { setTimeout(loop, 500); }
 		}).catch(function(){ show('err','Koneksi terputus saat mengirim. Sebagian mungkin sudah terkirim. Muat ulang untuk cek.'); sendBtn.disabled=false; testBtn.disabled=false; });
+	}
+
+	// lanjutkan pengiriman yang terhenti
+	var RESUME=CM_CFG.resumeId, rb=$('cmResumeBtn');
+	if(rb){
+		rb.addEventListener('click', function(){
+			if(!confirm('Lanjutkan pengiriman yang terhenti? Yang sudah terkirim tidak akan diulang.')) return;
+			rb.disabled=true;
+			var pw=$('cmResumeProg'), bar=$('cmResumeBar'), tx=$('cmResumeText'); pw.style.display='block';
+			(function rloop(){
+				post(BATCH,{jobId:RESUME}).then(function(res){
+					if(res.error){ tx.textContent=res.error; rb.disabled=false; return; }
+					bar.style.width=Math.round(res.processed/res.total*100)+'%';
+					tx.textContent='Terkirim '+res.sent+' / '+res.total+(res.failed?(' \u00b7 '+res.failed+' gagal'):'');
+					if(res.done){ tx.innerHTML='\u2713 Selesai. '+res.sent+' terkirim, '+res.failed+' gagal. Muat ulang untuk unduh daftar terbaru.'; }
+					else setTimeout(rloop,500);
+				}).catch(function(){ tx.textContent='Koneksi terputus lagi. Muat ulang lalu klik Lanjutkan kembali.'; rb.disabled=false; });
+			})();
+		});
 	}
 })();
 </script>

@@ -11,6 +11,7 @@
  */
 
 import('lib.pkp.classes.plugins.GenericPlugin');
+import('lib.pkp.classes.config.Config');
 
 class CheesaMailerPlugin extends GenericPlugin {
 
@@ -77,19 +78,37 @@ class CheesaMailerPlugin extends GenericPlugin {
 
 	/* ---------------------------------------------------------------- pekerjaan kirim (job) */
 
-	public function getJob($id) {
+	// Job disimpan sebagai FILE di files_dir (bukan setting), agar daftar besar tidak terpotong batas 64KB.
+	private function jobDir() {
+		$dir = Config::getVar('files', 'files_dir') . '/cheesaMailer';
+		if (!is_dir($dir)) @mkdir($dir, 0750, true);
+		return $dir;
+	}
+
+	private function jobPath($id) {
 		if (!preg_match('/^[a-f0-9]{16}$/', (string) $id)) return null;
-		$j = $this->getSetting(CONTEXT_SITE, 'job_' . $id);
+		return $this->jobDir() . '/job_' . $id . '.json';
+	}
+
+	public function getJob($id) {
+		$p = $this->jobPath($id);
+		if (!$p || !is_file($p)) return null;
+		$j = json_decode((string) file_get_contents($p), true);
 		return is_array($j) ? $j : null;
 	}
 
 	public function saveJob($id, array $job) {
-		$this->updateSetting(CONTEXT_SITE, 'job_' . $id, $job, 'object');
+		$p = $this->jobPath($id);
+		if ($p) file_put_contents($p, json_encode($job), LOCK_EX);
 	}
 
 	public function deleteJob($id) {
-		if (preg_match('/^[a-f0-9]{16}$/', (string) $id)) $this->updateSetting(CONTEXT_SITE, 'job_' . $id, [], 'object');
+		$p = $this->jobPath($id);
+		if ($p && is_file($p)) @unlink($p);
 	}
+
+	public function lastRunId() { return (string) $this->getSetting(CONTEXT_SITE, 'lastRunId'); }
+	public function setLastRunId($id) { $this->updateSetting(CONTEXT_SITE, 'lastRunId', (string) $id, 'string'); }
 
 	/* ---------------------------------------------------------------- pembatas harian */
 

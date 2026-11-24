@@ -26,7 +26,7 @@ class CheesaMailerHandler extends Handler {
 		parent::__construct();
 		$this->addRoleAssignment(
 			[ROLE_ID_SITE_ADMIN, ROLE_ID_MANAGER],
-			['index', 'unlock', 'lock', 'start', 'batch', 'test', 'upload']
+			['index', 'unlock', 'lock', 'start', 'batch', 'test', 'upload', 'download']
 		);
 	}
 
@@ -126,6 +126,8 @@ class CheesaMailerHandler extends Handler {
 		}
 
 		$from = $this->fromAddress($request);
+		$lastId = $plugin->lastRunId();
+		$last = $lastId ? $plugin->getJob($lastId) : null;
 		$tm->assign($this->common($request) + [
 			'cmLocked' => false,
 			'cmLockUrl' => $plugin->actionUrl($request, 'lock'),
@@ -140,6 +142,9 @@ class CheesaMailerHandler extends Handler {
 			'cmSentToday' => $plugin->sentToday(),
 			'cmMyEmail' => $request->getUser() ? $request->getUser()->getEmail() : '',
 			'cmLog' => array_slice($plugin->auditLog(), 0, 20),
+			'cmLast' => $last ? ['subject' => $last['subject'], 'total' => (int) $last['total'], 'sent' => (int) $last['sent'], 'failed' => (int) $last['failed'], 'processed' => (int) $last['idx'], 'done' => ($last['idx'] >= $last['total'])] : null,
+			'cmResumeId' => ($last && $last['idx'] < $last['total']) ? $lastId : '',
+			'cmDownloadUrl' => $plugin->actionUrl($request, 'download'),
 			'cmTemplates' => $this->templates($from),
 			'cmTplJson' => json_encode($this->templates($from), JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_UNICODE),
 		]);
@@ -173,6 +178,8 @@ class CheesaMailerHandler extends Handler {
 		$from = $this->fromAddress($request);
 		if (!$from['email']) return $this->json(['error' => 'Alamat kontak jurnal belum diset, jadi email tidak bisa dikirim. Isi dulu di Settings → Journal → Contact.']);
 
+		$prev = $plugin->lastRunId();
+		if ($prev) $plugin->deleteJob($prev);
 		$id = bin2hex(random_bytes(8));
 		$me = $request->getUser();
 		$plugin->saveJob($id, [
@@ -182,6 +189,7 @@ class CheesaMailerHandler extends Handler {
 			'mode' => $mode,
 			'fromName' => $fromName !== '' ? $fromName : $from['name'],
 			'rows' => $rows,
+			'results' => [],
 			'idx' => 0,
 			'sent' => 0,
 			'failed' => 0,
@@ -190,6 +198,7 @@ class CheesaMailerHandler extends Handler {
 			'ctx' => $request->getContext() ? (int) $request->getContext()->getId() : 0,
 			'created' => time(),
 		]);
+		$plugin->setLastRunId($id);
 		return $this->json(['jobId' => $id, 'total' => $total, 'invalid' => $invalid, 'dup' => $dup]);
 	}
 
@@ -213,6 +222,7 @@ class CheesaMailerHandler extends Handler {
 			$subj = strtr($job['subject'], $repl);
 			$bod = strtr($job['body'], $repl);
 			$ok = $this->sendOne($from['email'], $job['fromName'], $r['email'], $subj, $bod, $job['format'], $c);
+			$job['results'][] = [$r['email'], $ok ? 1 : 0];
 			if ($ok) { $job['sent']++; $batchSent++; } else { $job['failed']++; }
 			usleep(self::THROTTLE_US);
 		}
@@ -220,12 +230,12 @@ class CheesaMailerHandler extends Handler {
 		if ($batchSent) $plugin->addSentToday($batchSent);
 
 		$done = $job['idx'] >= $job['total'];
-		if ($done) {
+		if ($done && empty($job['logged'])) {
+			$job['logged'] = true;
 			$plugin->audit('kirim', 'Call/email massal: "' . $job['subject'] . '" — ' . $job['sent'] . ' terkirim, ' . $job['failed'] . ' gagal, dari ' . $job['total'] . ' penerima.', $request);
-			$plugin->deleteJob($id);
-		} else {
-			$plugin->saveJob($id, $job);
 		}
+		$plugin->saveJob($id, $job);
+		$plugin->setLastRunId($id);
 		return $this->json([
 			'done' => $done, 'sent' => $job['sent'], 'failed' => $job['failed'],
 			'processed' => $job['idx'], 'total' => $job['total'],
@@ -366,6 +376,25 @@ class CheesaMailerHandler extends Handler {
 			if (++$rc > self::MAX_RECIPIENTS + 50) break;
 		}
 		return $rows;
+	}
+
+	/* ------------------------------------------------------------------ unduh hasil kirim */
+
+	function download($args, $request) {
+		$this->setupTemplate($request);
+		$plugin = self::$plugin;
+		if (!$this->isUnlocked($request)) { $request->redirectUrl($plugin->pageUrl($request)); return; }
+		$id = $plugin->lastRunId();
+		$job = $id ? $plugin->getJob($id) : null;
+		if (!$job || empty($job['results'])) { $request->redirectUrl($plugin->pageUrl($request)); return; }
+		header('Content-Type: text/csv; charset=utf-8');
+		header('Content-Disposition: attachment; filename="cheesa_mailer_hasil.csv"');
+		echo "\xEF\xBB\xBF" . "email,status\n";
+		foreach ($job['results'] as $r) {
+			$e = str_replace('"', '""', (string) $r[0]);
+			echo '"' . $e . '",' . (!empty($r[1]) ? 'terkirim' : 'gagal') . "\n";
+		}
+		exit;
 	}
 
 	/* ------------------------------------------------------------------ kirim satu email */
