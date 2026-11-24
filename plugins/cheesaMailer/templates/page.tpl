@@ -149,6 +149,11 @@
 	<div class="card">
 		<h1>Daftar penerima</h1>
 		<p class="sub" id="cmToHelp">Tempel alamat email, dipisah baris baru, koma, titik koma, atau spasi. Duplikat & yang tidak valid otomatis dibuang.</p>
+		<div style="margin:4px 0 10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+			<input type="file" id="cmFile" accept=".xlsx,.csv" style="display:none">
+			<button type="button" class="btn ghost" id="cmFileBtn">📁 Unggah Excel/CSV</button>
+			<span class="meta" id="cmFileInfo">Kolom dikenali otomatis: Email, Nama, Judul. Hasilnya mengisi kotak di bawah untuk Anda tinjau.</span>
+		</div>
 		<textarea id="cmTo" placeholder="budi@example.ac.id&#10;siti@univ.ac.id, andi@inst.go.id"></textarea>
 		<div class="hint" id="cmCount">0 alamat terdeteksi.</div>
 
@@ -185,6 +190,7 @@ var CM_CFG = {ldelim}
 	start: "{$cmStartUrl}",
 	batch: "{$cmBatchUrl}",
 	test:  "{$cmTestUrl}",
+	upload: "{$cmUploadUrl}",
 	tpl: {$cmTplJson nofilter}
 {rdelim};
 </script>
@@ -249,6 +255,23 @@ var CM_CFG = {ldelim}
 		for(var k in data) fd.append(k,data[k]);
 		return fetch(url,{method:'POST',body:fd,credentials:'same-origin'}).then(function(r){return r.json();});
 	}
+
+	// unggah Excel/CSV -> isi kotak penerima (mode personal)
+	var UPLOAD=CM_CFG.upload, fileBtn=$('cmFileBtn'), fileIn=$('cmFile'), fileInfo=$('cmFileInfo');
+	fileBtn.addEventListener('click', function(){ fileIn.click(); });
+	fileIn.addEventListener('change', function(){
+		if(!fileIn.files.length) return;
+		var f=fileIn.files[0];
+		fileInfo.textContent='Membaca '+f.name+'…';
+		var fd=new FormData(); fd.append('csrfToken',CSRF); fd.append('file',f);
+		fetch(UPLOAD,{method:'POST',body:fd,credentials:'same-origin'}).then(function(r){return r.json();}).then(function(res){
+			if(res.error){ fileInfo.textContent=''; show('err',res.error); return; }
+			var pm=document.querySelector('input[name=mode][value=personal]'); if(pm){ pm.checked=true; }
+			to.value=res.text; applyMode();
+			fileInfo.innerHTML='✓ <b>'+res.count+'</b> penerima dimuat'+(res.invalid?(' ('+res.invalid+' tanpa email valid diabaikan)'):'')+'. Tinjau di bawah lalu uji-kirim.';
+		}).catch(function(){ fileInfo.textContent=''; show('err','Gagal mengunggah file.'); });
+		fileIn.value='';
+	});
 
 	testBtn.addEventListener('click', function(){
 		if(!subject.value.trim()||!body.value.trim()){ show('err','Isi subjek dan isi email dulu.'); return; }

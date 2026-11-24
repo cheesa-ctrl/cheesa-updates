@@ -26,7 +26,7 @@ class CheesaMailerHandler extends Handler {
 		parent::__construct();
 		$this->addRoleAssignment(
 			[ROLE_ID_SITE_ADMIN, ROLE_ID_MANAGER],
-			['index', 'unlock', 'lock', 'start', 'batch', 'test']
+			['index', 'unlock', 'lock', 'start', 'batch', 'test', 'upload']
 		);
 	}
 
@@ -132,6 +132,7 @@ class CheesaMailerHandler extends Handler {
 			'cmStartUrl' => $plugin->actionUrl($request, 'start'),
 			'cmBatchUrl' => $plugin->actionUrl($request, 'batch'),
 			'cmTestUrl' => $plugin->actionUrl($request, 'test'),
+			'cmUploadUrl' => $plugin->actionUrl($request, 'upload'),
 			'cmFromEmail' => $from['email'],
 			'cmFromName' => $from['name'],
 			'cmMax' => self::MAX_RECIPIENTS,
@@ -248,6 +249,123 @@ class CheesaMailerHandler extends Handler {
 		$repl = ['{name}' => 'Dr. [Nama]', '{paper}' => '[judul makalah]', '{email}' => $me->getEmail()];
 		$ok = $this->sendOne($from['email'], $fromName !== '' ? $fromName : $from['name'], $me->getEmail(), '[UJI] ' . strtr($subject, $repl), strtr($body, $repl), $format, $request->getContext());
 		return $ok ? $this->json(['ok' => true, 'email' => $me->getEmail()]) : $this->json(['error' => 'Uji-kirim gagal. Cek konfigurasi email server.']);
+	}
+
+	/* ------------------------------------------------------------------ unggah Excel/CSV */
+
+	function upload($args, $request) {
+		if (!$request->isPost() || !$request->checkCSRF()) return $this->json(['error' => 'Permintaan tidak sah.']);
+		if (!$this->isUnlocked($request)) return $this->json(['error' => 'Halaman terkunci. Muat ulang dan masukkan kata sandi.']);
+		if (empty($_FILES['file']) || !isset($_FILES['file']['tmp_name']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) return $this->json(['error' => 'Tidak ada file atau gagal mengunggah.']);
+		$f = $_FILES['file'];
+		if ($f['size'] > 5 * 1024 * 1024) return $this->json(['error' => 'File terlalu besar (maks 5 MB).']);
+		if (!is_uploaded_file($f['tmp_name'])) return $this->json(['error' => 'File tidak valid.']);
+		$name = strtolower((string) $f['name']);
+		try {
+			if (substr($name, -4) === '.csv') $rows = $this->readCsvRows($f['tmp_name']);
+			elseif (substr($name, -5) === '.xlsx') $rows = $this->readXlsxRows($f['tmp_name']);
+			else return $this->json(['error' => 'Format tidak didukung. Gunakan .xlsx atau .csv.']);
+		} catch (\Throwable $e) {
+			return $this->json(['error' => 'Gagal membaca file: ' . $e->getMessage()]);
+		}
+		if (!$rows) return $this->json(['error' => 'File kosong.']);
+
+		// deteksi kolom dari baris header
+		$hdr = array_map(function ($x) { return strtolower(trim((string) $x)); }, $rows[0]);
+		$ciE = $ciN = $ciT = -1;
+		foreach ($hdr as $i => $h) {
+			if ($ciE < 0 && strpos($h, 'email') !== false) $ciE = $i;
+			if ($ciN < 0 && (strpos($h, 'nama') !== false || strpos($h, 'name') !== false)) $ciN = $i;
+			if ($ciT < 0 && (strpos($h, 'judul') !== false || strpos($h, 'title') !== false || strpos($h, 'paper') !== false || strpos($h, 'makalah') !== false)) $ciT = $i;
+		}
+		$hasHeader = $ciE >= 0;
+		if (!$hasHeader) { $ciE = 0; $ciN = 1; $ciT = 2; }
+		$start = $hasHeader ? 1 : 0;
+
+		$lines = []; $seen = []; $invalid = 0;
+		for ($i = $start; $i < count($rows); $i++) {
+			$r = $rows[$i];
+			$email = isset($r[$ciE]) ? trim((string) $r[$ciE], " \t<>\"'") : '';
+			if (!filter_var($email, FILTER_VALIDATE_EMAIL)) { if (trim(implode('', $r)) !== '') $invalid++; continue; }
+			$key = strtolower($email);
+			if (isset($seen[$key])) continue;
+			$seen[$key] = true;
+			$nm = ($ciN >= 0 && isset($r[$ciN])) ? trim((string) $r[$ciN]) : '';
+			$tt = ($ciT >= 0 && isset($r[$ciT])) ? trim((string) $r[$ciT]) : '';
+			$nm = str_replace(["\t", "\r", "\n"], ' ', $nm);
+			$tt = str_replace(["\t", "\r", "\n"], ' ', $tt);
+			$lines[] = $email . "\t" . $nm . "\t" . $tt;
+			if (count($lines) >= self::MAX_RECIPIENTS) break;
+		}
+		if (!$lines) return $this->json(['error' => 'Tidak ada email valid di file. Pastikan ada kolom berisi alamat email.']);
+		return $this->json(['text' => implode("\n", $lines), 'count' => count($lines), 'invalid' => $invalid, 'header' => $hasHeader]);
+	}
+
+	private function readCsvRows($path) {
+		$rows = [];
+		$h = fopen($path, 'r');
+		if (!$h) throw new Exception('tidak bisa membuka file.');
+		$n = 0;
+		while (($c = fgetcsv($h, 0, ',')) !== false) {
+			if ($n === 0 && isset($c[0])) $c[0] = preg_replace('/^\xEF\xBB\xBF/', '', $c[0]); // buang BOM
+			$rows[] = $c;
+			if (++$n > self::MAX_RECIPIENTS + 50) break;
+		}
+		fclose($h);
+		return $rows;
+	}
+
+	private function colIdx($letters) {
+		$n = 0; $letters = strtoupper($letters);
+		for ($i = 0; $i < strlen($letters); $i++) $n = $n * 26 + (ord($letters[$i]) - 64);
+		return $n - 1;
+	}
+
+	private function readXlsxRows($path) {
+		if (!class_exists('ZipArchive')) throw new Exception('server tidak bisa membaca .xlsx (ekstensi zip nonaktif). Unggah CSV saja.');
+		$zip = new ZipArchive();
+		if ($zip->open($path) !== true) throw new Exception('file xlsx rusak.');
+		$shared = [];
+		$ss = $zip->getFromName('xl/sharedStrings.xml');
+		if ($ss !== false) {
+			$x = simplexml_load_string($ss, 'SimpleXMLElement', LIBXML_NONET);
+			if ($x) foreach ($x->si as $si) {
+				$t = '';
+				if (isset($si->t)) $t = (string) $si->t;
+				else foreach ($si->r as $r) $t .= (string) $r->t;
+				$shared[] = $t;
+			}
+		}
+		$sheet = $zip->getFromName('xl/worksheets/sheet1.xml');
+		if ($sheet === false) {
+			for ($i = 0; $i < $zip->numFiles; $i++) {
+				$nm = $zip->getNameIndex($i);
+				if (preg_match('#xl/worksheets/sheet\d+\.xml$#', $nm)) { $sheet = $zip->getFromName($nm); break; }
+			}
+		}
+		$zip->close();
+		if ($sheet === false) throw new Exception('lembar kerja tidak ditemukan.');
+		$x = simplexml_load_string($sheet, 'SimpleXMLElement', LIBXML_NONET);
+		if (!$x) throw new Exception('isi xlsx tidak terbaca.');
+		$rows = []; $rc = 0;
+		foreach ($x->sheetData->row as $row) {
+			$cells = [];
+			foreach ($row->c as $c) {
+				$ref = (string) $c['r']; $col = preg_replace('/[0-9]+/', '', $ref);
+				if ($col === '') continue;
+				$t = (string) $c['t']; $v = '';
+				if ($t === 's') { $v = isset($shared[(int) $c->v]) ? $shared[(int) $c->v] : ''; }
+				elseif ($t === 'inlineStr') { $v = isset($c->is->t) ? (string) $c->is->t : ''; }
+				else { $v = (string) $c->v; }
+				$cells[$this->colIdx($col)] = $v;
+			}
+			$max = $cells ? max(array_keys($cells)) : -1;
+			$arr = [];
+			for ($i = 0; $i <= $max; $i++) $arr[$i] = isset($cells[$i]) ? $cells[$i] : '';
+			$rows[] = $arr;
+			if (++$rc > self::MAX_RECIPIENTS + 50) break;
+		}
+		return $rows;
 	}
 
 	/* ------------------------------------------------------------------ kirim satu email */

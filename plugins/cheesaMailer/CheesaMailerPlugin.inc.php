@@ -28,7 +28,7 @@ class CheesaMailerPlugin extends GenericPlugin {
 	public function getDisplayName() { return 'CHEESA Mailer'; }
 
 	public function getDescription() {
-		return 'Kirim email massal (Call for Papers, Call for Reviewer/Editor) ke daftar email yang ditempel. Terkunci kata sandi, akses Site Administrator dan Journal Manager/Editor, kirim bertahap dengan pembatas harian, uji-kirim ke email sendiri, dan setiap pengiriman dicatat.';
+		return 'Kirim email massal (Call for Papers, Call for Reviewer/Editor) ke daftar email yang ditempel. Terkunci kata sandi, akses Site Administrator dan Journal Manager/Editor, kirim bertahap dengan pembatas harian, unggah daftar dari Excel/CSV, mode undangan personal (menyebut nama & makalah), uji-kirim ke email sendiri, dan setiap pengiriman dicatat.';
 	}
 
 	public function loadPageHandler($hookName, $params) {
