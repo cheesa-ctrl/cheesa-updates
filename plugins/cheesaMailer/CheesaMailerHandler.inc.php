@@ -140,6 +140,7 @@ class CheesaMailerHandler extends Handler {
 			'cmMyEmail' => $request->getUser() ? $request->getUser()->getEmail() : '',
 			'cmLog' => array_slice($plugin->auditLog(), 0, 20),
 			'cmTemplates' => $this->templates($from),
+			'cmTplJson' => json_encode($this->templates($from), JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_UNICODE),
 		]);
 		return $tm->display($plugin->getTemplateResource('page.tpl'));
 	}

@@ -142,7 +142,7 @@
 		</div>
 
 		<label for="cmBody">Isi email <i>*</i></label>
-		<textarea id="cmBody" placeholder="Tulis isi email di sini. Gunakan {DEADLINE} dsb. lalu ganti sesuai kebutuhan."></textarea>
+		<textarea id="cmBody" placeholder="Tulis isi email di sini. Untuk mode personal gunakan placeholder nama &amp; makalah."></textarea>
 		<div class="hint">Footer "cara berhenti berlangganan" otomatis ditambahkan demi kepatuhan anti-spam.</div>
 	</div>
 
@@ -181,12 +181,12 @@
 
 <form id="csrfHolder" style="display:none">{csrf}</form>
 <script>
-var CM_CFG = {
-	start: "{$cmStartUrl|escape:'javascript'}",
-	batch: "{$cmBatchUrl|escape:'javascript'}",
-	test:  "{$cmTestUrl|escape:'javascript'}",
-	tpl: {ldelim}{foreach $cmTemplates key=k item=t name=tl}"{$k|escape:'javascript'}": {ldelim}subject:"{$t.subject|escape:'javascript'}", body:"{$t.body|escape:'javascript'}"{rdelim}{if !$smarty.foreach.tl.last},{/if}{/foreach}{rdelim}
-};
+var CM_CFG = {ldelim}
+	start: "{$cmStartUrl}",
+	batch: "{$cmBatchUrl}",
+	test:  "{$cmTestUrl}",
+	tpl: {$cmTplJson nofilter}
+{rdelim};
 </script>
 {literal}
 <script>
