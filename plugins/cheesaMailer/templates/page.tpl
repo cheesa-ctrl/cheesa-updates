@@ -226,7 +226,7 @@ var CM_CFG = {ldelim}
 			var k=c.getAttribute('data-tpl');
 			if(k==='_clear'){ subject.value=''; body.value=''; return; }
 			if(TPL[k]){ subject.value=TPL[k].subject; body.value=TPL[k].body;
-				if(k==='invite'){ var pm=document.querySelector('input[name=mode][value=personal]'); if(pm){ pm.checked=true; applyMode(); } }
+				if(k.indexOf('invite')===0){ var pm=document.querySelector('input[name=mode][value=personal]'); if(pm){ pm.checked=true; applyMode(); } }
 				subject.focus(); }
 		});
 	});

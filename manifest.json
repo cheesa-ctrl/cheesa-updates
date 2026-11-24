@@ -48,10 +48,10 @@
         "cheesaMailer": {
             "category": "generic",
             "label": "Cheesa Mailer",
-            "version": "1.2.0.0",
-            "file": "cheesaMailer-1.2.0.0.tar.gz",
-            "sha256": "ff19573a64e77d5c85b6a953270657301d6a035d67d25966966e75f68f36c584",
-            "size": 15383,
+            "version": "1.3.0.0",
+            "file": "cheesaMailer-1.3.0.0.tar.gz",
+            "sha256": "2a9b07dd1d92b2ae89185e4aed97ed22aa81a8fcc8d124535384c0b9a1c92e1f",
+            "size": 15538,
             "released": "2026-11-24"
         },
         "cheesaNovelty": {
@@ -118,5 +118,5 @@
             "released": "2026-11-16"
         }
     },
-    "generated": "2026-11-24T21:46:03+00:00"
+    "generated": "2026-11-24T21:59:32+00:00"
 }

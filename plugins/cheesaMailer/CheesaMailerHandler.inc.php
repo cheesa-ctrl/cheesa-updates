@@ -479,6 +479,21 @@ class CheesaMailerHandler extends Handler {
 "Editorial Team\n" .
 "CHEESA: Chemical Engineering Research Articles";
 
+		$invite_cfp_body =
+"Dear Dr. {name},\n\n" .
+"I am writing on behalf of the editorial team of CHEESA: Chemical Engineering Research Articles. I read your work, \"{paper}\", with great interest.\n\n" .
+"Given the relevance of your research, I would like to warmly invite you to consider submitting your future work to CHEESA. We are currently welcoming submissions for our upcoming issues.\n\n" .
+"About CHEESA:\n" .
+"- Peer-reviewed and open access (freely available to readers)\n" .
+"- Focused on chemical engineering, process technology, and related fields\n" .
+"- Growing international readership\n\n" .
+"Submission & author guidelines: https://journal-ft.unipma.ac.id/cheesa\n\n" .
+"If you have a manuscript that fits our scope, we would be glad to receive it. Should you have any questions, simply reply to this email.\n\n" .
+"Thank you for your time and for your contribution to the field.\n\n" .
+"Best regards,\n" .
+"Editorial Team\n" .
+"CHEESA: Chemical Engineering Research Articles";
+
 		$invite_body =
 "Dear Dr. {name},\n\n" .
 "I am writing on behalf of the editorial team of CHEESA: Chemical Engineering Research Articles. I read your work, \"{paper}\", with great interest.\n\n" .
@@ -497,7 +512,8 @@ class CheesaMailerHandler extends Handler {
 		return [
 			'cfp' => ['label' => 'Call for Papers', 'subject' => 'Call for Papers — CHEESA: Chemical Engineering Research Articles', 'body' => $cfp_body],
 			'reviewer' => ['label' => 'Call for Reviewer / Editor', 'subject' => 'Invitation to Join as Reviewer / Editor — CHEESA', 'body' => $crev_body],
-			'invite' => ['label' => 'Undangan personal (pakai {name}, {paper})', 'subject' => 'Invitation from CHEESA: Chemical Engineering Research Articles', 'body' => $invite_body],
+			'invitecfp' => ['label' => 'Personal — Call for Papers', 'subject' => 'Invitation to Submit to CHEESA: Chemical Engineering Research Articles', 'body' => $invite_cfp_body],
+			'inviterev' => ['label' => 'Personal — Reviewer/Editor', 'subject' => 'Invitation to Join CHEESA as Reviewer / Editor', 'body' => $invite_body],
 		];
 	}
 }
