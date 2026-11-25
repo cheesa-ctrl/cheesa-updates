@@ -548,6 +548,18 @@ class CheesaMailerHandler extends Handler {
 "Editorial Team\n" .
 "CHEESA: Chemical Engineering Research Articles";
 
+		$reply_body =
+"Dear Dr. {name},\n\n" .
+"Thank you very much for your kind reply \u2014 we would be delighted to receive your work at CHEESA whenever you have a manuscript that fits our scope. Please do keep us in mind for the future.\n\n" .
+"Given the expertise reflected in your work, \"{paper}\", we would also be honored to invite you to join CHEESA as a reviewer. Your background would be highly valuable in evaluating manuscripts within our green chemistry, separation, reaction, and related areas.\n\n" .
+"If you are open to it, you can register as a reviewer here:\n" .
+"https://journal-ft.unipma.ac.id/cheesa/rolereg\n\n" .
+"When registering, kindly tick the Reviewer role and list your areas of expertise (and ORCID iD, if available). Alternatively, simply reply to this email with your ORCID iD and reviewing interests, and we will gladly set it up for you.\n\n" .
+"Thank you again for your interest in CHEESA, and we look forward to the possibility of working together.\n\n" .
+"Warm regards,\n" .
+"Editorial Team\n" .
+"CHEESA: Chemical Engineering Research Articles";
+
 		$notif_body =
 "Yth. {name},\n\n" .
 "Kami dari tim editorial CHEESA: Chemical Engineering Research Articles ingin menyampaikan informasi berikut kepada Anda sebagai bagian dari komunitas jurnal kami.\n\n" .
@@ -591,6 +603,7 @@ class CheesaMailerHandler extends Handler {
 		return [
 			'cfp' => ['label' => 'Call for Papers', 'subject' => 'Call for Papers — CHEESA: Chemical Engineering Research Articles', 'body' => $cfp_body],
 			'reviewer' => ['label' => 'Call for Reviewer / Editor', 'subject' => 'Invitation to Join as Reviewer / Editor — CHEESA', 'body' => $crev_body],
+			'replyrev' => ['label' => 'Balasan — terima kasih + ajakan reviewer', 'subject' => 'Re: Invitation to Submit to CHEESA: Chemical Engineering Research Articles', 'body' => $reply_body],
 			'notif' => ['label' => 'Notifikasi pengguna (pakai {name})', 'subject' => 'Pengumuman dari CHEESA: Chemical Engineering Research Articles', 'body' => $notif_body],
 			'invitecfp' => ['label' => 'Personal — Call for Papers', 'subject' => 'Invitation to Submit to CHEESA: Chemical Engineering Research Articles', 'body' => $invite_cfp_body],
 			'inviterev' => ['label' => 'Personal — Reviewer/Editor', 'subject' => 'Invitation to Join CHEESA as Reviewer / Editor', 'body' => $invite_body],
