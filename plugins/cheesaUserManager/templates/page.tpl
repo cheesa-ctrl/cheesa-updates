@@ -381,6 +381,26 @@
 				{else}
 				<button class="btn sec" type="button" disabled title="{$u.lock|escape}">✎ Username</button>
 				{/if}
+				{if $u.canEditRoles}
+				<details class="pop">
+					<summary class="btn sec">✎ Peran</summary>
+					<form class="popbox" method="post" action="{$umSaveUrl|escape}">
+						{csrf}
+						<input type="hidden" name="verb" value="roles"><input type="hidden" name="userId" value="{$u.id}">
+						<input type="hidden" name="q" value="{$umQ|escape}"><input type="hidden" name="p" value="{$umPage}">
+						<label>Peran “{$u.username|escape}” di jurnal ini</label>
+						<div style="display:flex;flex-direction:column;gap:7px;margin:8px 0;">
+							{foreach from=$umGroups item=g}
+							<label style="display:flex;align-items:center;gap:8px;font-weight:500;cursor:pointer;"><input type="checkbox" name="groups[]" value="{$g.id}"{if isset($u.groupMap[$g.id])} checked{/if}> {$g.name|escape}</label>
+							{/foreach}
+						</div>
+						<p>Centang peran yang ingin dimiliki akun ini. Perubahan hanya berlaku untuk jurnal ini; peran Site Admin tidak diubah dari sini.</p>
+						<div class="row"><button class="btn" type="submit">Simpan peran</button></div>
+					</form>
+				</details>
+				{else}
+				<button class="btn sec" type="button" disabled title="{if $u.lock}{$u.lock|escape}{elseif $u.isMe}Akun Anda sendiri{elseif $u.isAdmin}Akun Site Admin{/if}">✎ Peran</button>
+				{/if}
 				{if $u.canMerge}
 				<details class="pop">
 					<summary class="btn sec">⇄ Gabungkan</summary>

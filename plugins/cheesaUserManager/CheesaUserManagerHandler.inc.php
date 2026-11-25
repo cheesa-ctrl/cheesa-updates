@@ -219,6 +219,7 @@ class CheesaUserManagerHandler extends Handler {
 		$names = $this->names($ids);
 		$roles = $this->roles($ids);
 		$activity = $this->activity($ids);
+		$ugIds = $this->userGroupIds($ids, $cid);
 		$me = (int) $request->getUser()->getId();
 
 		$rows = [];
@@ -250,6 +251,8 @@ class CheesaUserManagerHandler extends Handler {
 				'canDelete' => !$act && !$isAdmin && $id !== $me && $lock === '',
 				'canMerge' => !$isAdmin && $id !== $me && $lock === '',
 				'canLoginAs' => $canLoginAs,
+				'groupMap' => isset($ugIds[$id]) ? array_fill_keys($ugIds[$id], 1) : [],
+				'canEditRoles' => $lock === '' && $id !== $me && !$isAdmin,
 			];
 		}
 
@@ -363,6 +366,27 @@ class CheesaUserManagerHandler extends Handler {
 				$userDao->updateObject($user);
 				$plugin->audit('ubah username', "#$id $old → $new", $request);
 				$ok = "Username #$id diubah dari \"$old\" menjadi \"$new\". Beri tahu pemilik akun bahwa ia sekarang login dengan username baru.";
+
+			} elseif ($verb === 'roles') {
+				if ($id === $me) throw new Exception('Peran akun Anda sendiri tidak bisa diubah dari sini (menghindari salah-kunci akses). Pakai Users & Roles untuk itu.');
+				if (!empty($info['admin'])) throw new Exception('Akun Site Administrator tidak bisa diubah perannya dari sini.');
+				$selected = array_values(array_unique(array_map('intval', (array) $request->getUserVar('groups'))));
+				$valid = array_map(function ($g) { return (int) $g['id']; }, $this->journalGroups($cid));
+				$selected = array_values(array_intersect($selected, $valid));
+				$curMap = $this->userGroupIds([$id], $cid);
+				$cur = isset($curMap[$id]) ? $curMap[$id] : [];
+				$toAdd = array_values(array_diff($selected, $cur));
+				$toRemove = array_values(array_diff($cur, $selected));
+				$ugDao = DAORegistry::getDAO('UserGroupDAO');
+				foreach ($toAdd as $gid) $ugDao->assignUserToGroup($id, $gid);
+				foreach ($toRemove as $gid) $ugDao->removeUserFromGroup($id, $gid, $cid);
+				if (!$toAdd && !$toRemove) { $ok = 'Tidak ada perubahan peran.'; }
+				else {
+					$byId = []; foreach ($this->journalGroups($cid) as $g) $byId[(int) $g['id']] = $g['name'];
+					$nm = function ($arr) use ($byId) { return implode(', ', array_map(function ($g) use ($byId) { return isset($byId[$g]) ? $byId[$g] : ('#' . $g); }, $arr)); };
+					$plugin->audit('ubah peran', "#$id $old +[" . $nm($toAdd) . '] -[' . $nm($toRemove) . ']', $request);
+					$ok = 'Peran "' . $old . '" diperbarui.' . ($toAdd ? ' Ditambah: ' . $nm($toAdd) . '.' : '') . ($toRemove ? ' Dicabut: ' . $nm($toRemove) . '.' : '');
+				}
 
 			} elseif ($verb === 'delete') {
 				$this->guardTarget($id, $me, (string) $request->getUserVar('confirm'), $old, 'dihapus');
@@ -660,6 +684,18 @@ class CheesaUserManagerHandler extends Handler {
 			$out[] = ['id' => (int) $g->getId(), 'name' => $g->getLocalizedName(), 'role' => isset(self::ROLES[$rid]) ? self::ROLES[$rid] : ''];
 		}
 		return $cache[$cid] = $out;
+	}
+
+	/** @return array user_id => [user_group_id, ...] peran (group) yang dimiliki di jurnal $cid */
+	private function userGroupIds(array $ids, $cid) {
+		if (!$ids) return [];
+		$rows = Capsule::table('user_user_groups as uug')
+			->join('user_groups as ug', 'ug.user_group_id', '=', 'uug.user_group_id')
+			->whereIn('uug.user_id', $ids)->where('ug.context_id', (int) $cid)
+			->get(['uug.user_id', 'uug.user_group_id']);
+		$out = [];
+		foreach ($rows as $r) $out[(int) $r->user_id][] = (int) $r->user_group_id;
+		return $out;
 	}
 
 	/* ------------------------------------------------------------------ bantuan */
