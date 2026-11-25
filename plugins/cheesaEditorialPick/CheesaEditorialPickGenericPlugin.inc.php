@@ -132,7 +132,14 @@ class CheesaEditorialPickGenericPlugin extends GenericPlugin {
 	public function canManage($request) {
 		$user = $request->getUser(); $c = $request->getContext();
 		if (!$user || !$c) return false;
-		return Validation::isSiteAdmin() || $user->hasRole([ROLE_ID_MANAGER, ROLE_ID_SUB_EDITOR], (int) $c->getId());
+		if (Validation::isSiteAdmin()) return true;
+		// cek peran langsung ke user-group (andal di OJS 3.3), bukan $user->hasRole() yang bisa meleset
+		$userGroupDao = DAORegistry::getDAO('UserGroupDAO');
+		$groups = $userGroupDao->getByUserId($user->getId(), (int) $c->getId());
+		while ($groups && ($g = $groups->next())) {
+			if (in_array((int) $g->getRoleId(), [ROLE_ID_MANAGER, ROLE_ID_SUB_EDITOR])) return true;
+		}
+		return false;
 	}
 
 	public function getActions($request, $actionArgs) {
