@@ -154,6 +154,17 @@
 			<button type="button" class="btn ghost" id="cmFileBtn">📁 Unggah Excel/CSV</button>
 			<span class="meta" id="cmFileInfo">Kolom dikenali otomatis: Email, Nama, Judul. Hasilnya mengisi kotak di bawah untuk Anda tinjau.</span>
 		</div>
+		<div style="margin:0 0 10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+			<select id="cmRole" style="width:auto;min-width:170px;">
+				<option value="all">Semua pengguna CHEESA</option>
+				<option value="author">Author</option>
+				<option value="reviewer">Reviewer</option>
+				<option value="editor">Editor (Manager/Editor)</option>
+				<option value="reader">Reader</option>
+			</select>
+			<button type="button" class="btn ghost" id="cmUsersBtn">👥 Ambil pengguna CHEESA</button>
+			<span class="meta" id="cmUsersInfo">Untuk notifikasi/pengumuman ke pengguna terdaftar (sudah setuju).</span>
+		</div>
 		<textarea id="cmTo" placeholder="budi@example.ac.id&#10;siti@univ.ac.id, andi@inst.go.id"></textarea>
 		<div class="hint" id="cmCount">0 alamat terdeteksi.</div>
 
@@ -206,6 +217,7 @@ var CM_CFG = {ldelim}
 	test:  "{$cmTestUrl}",
 	upload: "{$cmUploadUrl}",
 	resumeId: "{$cmResumeId}",
+	users: "{$cmUsersUrl}",
 	tpl: {$cmTplJson nofilter}
 {rdelim};
 </script>
@@ -241,7 +253,7 @@ var CM_CFG = {ldelim}
 			var k=c.getAttribute('data-tpl');
 			if(k==='_clear'){ subject.value=''; body.value=''; return; }
 			if(TPL[k]){ subject.value=TPL[k].subject; body.value=TPL[k].body;
-				if(k.indexOf('invite')===0){ var pm=document.querySelector('input[name=mode][value=personal]'); if(pm){ pm.checked=true; applyMode(); } }
+				if(TPL[k] && (TPL[k].body.indexOf('{name}')>=0 || TPL[k].body.indexOf('{paper}')>=0)){ var pm=document.querySelector('input[name=mode][value=personal]'); if(pm){ pm.checked=true; applyMode(); } }
 				subject.focus(); }
 		});
 	});
@@ -286,6 +298,19 @@ var CM_CFG = {ldelim}
 			fileInfo.innerHTML='✓ <b>'+res.count+'</b> penerima dimuat'+(res.invalid?(' ('+res.invalid+' tanpa email valid diabaikan)'):'')+'. Tinjau di bawah lalu uji-kirim.';
 		}).catch(function(){ fileInfo.textContent=''; show('err','Gagal mengunggah file.'); });
 		fileIn.value='';
+	});
+
+	// ambil pengguna jurnal menurut peran -> isi kotak penerima (mode personal)
+	var USERS=CM_CFG.users, usersBtn=$('cmUsersBtn'), roleSel=$('cmRole'), usersInfo=$('cmUsersInfo');
+	usersBtn.addEventListener('click', function(){
+		usersBtn.disabled=true; usersInfo.textContent='Mengambil\u2026';
+		post(USERS,{role:roleSel.value}).then(function(res){
+			usersBtn.disabled=false;
+			if(res.error){ usersInfo.textContent=''; show('err',res.error); return; }
+			var pm=document.querySelector('input[name=mode][value=personal]'); if(pm){ pm.checked=true; }
+			to.value=res.text; applyMode();
+			usersInfo.innerHTML='\u2713 <b>'+res.count+'</b> pengguna dimuat. Tinjau lalu uji-kirim.';
+		}).catch(function(){ usersBtn.disabled=false; usersInfo.textContent=''; show('err','Gagal mengambil pengguna.'); });
 	});
 
 	testBtn.addEventListener('click', function(){

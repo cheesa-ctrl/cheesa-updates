@@ -26,7 +26,7 @@ class CheesaMailerHandler extends Handler {
 		parent::__construct();
 		$this->addRoleAssignment(
 			[ROLE_ID_SITE_ADMIN, ROLE_ID_MANAGER],
-			['index', 'unlock', 'lock', 'start', 'batch', 'test', 'upload', 'download']
+			['index', 'unlock', 'lock', 'start', 'batch', 'test', 'upload', 'download', 'users']
 		);
 	}
 
@@ -59,7 +59,7 @@ class CheesaMailerHandler extends Handler {
 			'pageTitle' => 'Email Massal — CHEESA Mailer',
 			'cmName' => $c ? $c->getLocalizedName() : 'CHEESA',
 			'cmHome' => $request->getDispatcher()->url($request, ROUTE_PAGE, null, 'index'),
-			'cmDash' => $request->getDispatcher()->url($request, ROUTE_PAGE, null, 'dashboard'),
+			'cmDash' => $request->getDispatcher()->url($request, ROUTE_PAGE, null, 'submissions'),
 			'cmPluginsUrl' => $request->getDispatcher()->url($request, ROUTE_PAGE, null, 'management', 'settings', 'website', null, 'plugins'),
 		];
 	}
@@ -135,6 +135,7 @@ class CheesaMailerHandler extends Handler {
 			'cmBatchUrl' => $plugin->actionUrl($request, 'batch'),
 			'cmTestUrl' => $plugin->actionUrl($request, 'test'),
 			'cmUploadUrl' => $plugin->actionUrl($request, 'upload'),
+			'cmUsersUrl' => $plugin->actionUrl($request, 'users'),
 			'cmFromEmail' => $from['email'],
 			'cmFromName' => $from['name'],
 			'cmMax' => self::MAX_RECIPIENTS,
@@ -260,6 +261,44 @@ class CheesaMailerHandler extends Handler {
 		$repl = ['{name}' => 'Dr. [Nama]', '{paper}' => '[judul makalah]', '{email}' => $me->getEmail()];
 		$ok = $this->sendOne($from['email'], $fromName !== '' ? $fromName : $from['name'], $me->getEmail(), '[UJI] ' . strtr($subject, $repl), strtr($body, $repl), $format, $request->getContext());
 		return $ok ? $this->json(['ok' => true, 'email' => $me->getEmail()]) : $this->json(['error' => 'Uji-kirim gagal. Cek konfigurasi email server.']);
+	}
+
+	/* ------------------------------------------------------------------ ambil pengguna jurnal */
+
+	function users($args, $request) {
+		if (!$request->isPost() || !$request->checkCSRF()) return $this->json(['error' => 'Permintaan tidak sah.']);
+		if (!$this->isUnlocked($request)) return $this->json(['error' => 'Halaman terkunci. Muat ulang dan masukkan kata sandi.']);
+		$context = $request->getContext();
+		if (!$context) return $this->json(['error' => 'Konteks jurnal tidak ditemukan.']);
+		$role = (string) $request->getUserVar('role');
+		$map = [
+			'author'   => [ROLE_ID_AUTHOR],
+			'reviewer' => [ROLE_ID_REVIEWER],
+			'editor'   => [ROLE_ID_MANAGER, ROLE_ID_SUB_EDITOR],
+			'reader'   => [ROLE_ID_READER],
+		];
+		$qargs = ['contextId' => (int) $context->getId()];
+		if (isset($map[$role])) $qargs['roleIds'] = $map[$role];
+		try {
+			$iter = Services::get('user')->getMany($qargs);
+		} catch (\Throwable $e) {
+			return $this->json(['error' => 'Gagal mengambil pengguna: ' . $e->getMessage()]);
+		}
+		$lines = []; $seen = []; $skipped = 0;
+		foreach ($iter as $user) {
+			if (method_exists($user, 'getDisabled') && $user->getDisabled()) { $skipped++; continue; }
+			$email = (string) $user->getEmail();
+			if (!filter_var($email, FILTER_VALIDATE_EMAIL)) { $skipped++; continue; }
+			$key = strtolower($email);
+			if (isset($seen[$key])) continue;
+			$seen[$key] = true;
+			$name = method_exists($user, 'getFullName') ? (string) $user->getFullName() : '';
+			$name = str_replace(["\t", "\r", "\n"], ' ', $name);
+			$lines[] = $email . "\t" . $name . "\t";
+			if (count($lines) >= self::MAX_RECIPIENTS) break;
+		}
+		if (!$lines) return $this->json(['error' => 'Tidak ada pengguna ditemukan untuk peran itu.']);
+		return $this->json(['text' => implode("\n", $lines), 'count' => count($lines), 'skipped' => $skipped]);
 	}
 
 	/* ------------------------------------------------------------------ unggah Excel/CSV */
@@ -509,6 +548,16 @@ class CheesaMailerHandler extends Handler {
 "Editorial Team\n" .
 "CHEESA: Chemical Engineering Research Articles";
 
+		$notif_body =
+"Yth. {name},\n\n" .
+"Kami dari tim editorial CHEESA: Chemical Engineering Research Articles ingin menyampaikan informasi berikut kepada Anda sebagai bagian dari komunitas jurnal kami.\n\n" .
+"[Tulis isi pengumuman di sini.]\n\n" .
+"Informasi lebih lanjut dapat dilihat di: https://journal-ft.unipma.ac.id/cheesa\n\n" .
+"Terima kasih atas perhatian dan kontribusi Anda.\n\n" .
+"Hormat kami,\n" .
+"Tim Editorial\n" .
+"CHEESA: Chemical Engineering Research Articles";
+
 		$invite_cfp_body =
 "Dear Dr. {name},\n\n" .
 "I am writing on behalf of the editorial team of CHEESA: Chemical Engineering Research Articles. I read your work, \"{paper}\", with great interest.\n\n" .
@@ -542,6 +591,7 @@ class CheesaMailerHandler extends Handler {
 		return [
 			'cfp' => ['label' => 'Call for Papers', 'subject' => 'Call for Papers — CHEESA: Chemical Engineering Research Articles', 'body' => $cfp_body],
 			'reviewer' => ['label' => 'Call for Reviewer / Editor', 'subject' => 'Invitation to Join as Reviewer / Editor — CHEESA', 'body' => $crev_body],
+			'notif' => ['label' => 'Notifikasi pengguna (pakai {name})', 'subject' => 'Pengumuman dari CHEESA: Chemical Engineering Research Articles', 'body' => $notif_body],
 			'invitecfp' => ['label' => 'Personal — Call for Papers', 'subject' => 'Invitation to Submit to CHEESA: Chemical Engineering Research Articles', 'body' => $invite_cfp_body],
 			'inviterev' => ['label' => 'Personal — Reviewer/Editor', 'subject' => 'Invitation to Join CHEESA as Reviewer / Editor', 'body' => $invite_body],
 		];
