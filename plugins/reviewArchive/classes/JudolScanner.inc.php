@@ -64,6 +64,16 @@ class JudolScanner extends TextExtractor {
 	const MAX_PER_LOCATION = 5;
 	const MAX_TOTAL = 100;
 
+	/**
+	 * Jaring pengaman agar impor sangat besar tak melewati timeout web-server.
+	 * Nilainya longgar: untuk berkas per-artikel yang normal, cap ini tak pernah
+	 * tersentuh sehingga tiap berkas dipindai PENUH. Hanya berkas tunggal yang
+	 * luar biasa besar (> 20 MB) yang dipotong, dan itu pun dilaporkan.
+	 */
+	const MAX_FILE_BYTES = 20971520;  // 20 MB per-embed (PDF galley/review normal jauh di bawah ini)
+	const MAX_TEXT = 2097152;         // 2 MB teks untuk pemindai regex
+	const TIME_BUDGET = 40;           // detik: jaring pengaman; berkas sisa dilewati & dilaporkan
+
 	/** @var array */
 	protected $_findings = [];
 
@@ -72,6 +82,9 @@ class JudolScanner extends TextExtractor {
 
 	/** @var int */
 	protected $_scannedFiles = 0;
+
+	/** @var float Waktu mulai pindai (untuk batas waktu). */
+	protected $_start = 0.0;
 
 	/**
 	 * Scan a Native XML file.
@@ -95,6 +108,7 @@ class JudolScanner extends TextExtractor {
 		$this->_findings = [];
 		$this->_skipped = [];
 		$this->_scannedFiles = 0;
+		$this->_start = microtime(true);
 
 		$previous = libxml_use_internal_errors(true);
 		$dom = new DOMDocument();
@@ -154,6 +168,12 @@ class JudolScanner extends TextExtractor {
 		$extension = strtolower((string) ($fileElement instanceof DOMElement ? $fileElement->getAttribute('extension') : ''));
 		$location = $this->_describeFile($embed);
 
+		// Batas waktu: setelah TIME_BUDGET, lewati berkas sisa agar tidak kena timeout server.
+		if ((microtime(true) - $this->_start) > self::TIME_BUDGET) {
+			$this->_skipped[] = $location . ' (dilewati: batas waktu pindai tercapai)';
+			return;
+		}
+
 		$encoding = strtolower($embed->getAttribute('encoding'));
 		$data = trim($embed->textContent);
 		if ($encoding === 'base64' || $encoding === '') {
@@ -164,6 +184,11 @@ class JudolScanner extends TextExtractor {
 			}
 		}
 		$this->_scannedFiles++;
+		// Batasi besar berkas yang diekstraksi agar pemindaian cepat. Dilaporkan bila terpotong.
+		if (strlen($data) > self::MAX_FILE_BYTES) {
+			$data = substr($data, 0, self::MAX_FILE_BYTES);
+			$this->_skipped[] = $location . ' (berkas besar: hanya ' . round(self::MAX_FILE_BYTES / 1048576) . ' MB pertama dipindai)';
+		}
 
 		$type = $this->_detectType($data, $extension);
 		switch ($type) {
@@ -204,6 +229,10 @@ class JudolScanner extends TextExtractor {
 	 */
 	protected function _scanText($text, $location, $isMetadata) {
 		if ($text === '' || $text === null) return;
+		// Batasi panjang teks untuk pemindai regex: cukup untuk menangkap spam, cepat.
+		if (strlen($text) > self::MAX_TEXT) {
+			$text = substr($text, 0, self::MAX_TEXT);
+		}
 		if (!mb_check_encoding($text, 'UTF-8')) {
 			$text = mb_convert_encoding($text, 'UTF-8', 'ISO-8859-1');
 		}

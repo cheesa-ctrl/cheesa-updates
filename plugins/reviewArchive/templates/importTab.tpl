@@ -35,7 +35,8 @@
 
 		<fieldset>
 			<legend>{translate key="plugins.generic.reviewArchive.import.file"}</legend>
-			<input type="file" id="raFile" accept=".xml,text/xml,application/xml">
+			<input type="file" id="raFile" accept=".xml,text/xml,application/xml" multiple>
+			<small style="display:block;color:#666;margin-top:.35rem;">Bisa pilih beberapa berkas XML artikel sekaligus. Untuk satu berkas, pakai "Upload &amp; check" (dengan pratinjau); untuk banyak berkas, pakai "Unggah &amp; impor semua".</small>
 		</fieldset>
 
 		<fieldset>
@@ -56,6 +57,7 @@
 		<div class="ra_actions">
 			<button type="button" class="pkpButton" id="raAnalyze">{translate key="plugins.generic.reviewArchive.import.analyze"}</button>
 			<button type="button" class="pkpButton" id="raImportButton" disabled>{translate key="plugins.generic.reviewArchive.import.run"}</button>
+			<button type="button" class="pkpButton" id="raBatchButton">Unggah &amp; impor semua</button>
 		</div>
 	</div>
 
@@ -85,7 +87,8 @@
 	{rdelim};
 
 	var $root = $('#raImport'), $status = $('#raStatus'), $bar = $('#raBar'),
-		$analyze = $('#raAnalyze'), $import = $('#raImportButton'), $result = $('#raResult'),
+		$analyze = $('#raAnalyze'), $import = $('#raImportButton'), $batch = $('#raBatchButton'),
+		$result = $('#raResult'),
 		uploadId = null, uploadedFor = null;
 
 	function status(msg, isError) {ldelim}
@@ -100,8 +103,8 @@
 		for (var i = 0; i < bytes.length; i++) hex += ('0' + bytes[i].toString(16)).slice(-2);
 		return hex;
 	{rdelim}
-	function options() {ldelim}
-		var data = {ldelim} csrfToken: cfg.csrfToken, uploadId: uploadId {rdelim};
+	function options(id) {ldelim}
+		var data = {ldelim} csrfToken: cfg.csrfToken, uploadId: id || uploadId {rdelim};
 		$root.find('input[type=checkbox]').each(function() {ldelim}
 			data[this.name] = this.checked ? 1 : 0;
 		{rdelim});
@@ -202,6 +205,52 @@
 			status(cfg.text.done);
 			uploadId = null; uploadedFor = null;
 		{rdelim}).fail(function() {ldelim} status(cfg.text.failed, true); {rdelim});
+	{rdelim});
+
+	// ---- Mode banyak berkas: unggah -> cek judol -> impor, satu per satu ----
+	function esc(s) {ldelim} return $('<span>').text(s == null ? '' : s).html(); {rdelim}
+	function logRow(name, state, detail) {ldelim}
+		var color = state === 'done' ? '#107c10' : (state === 'blocked' ? '#b45309' : (state === 'busy' ? '#555' : '#d00a6c'));
+		var label = ({ldelim} busy: 'memproses…', done: '✓ diimpor', blocked: '⚠ diblokir (judol) — dilewati', failed: '✗ gagal' {rdelim})[state] || state;
+		var rid = 'ralog_' + name.replace(/[^a-z0-9]/gi, '_');
+		var $row = $('#' + rid);
+		if (!$row.length) $row = $('<li id="' + rid + '" style="margin:.25rem 0;"></li>').appendTo($('#raBatchLog'));
+		$row.html('<b>' + esc(name) + '</b> — <span style="color:' + color + '">' + label + (detail ? ' (' + esc(detail) + ')' : '') + '</span>');
+	{rdelim}
+	function batchProcess(files) {ldelim}
+		$analyze.prop('disabled', true); $import.prop('disabled', true); $batch.prop('disabled', true);
+		$result.html('<div class="ra_card"><h3>Impor banyak berkas</h3><ol id="raBatchLog" style="margin:.5rem 0 0 1.25rem;"></ol></div>');
+		var i = 0, ok = 0, blocked = 0, failed = 0;
+		function finish() {ldelim}
+			$batch.prop('disabled', false); $analyze.prop('disabled', false); progress(1);
+			status(files.length + ' berkas: ' + ok + ' diimpor, ' + blocked + ' diblokir, ' + failed + ' gagal.', failed > 0);
+		{rdelim}
+		function next() {ldelim}
+			if (i >= files.length) {ldelim} finish(); return; {rdelim}
+			var file = files[i];
+			progress(i / files.length);
+			status('Berkas ' + (i + 1) + '/' + files.length + ': ' + file.name);
+			if (file.size > cfg.maxSize) {ldelim} logRow(file.name, 'failed', 'terlalu besar'); failed++; i++; next(); return; {rdelim}
+			logRow(file.name, 'busy', 'mengunggah');
+			upload(file).done(function(id) {ldelim}
+				logRow(file.name, 'busy', 'memeriksa judol');
+				$.ajax({ldelim} url: cfg.analyzeUrl, type: 'POST', data: options(id), dataType: 'json' {rdelim}).done(function(r) {ldelim}
+					if (!r || !r.status) {ldelim} logRow(file.name, 'failed', (r && r.content) ? 'cek gagal' : ''); failed++; i++; next(); return; {rdelim}
+					if (r.blocked) {ldelim} logRow(file.name, 'blocked'); blocked++; i++; next(); return; {rdelim}
+					logRow(file.name, 'busy', 'mengimpor');
+					$.ajax({ldelim} url: cfg.importUrl, type: 'POST', data: options(id), dataType: 'json' {rdelim}).done(function(ri) {ldelim}
+						if (ri && ri.status) {ldelim} logRow(file.name, 'done'); ok++; {rdelim} else {ldelim} logRow(file.name, 'failed'); failed++; {rdelim}
+						i++; next();
+					{rdelim}).fail(function() {ldelim} logRow(file.name, 'failed', 'impor timeout/galat'); failed++; i++; next(); {rdelim});
+				{rdelim}).fail(function() {ldelim} logRow(file.name, 'failed', 'cek timeout/galat'); failed++; i++; next(); {rdelim});
+			{rdelim}).fail(function() {ldelim} logRow(file.name, 'failed', 'unggah gagal'); failed++; i++; next(); {rdelim});
+		{rdelim}
+		next();
+	{rdelim}
+	$batch.on('click', function() {ldelim}
+		var files = $('#raFile')[0].files;
+		if (!files || !files.length) {ldelim} status(cfg.text.chooseFile, true); return; {rdelim}
+		batchProcess(Array.prototype.slice.call(files));
 	{rdelim});
 {rdelim}(jQuery));
 </script>
