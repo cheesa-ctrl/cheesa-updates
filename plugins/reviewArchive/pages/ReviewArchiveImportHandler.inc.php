@@ -90,6 +90,8 @@ class ReviewArchiveImportHandler extends Handler {
 		$this->_cleanupOldUploads($request);
 		$dispatcher = $request->getDispatcher();
 		$templateMgr = TemplateManager::getManager($request);
+		if (method_exists($templateMgr, 'setupBackendPage')) $templateMgr->setupBackendPage();
+		$templateMgr->assign('pageTitle', __('plugins.generic.reviewArchive.import.tabTitle'));
 		$templateMgr->assign([
 			'raUploadUrl' => $dispatcher->url($request, ROUTE_PAGE, null, ReviewArchivePlugin::IMPORT_PAGE, 'uploadChunk'),
 			'raAnalyzeUrl' => $dispatcher->url($request, ROUTE_PAGE, null, ReviewArchivePlugin::IMPORT_PAGE, 'analyze'),
