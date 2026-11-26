@@ -86,22 +86,10 @@ class ReviewArchiveImportHandler extends Handler {
 	 * @param $request PKPRequest
 	 */
 	function page($args, $request) {
-		$this->setupTemplate($request);
-		$this->_cleanupOldUploads($request);
-		$dispatcher = $request->getDispatcher();
-		$templateMgr = TemplateManager::getManager($request);
-		if (method_exists($templateMgr, 'setupBackendPage')) $templateMgr->setupBackendPage();
-		$templateMgr->assign('pageTitle', __('plugins.generic.reviewArchive.import.tabTitle'));
-		$templateMgr->assign([
-			'raUploadUrl' => $dispatcher->url($request, ROUTE_PAGE, null, ReviewArchivePlugin::IMPORT_PAGE, 'uploadChunk'),
-			'raAnalyzeUrl' => $dispatcher->url($request, ROUTE_PAGE, null, ReviewArchivePlugin::IMPORT_PAGE, 'analyze'),
-			'raImportUrl' => $dispatcher->url($request, ROUTE_PAGE, null, ReviewArchivePlugin::IMPORT_PAGE, 'import'),
-			'raCsrfToken' => $request->getSession()->getCSRFToken(),
-			'raChunkSize' => self::CHUNK_SIZE,
-			'raMaxSize' => self::MAX_SIZE,
-		]);
-		$templateMgr->assign('raTabContent', $templateMgr->fetch(self::$plugin->getTemplateResource('importTab.tpl')));
-		return $templateMgr->display(self::$plugin->getTemplateResource('importPage.tpl'));
+		// Alat ini berbasis jQuery; di halaman backend Vue, tag <style>/<script>-nya dibuang.
+		// Maka arahkan ke tab Tools (dimuat via AJAX, di luar Vue) tempat ia berfungsi penuh.
+		$url = $request->getDispatcher()->url($request, ROUTE_PAGE, null, 'management', 'tools', null, null, 'reviewArchiveImport');
+		$request->redirectUrl($url);
 	}
 
 	/**
