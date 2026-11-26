@@ -154,6 +154,8 @@ class ReviewArchiveImportHandler extends Handler {
 		list($xml, $meta, $error) = $this->_readUpload($request);
 		if ($error) return $this->_json(false, $error);
 		$this->_raiseLimits();
+		$short = $this->_memoryShortfall(strlen($xml));
+		if ($short) return $this->_json(false, $this->_memoryMessage($short));
 
 		// 1. Online gambling check on the file as uploaded.
 		self::$plugin->import('classes.JudolScanner');
@@ -200,6 +202,8 @@ class ReviewArchiveImportHandler extends Handler {
 		list($xml, $meta, $error) = $this->_readUpload($request);
 		if ($error) return $this->_json(false, $error);
 		$this->_raiseLimits();
+		$short = $this->_memoryShortfall(strlen($xml));
+		if ($short) return $this->_json(false, $this->_memoryMessage($short));
 
 		// Never import without checking again.
 		self::$plugin->import('classes.JudolScanner');
@@ -365,8 +369,48 @@ class ReviewArchiveImportHandler extends Handler {
 	 */
 	protected function _raiseLimits() {
 		@set_time_limit(0);
+		@ini_set('max_execution_time', '0');
 		$limit = ini_get('memory_limit');
-		if ($limit !== '-1' && $this->_bytes($limit) < 1073741824) @ini_set('memory_limit', '1024M');
+		// Coba naikkan ke 2 GB. Berhasil hanya bila host mengizinkan ini_set.
+		if ($limit !== '-1' && $this->_bytes($limit) < 2147483648) @ini_set('memory_limit', '2048M');
+	}
+
+	/**
+	 * Perkiraan apakah batas memori PHP (setelah dinaikkan) cukup untuk berkas sebesar ini.
+	 * Mengembalikan null bila cukup/tak terbatas, atau ['have'=>bytes,'need'=>bytes] bila kurang.
+	 * Mencegah proses jatuh ke "fatal: out of memory" yang tak bisa ditangkap.
+	 * @param $fileSize int
+	 * @return array|null
+	 */
+	protected function _memoryShortfall($fileSize) {
+		$limit = ini_get('memory_limit');
+		if ($limit === false || $limit === '' || trim($limit) === '-1') return null; // tak terbatas
+		$have = $this->_bytes($limit);
+		if ($have <= 0) return null;
+		// Empiris: impor native perlu ~5x ukuran berkas + overhead framework.
+		$need = (int) ($fileSize * 5) + 180 * 1048576;
+		return $have >= $need ? null : ['have' => $have, 'need' => $need];
+	}
+
+	/**
+	 * @param $bytes int
+	 * @return string e.g. "256 MB"
+	 */
+	protected function _mb($bytes) {
+		return round($bytes / 1048576) . ' MB';
+	}
+
+	/**
+	 * Pesan bila memori server kurang.
+	 * @param $short array ['have'=>int,'need'=>int]
+	 * @return string
+	 */
+	protected function _memoryMessage($short) {
+		return 'Batas memori PHP server (' . $this->_mb($short['have']) . ') terlalu kecil untuk memproses berkas sebesar ini '
+			. '(perkiraan butuh ~' . $this->_mb($short['need']) . '). '
+			. 'Plugin sudah mencoba menaikkannya tetapi host mengunci batas tersebut. '
+			. 'Minta pengelola server menaikkan PHP memory_limit (mis. 1024M) lewat php.ini/cPanel, '
+			. 'atau impor berkas yang lebih kecil (mis. hanya galley/berkas terbit).';
 	}
 
 	/**
