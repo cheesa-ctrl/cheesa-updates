@@ -177,7 +177,7 @@ msgid "plugins.generic.reviewArchive.import.intro"
 msgstr "Imports a Native XML file like the Native XML Plugin, with these extra steps:"
 
 msgid "plugins.generic.reviewArchive.import.step.upload"
-msgstr "The file is uploaded in 2 MB pieces, so the server upload limit does not apply."
+msgstr "Files up to 7.5 MB are uploaded directly; larger files are uploaded in 2 MB pieces so the server upload limit does not apply."
 
 msgid "plugins.generic.reviewArchive.import.step.check"
 msgstr "The whole XML and the files inside it are checked for online-gambling content. If found, the import is stopped."

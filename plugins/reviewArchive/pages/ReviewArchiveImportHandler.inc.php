@@ -26,6 +26,9 @@ class ReviewArchiveImportHandler extends Handler {
 	/** Largest XML accepted. */
 	const MAX_SIZE = 536870912; // 512 MB
 
+	/** At or below this size the file is uploaded in one piece (no chunking), only scanned. */
+	const DIRECT_LIMIT = 7864320; // 7.5 MB (aman di bawah batas unggah server 8 MB)
+
 	/** @var ReviewArchivePlugin */
 	static $plugin;
 
@@ -75,6 +78,7 @@ class ReviewArchiveImportHandler extends Handler {
 			'raImportUrl' => $dispatcher->url($request, ROUTE_PAGE, null, ReviewArchivePlugin::IMPORT_PAGE, 'import'),
 			'raCsrfToken' => $request->getSession()->getCSRFToken(),
 			'raChunkSize' => self::CHUNK_SIZE,
+			'raDirectLimit' => self::DIRECT_LIMIT,
 			'raMaxSize' => self::MAX_SIZE,
 		]);
 		return $this->_json(true, $templateMgr->fetch(self::$plugin->getTemplateResource('importTab.tpl')));

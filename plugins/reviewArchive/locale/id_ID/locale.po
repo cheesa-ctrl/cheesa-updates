@@ -177,7 +177,7 @@ msgid "plugins.generic.reviewArchive.import.intro"
 msgstr "Mengimpor berkas Native XML seperti Native XML Plugin, dengan langkah tambahan berikut:"
 
 msgid "plugins.generic.reviewArchive.import.step.upload"
-msgstr "Berkas diunggah bertahap per 2 MB, sehingga tidak terbatas oleh batas unggah server."
+msgstr "Berkas hingga 7,5 MB diunggah langsung; berkas lebih besar diunggah bertahap per 2 MB agar tidak terbatas oleh batas unggah server."
 
 msgid "plugins.generic.reviewArchive.import.step.check"
 msgstr "Seluruh isi XML dan berkas di dalamnya diperiksa dari indikasi judi online. Jika ditemukan, impor dibatalkan."

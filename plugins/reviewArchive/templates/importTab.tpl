@@ -112,7 +112,9 @@
 	{rdelim}
 
 	function upload(file) {ldelim}
-		var total = Math.max(1, Math.ceil(file.size / cfg.chunkSize)), id = newUploadId();
+		// File <= directLimit diunggah sekali (tanpa dipecah); file besar dipecah per chunkSize.
+		var chunkSize = (file.size <= cfg.directLimit) ? Math.max(1, file.size) : cfg.chunkSize;
+		var total = Math.max(1, Math.ceil(file.size / chunkSize)), id = newUploadId();
 		var deferred = $.Deferred();
 		function send(index, attempt) {ldelim}
 			var form = new FormData();
@@ -122,7 +124,7 @@
 			form.append('total', total);
 			form.append('size', file.size);
 			form.append('name', file.name);
-			form.append('chunk', file.slice(index * cfg.chunkSize, (index + 1) * cfg.chunkSize), 'chunk');
+			form.append('chunk', file.slice(index * chunkSize, (index + 1) * chunkSize), 'chunk');
 			$.ajax({ldelim} url: cfg.uploadUrl, type: 'POST', data: form, processData: false, contentType: false, dataType: 'json' {rdelim})
 				.done(function(r) {ldelim}
 					if (!r || !r.status) {ldelim} deferred.reject(r && r.content); return; {rdelim}
