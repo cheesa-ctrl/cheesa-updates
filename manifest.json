@@ -48,10 +48,10 @@
         "cheesaGuard": {
             "category": "generic",
             "label": "Cheesa Guard",
-            "version": "1.1.0.0",
-            "file": "cheesaGuard-1.1.0.0.tar.gz",
-            "sha256": "d4f59e7e0c503ba683908a2f1cebabd3ef378f947aa65df74ee2d3da6a11bf92",
-            "size": 11164,
+            "version": "1.2.0.0",
+            "file": "cheesaGuard-1.2.0.0.tar.gz",
+            "sha256": "2409b0707f553b7656bd57676094d53ad6964a47e85f2d886f7de5c0ce55b2bd",
+            "size": 13322,
             "released": "2026-11-26"
         },
         "cheesaMailer": {
@@ -136,5 +136,5 @@
             "released": "2026-11-26"
         }
     },
-    "generated": "2026-11-26T10:52:56+00:00"
+    "generated": "2026-11-26T11:16:16+00:00"
 }
