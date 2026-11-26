@@ -39,6 +39,10 @@ class ReviewArchiveTabHandler extends Handler {
 			[ROLE_ID_MANAGER, ROLE_ID_SUB_EDITOR, ROLE_ID_ASSISTANT],
 			['fetchTab']
 		);
+		$this->addRoleAssignment(
+			[ROLE_ID_MANAGER, ROLE_ID_SUB_EDITOR],
+			['saveStatement']
+		);
 	}
 
 	/**
@@ -132,6 +136,7 @@ class ReviewArchiveTabHandler extends Handler {
 		usort($hidden, $sortByDate);
 
 		$templateMgr = TemplateManager::getManager($request);
+		$templateMgr->assign($this->_statementVars($request, $submission));
 		$templateMgr->assign([
 			'submission' => $submission,
 			'markedFiles' => $marked,
@@ -139,6 +144,66 @@ class ReviewArchiveTabHandler extends Handler {
 			'reviewMarker' => self::MARKER,
 		]);
 		return $templateMgr->fetchJson(self::$plugin->getTemplateResource('reviewArchiveTab.tpl'));
+	}
+
+	/**
+	 * Save the per-article editor statement and return the refreshed box.
+	 * @param $args array
+	 * @param $request PKPRequest
+	 * @return JSONMessage
+	 */
+	function saveStatement($args, $request) {
+		if (!$request->isPost() || !$request->checkCSRF()) {
+			return new JSONMessage(false, __('form.csrfInvalid'));
+		}
+		$submission = $this->getAuthorizedContextObject(ASSOC_TYPE_SUBMISSION); /** @var $submission Submission */
+		$user = $request->getUser();
+		$text = trim((string) $request->getUserVar('reviewArchiveStatement'));
+		if (mb_strlen($text) > 20000) $text = mb_substr($text, 0, 20000);
+
+		$submission->setData('reviewArchiveStatement', $text);
+		$submission->setData('reviewArchiveStatementBy', $user ? $user->getFullName() : '');
+		$submission->setData('reviewArchiveStatementAt', Core::getCurrentDate());
+		DAORegistry::getDAO('SubmissionDAO')->updateObject($submission);
+
+		$templateMgr = TemplateManager::getManager($request);
+		$templateMgr->assign($this->_statementVars($request, $submission));
+		$templateMgr->assign('submission', $submission);
+		return new JSONMessage(true, $templateMgr->fetch(self::$plugin->getTemplateResource('statementBox.tpl')));
+	}
+
+	/**
+	 * Template variables for the "Pernyataan Editor" box.
+	 * @param $request PKPRequest
+	 * @param $submission Submission
+	 * @return array
+	 */
+	protected function _statementVars($request, $submission) {
+		$plugin = self::$plugin;
+		$context = $request->getContext();
+		$userRoles = (array) $this->getAuthorizedContextObject(ASSOC_TYPE_USER_ROLES);
+
+		// The journal-wide text explains a migrated review history, so it is
+		// only shown for articles that have no review round in this OJS.
+		$reviewRoundDao = DAORegistry::getDAO('ReviewRoundDAO'); /** @var $reviewRoundDao ReviewRoundDAO */
+		$hasReviewRounds = count($reviewRoundDao->getBySubmissionId($submission->getId())->toArray()) > 0;
+		$default = $hasReviewRounds ? '' : $plugin->fillPlaceholders($plugin->getDefaultStatement($context->getId()), $submission, $context);
+		$note = (string) $submission->getData('reviewArchiveStatement');
+		$sourceId = $plugin->getSourceId($submission);
+
+		return [
+			'statementDefaultHtml' => $default !== '' ? $plugin->formatText($default) : '',
+			'statementNote' => $note,
+			'statementNoteHtml' => $note !== '' ? $plugin->formatText($plugin->fillPlaceholders($note, $submission, $context)) : '',
+			'statementBy' => (string) $submission->getData('reviewArchiveStatementBy'),
+			'statementAt' => (string) $submission->getData('reviewArchiveStatementAt'),
+			'statementCanEdit' => (bool) array_intersect([ROLE_ID_MANAGER, ROLE_ID_SUB_EDITOR, ROLE_ID_SITE_ADMIN], $userRoles),
+			'statementSaveUrl' => $request->getDispatcher()->url($request, ROUTE_COMPONENT, null, ReviewArchivePlugin::TAB_COMPONENT, 'saveStatement', null, ['submissionId' => $submission->getId()]),
+			'statementSourceId' => $sourceId,
+			'certificates' => $plugin->getCertificates($context->getId(), $sourceId),
+			'csrfToken' => $request->getSession()->getCSRFToken(),
+			'statementTemplate' => $plugin->getTemplateResource('statementBox.tpl'),
+		];
 	}
 
 	/**

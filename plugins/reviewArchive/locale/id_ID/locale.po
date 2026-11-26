@@ -9,7 +9,7 @@ msgid "plugins.generic.reviewArchive.displayName"
 msgstr "Arsip Review & Deteksi Judol"
 
 msgid "plugins.generic.reviewArchive.description"
-msgstr "Menambahkan tab \"Arsip Review\" di alur kerja naskah untuk berkas review yang tidak tampil setelah impor Native XML, dan memeriksa berkas Native XML dari indikasi judi online (judol) sebelum diimpor."
+msgstr "Tab \"Arsip Review\" (Pernyataan Editor untuk asesor, sertifikat reviewer, dan berkas review hasil migrasi) serta alat Import XML dengan unggah bertahap, pemeriksaan judi online, label review otomatis, dan pembuangan berkas duplikat."
 
 msgid "plugins.generic.reviewArchive.tabTitle"
 msgstr "Arsip Review"
@@ -112,3 +112,201 @@ msgstr "Berkas yang tidak dapat dipindai:"
 
 msgid "plugins.generic.reviewArchive.judol.nextSteps"
 msgstr "Bersihkan bagian yang ditandai (atau hapus berkas tertanam yang bermasalah dari XML), lalu unggah dan impor ulang. Jika temuan ternyata keliru, sesuaikan daftar pola di plugins/generic/reviewArchive/classes/JudolScanner.inc.php."
+
+msgid "plugins.generic.reviewArchive.certificates.title"
+msgstr "Sertifikat reviewer (ID artikel {$id})"
+
+msgid "plugins.generic.reviewArchive.certificates.item"
+msgstr "Sertifikat reviewer {$number}"
+
+msgid "plugins.generic.reviewArchive.certificates.none"
+msgstr "Belum ada tautan sertifikat untuk ID artikel ini. Daftar sertifikat dapat diperbarui di Settings plugin."
+
+msgid "plugins.generic.reviewArchive.statement.title"
+msgstr "Pernyataan Editor"
+
+msgid "plugins.generic.reviewArchive.statement.description"
+msgstr "Informasi untuk asesor akreditasi mengenai proses review artikel ini. Hanya terlihat oleh tim editorial."
+
+msgid "plugins.generic.reviewArchive.statement.empty"
+msgstr "Belum ada pernyataan."
+
+msgid "plugins.generic.reviewArchive.statement.edit"
+msgstr "Tambah/ubah catatan untuk artikel ini"
+
+msgid "plugins.generic.reviewArchive.statement.noteLabel"
+msgstr "Catatan tambahan untuk artikel ini"
+
+msgid "plugins.generic.reviewArchive.statement.noteHelp"
+msgstr "Tampil di bawah pernyataan umum. Tautan (https://…) otomatis bisa diklik. Penanda {id}, {doi}, {judul}, {jurnal} akan diganti otomatis."
+
+msgid "plugins.generic.reviewArchive.statement.lastEdited"
+msgstr "Terakhir diubah oleh {$name} pada {$date}."
+
+msgid "plugins.generic.reviewArchive.statement.saving"
+msgstr "Menyimpan…"
+
+msgid "plugins.generic.reviewArchive.statement.saveFailed"
+msgstr "Gagal menyimpan. Muat ulang halaman lalu coba lagi."
+
+msgid "plugins.generic.reviewArchive.statement.default"
+msgstr "Artikel ini telah melalui proses penelaahan sejawat (peer review). Riwayat proses review dipindahkan dari sistem OJS sebelumnya melalui impor Native XML, sehingga dokumen proses review dapat diperiksa pada tab Arsip Review ini."
+
+msgid "plugins.generic.reviewArchive.settings.statement"
+msgstr "Pernyataan Editor (umum)"
+
+msgid "plugins.generic.reviewArchive.settings.statement.description"
+msgstr "Tampil di tab Arsip Review setiap artikel yang tidak memiliki ronde review di OJS ini (artikel hasil migrasi). Penanda {id} (ID artikel di OJS lama, diambil dari DOI), {doi}, {judul}, dan {jurnal} akan diganti otomatis. Tautan otomatis bisa diklik."
+
+msgid "plugins.generic.reviewArchive.settings.certificates"
+msgstr "Daftar sertifikat reviewer"
+
+msgid "plugins.generic.reviewArchive.settings.certificates.description"
+msgstr "Format CSV: id_artikel,nomor,url,nama_file (satu sertifikat per baris). ID artikel adalah ID di OJS lama, yaitu angka dalam DOI. Saat ini terbaca {$count} sertifikat."
+
+msgid "plugins.generic.reviewArchive.import.open"
+msgstr "Buka Import XML"
+
+msgid "plugins.generic.reviewArchive.import.tabTitle"
+msgstr "Import XML Arsip Review"
+
+msgid "plugins.generic.reviewArchive.import.title"
+msgstr "Import XML Arsip Review"
+
+msgid "plugins.generic.reviewArchive.import.intro"
+msgstr "Mengimpor berkas Native XML seperti Native XML Plugin, dengan langkah tambahan berikut:"
+
+msgid "plugins.generic.reviewArchive.import.step.upload"
+msgstr "Berkas diunggah bertahap per 2 MB, sehingga tidak terbatas oleh batas unggah server."
+
+msgid "plugins.generic.reviewArchive.import.step.check"
+msgstr "Seluruh isi XML dan berkas di dalamnya diperiksa dari indikasi judi online. Jika ditemukan, impor dibatalkan."
+
+msgid "plugins.generic.reviewArchive.import.step.preview"
+msgstr "Pratinjau: berkas review diberi label [REVIEW] (dengan nama reviewer dari sertifikat) dan berkas duplikat ditandai untuk dibuang."
+
+msgid "plugins.generic.reviewArchive.import.step.import"
+msgstr "Impor dijalankan dengan mesin Native XML bawaan OJS."
+
+msgid "plugins.generic.reviewArchive.import.file"
+msgstr "Berkas XML"
+
+msgid "plugins.generic.reviewArchive.import.options"
+msgstr "Pengolahan"
+
+msgid "plugins.generic.reviewArchive.import.option.label"
+msgstr "Beri label [REVIEW] pada berkas proses review"
+
+msgid "plugins.generic.reviewArchive.import.option.label.help"
+msgstr "Tahap berkas tidak diubah, sehingga penulis tetap tidak bisa membukanya (aman untuk double-blind). Berkas tampil untuk editor di tab Arsip Review."
+
+msgid "plugins.generic.reviewArchive.import.option.dedupe"
+msgstr "Buang berkas yang isinya sama persis"
+
+msgid "plugins.generic.reviewArchive.import.option.dedupe.help"
+msgstr "Hanya salinan yang identik byte per byte. Galley dan naskah awal tidak pernah dibuang."
+
+msgid "plugins.generic.reviewArchive.import.option.production"
+msgstr "Buang dokumen kerja produksi"
+
+msgid "plugins.generic.reviewArchive.import.option.production.help"
+msgstr "GF.doc, draf copyediting, inpress, dan sejenisnya yang tidak dipakai galley. Hasil akhirnya tetap ada di galley PDF."
+
+msgid "plugins.generic.reviewArchive.import.option.revisions"
+msgstr "Buang revisi lama berkas non-review"
+
+msgid "plugins.generic.reviewArchive.import.option.revisions.help"
+msgstr "Revisi lama berkas review tetap disimpan."
+
+msgid "plugins.generic.reviewArchive.import.analyze"
+msgstr "Unggah & periksa"
+
+msgid "plugins.generic.reviewArchive.import.run"
+msgstr "Impor sekarang"
+
+msgid "plugins.generic.reviewArchive.import.status.chooseFile"
+msgstr "Pilih berkas XML terlebih dahulu."
+
+msgid "plugins.generic.reviewArchive.import.status.uploading"
+msgstr "Mengunggah bagian {$done} dari {$total}…"
+
+msgid "plugins.generic.reviewArchive.import.status.analyzing"
+msgstr "Memeriksa judol dan menyiapkan pratinjau…"
+
+msgid "plugins.generic.reviewArchive.import.status.analyzed"
+msgstr "Bersih. Periksa pratinjau di bawah, lalu klik Impor sekarang."
+
+msgid "plugins.generic.reviewArchive.import.status.blocked"
+msgstr "Impor diblokir: ditemukan indikasi judi online."
+
+msgid "plugins.generic.reviewArchive.import.status.importing"
+msgstr "Mengimpor… (berkas besar bisa memakan waktu beberapa menit)"
+
+msgid "plugins.generic.reviewArchive.import.status.done"
+msgstr "Selesai."
+
+msgid "plugins.generic.reviewArchive.import.status.failed"
+msgstr "Terjadi kesalahan. Coba lagi."
+
+msgid "plugins.generic.reviewArchive.import.error.upload"
+msgstr "Unggahan gagal."
+
+msgid "plugins.generic.reviewArchive.import.error.order"
+msgstr "Bagian unggahan tidak berurutan. Ulangi unggahan."
+
+msgid "plugins.generic.reviewArchive.import.error.tooLarge"
+msgstr "Berkas terlalu besar (maksimal 512 MB)."
+
+msgid "plugins.generic.reviewArchive.import.error.incomplete"
+msgstr "Unggahan belum lengkap. Ulangi unggahan."
+
+msgid "plugins.generic.reviewArchive.import.error.xml"
+msgstr "XML tidak valid."
+
+msgid "plugins.generic.reviewArchive.import.error.native"
+msgstr "Native XML Plugin tidak ditemukan."
+
+msgid "plugins.generic.reviewArchive.plan.clean"
+msgstr "Tidak ada indikasi judi online ({$count} berkas tertanam dipindai)."
+
+msgid "plugins.generic.reviewArchive.plan.size"
+msgstr "Ukuran XML: {$before} MB → {$after} MB."
+
+msgid "plugins.generic.reviewArchive.plan.sourceId"
+msgstr "ID artikel di OJS lama: {$id}"
+
+msgid "plugins.generic.reviewArchive.plan.column.action"
+msgstr "Tindakan"
+
+msgid "plugins.generic.reviewArchive.plan.column.stage"
+msgstr "Tahap"
+
+msgid "plugins.generic.reviewArchive.plan.action.label"
+msgstr "Label"
+
+msgid "plugins.generic.reviewArchive.plan.action.remove"
+msgstr "Dibuang"
+
+msgid "plugins.generic.reviewArchive.plan.action.keep"
+msgstr "Tetap"
+
+msgid "plugins.generic.reviewArchive.plan.action.galley"
+msgstr "Galley"
+
+msgid "plugins.generic.reviewArchive.plan.reason.duplicate"
+msgstr "isi sama dengan berkas lain"
+
+msgid "plugins.generic.reviewArchive.plan.reason.production"
+msgstr "dokumen kerja produksi"
+
+msgid "plugins.generic.reviewArchive.plan.revisionsRemoved"
+msgstr "{$count} dari {$total} revisi dibuang (duplikat/lama)"
+
+msgid "plugins.generic.reviewArchive.results.success"
+msgstr "Impor berhasil."
+
+msgid "plugins.generic.reviewArchive.results.successHelp"
+msgstr "Berkas review dapat dilihat di tab Arsip Review pada alur kerja artikel."
+
+msgid "plugins.generic.reviewArchive.results.failed"
+msgstr "Impor gagal. Tidak ada data yang disimpan."

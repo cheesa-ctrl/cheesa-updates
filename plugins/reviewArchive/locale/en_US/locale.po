@@ -112,3 +112,201 @@ msgstr "Files that could not be scanned:"
 
 msgid "plugins.generic.reviewArchive.judol.nextSteps"
 msgstr "Clean the marked parts (or remove the affected embedded file from the XML), then upload and import again. If a finding is a false positive, adjust the pattern list in plugins/generic/reviewArchive/classes/JudolScanner.inc.php."
+
+msgid "plugins.generic.reviewArchive.certificates.title"
+msgstr "Reviewer certificates (article ID {$id})"
+
+msgid "plugins.generic.reviewArchive.certificates.item"
+msgstr "Reviewer certificate {$number}"
+
+msgid "plugins.generic.reviewArchive.certificates.none"
+msgstr "No certificate link for this article ID yet. The certificate list can be updated in the plugin Settings."
+
+msgid "plugins.generic.reviewArchive.statement.title"
+msgstr "Editor Statement"
+
+msgid "plugins.generic.reviewArchive.statement.description"
+msgstr "Information for accreditation assessors about the review of this article. Visible to the editorial team only."
+
+msgid "plugins.generic.reviewArchive.statement.empty"
+msgstr "No statement yet."
+
+msgid "plugins.generic.reviewArchive.statement.edit"
+msgstr "Add/edit a note for this article"
+
+msgid "plugins.generic.reviewArchive.statement.noteLabel"
+msgstr "Additional note for this article"
+
+msgid "plugins.generic.reviewArchive.statement.noteHelp"
+msgstr "Shown below the general statement. Links (https://…) become clickable. {id}, {doi}, {judul} (title) and {jurnal} (journal) are filled in automatically."
+
+msgid "plugins.generic.reviewArchive.statement.lastEdited"
+msgstr "Last edited by {$name} on {$date}."
+
+msgid "plugins.generic.reviewArchive.statement.saving"
+msgstr "Saving…"
+
+msgid "plugins.generic.reviewArchive.statement.saveFailed"
+msgstr "Could not save. Reload the page and try again."
+
+msgid "plugins.generic.reviewArchive.statement.default"
+msgstr "This article went through peer review. Its review history was moved from the previous OJS through a Native XML import, so the review documents can be checked in this Review Archive tab."
+
+msgid "plugins.generic.reviewArchive.settings.statement"
+msgstr "Editor Statement (general)"
+
+msgid "plugins.generic.reviewArchive.settings.statement.description"
+msgstr "Shown in the Review Archive tab of every article without a review round in this OJS (migrated articles). {id} (article ID in the old OJS, read from the DOI), {doi}, {judul} (title) and {jurnal} (journal) are filled in automatically. Links become clickable."
+
+msgid "plugins.generic.reviewArchive.settings.certificates"
+msgstr "Reviewer certificate list"
+
+msgid "plugins.generic.reviewArchive.settings.certificates.description"
+msgstr "CSV format: id_artikel,nomor,url,nama_file (one certificate per line). The article ID is the ID in the old OJS, i.e. the number in the DOI. {$count} certificates read."
+
+msgid "plugins.generic.reviewArchive.import.open"
+msgstr "Open XML Import"
+
+msgid "plugins.generic.reviewArchive.import.tabTitle"
+msgstr "Review Archive XML Import"
+
+msgid "plugins.generic.reviewArchive.import.title"
+msgstr "Review Archive XML Import"
+
+msgid "plugins.generic.reviewArchive.import.intro"
+msgstr "Imports a Native XML file like the Native XML Plugin, with these extra steps:"
+
+msgid "plugins.generic.reviewArchive.import.step.upload"
+msgstr "The file is uploaded in 2 MB pieces, so the server upload limit does not apply."
+
+msgid "plugins.generic.reviewArchive.import.step.check"
+msgstr "The whole XML and the files inside it are checked for online-gambling content. If found, the import is stopped."
+
+msgid "plugins.generic.reviewArchive.import.step.preview"
+msgstr "Preview: review files are labelled [REVIEW] (with the reviewer name from the certificate) and duplicate files are marked for removal."
+
+msgid "plugins.generic.reviewArchive.import.step.import"
+msgstr "The import runs on OJS's own Native XML engine."
+
+msgid "plugins.generic.reviewArchive.import.file"
+msgstr "XML file"
+
+msgid "plugins.generic.reviewArchive.import.options"
+msgstr "Processing"
+
+msgid "plugins.generic.reviewArchive.import.option.label"
+msgstr "Label review-process files with [REVIEW]"
+
+msgid "plugins.generic.reviewArchive.import.option.label.help"
+msgstr "File stages are not changed, so authors still cannot open them (double-blind safe). Editors see them in the Review Archive tab."
+
+msgid "plugins.generic.reviewArchive.import.option.dedupe"
+msgstr "Remove files whose content is identical"
+
+msgid "plugins.generic.reviewArchive.import.option.dedupe.help"
+msgstr "Only byte-identical copies. Galleys and the original submission are never removed."
+
+msgid "plugins.generic.reviewArchive.import.option.production"
+msgstr "Remove production working documents"
+
+msgid "plugins.generic.reviewArchive.import.option.production.help"
+msgstr "GF.doc, copyediting drafts, in-press copies and the like that no galley uses. The final result stays in the galley PDF."
+
+msgid "plugins.generic.reviewArchive.import.option.revisions"
+msgstr "Remove old revisions of non-review files"
+
+msgid "plugins.generic.reviewArchive.import.option.revisions.help"
+msgstr "Old revisions of review files are kept."
+
+msgid "plugins.generic.reviewArchive.import.analyze"
+msgstr "Upload & check"
+
+msgid "plugins.generic.reviewArchive.import.run"
+msgstr "Import now"
+
+msgid "plugins.generic.reviewArchive.import.status.chooseFile"
+msgstr "Choose an XML file first."
+
+msgid "plugins.generic.reviewArchive.import.status.uploading"
+msgstr "Uploading part {$done} of {$total}…"
+
+msgid "plugins.generic.reviewArchive.import.status.analyzing"
+msgstr "Checking for online gambling and preparing the preview…"
+
+msgid "plugins.generic.reviewArchive.import.status.analyzed"
+msgstr "Clean. Check the preview below, then click Import now."
+
+msgid "plugins.generic.reviewArchive.import.status.blocked"
+msgstr "Import blocked: online-gambling content found."
+
+msgid "plugins.generic.reviewArchive.import.status.importing"
+msgstr "Importing… (large files can take a few minutes)"
+
+msgid "plugins.generic.reviewArchive.import.status.done"
+msgstr "Done."
+
+msgid "plugins.generic.reviewArchive.import.status.failed"
+msgstr "Something went wrong. Please try again."
+
+msgid "plugins.generic.reviewArchive.import.error.upload"
+msgstr "Upload failed."
+
+msgid "plugins.generic.reviewArchive.import.error.order"
+msgstr "Upload parts arrived out of order. Please upload again."
+
+msgid "plugins.generic.reviewArchive.import.error.tooLarge"
+msgstr "File too large (512 MB maximum)."
+
+msgid "plugins.generic.reviewArchive.import.error.incomplete"
+msgstr "Upload incomplete. Please upload again."
+
+msgid "plugins.generic.reviewArchive.import.error.xml"
+msgstr "Invalid XML."
+
+msgid "plugins.generic.reviewArchive.import.error.native"
+msgstr "Native XML Plugin not found."
+
+msgid "plugins.generic.reviewArchive.plan.clean"
+msgstr "No online-gambling content found ({$count} embedded files scanned)."
+
+msgid "plugins.generic.reviewArchive.plan.size"
+msgstr "XML size: {$before} MB → {$after} MB."
+
+msgid "plugins.generic.reviewArchive.plan.sourceId"
+msgstr "Article ID in the old OJS: {$id}"
+
+msgid "plugins.generic.reviewArchive.plan.column.action"
+msgstr "Action"
+
+msgid "plugins.generic.reviewArchive.plan.column.stage"
+msgstr "Stage"
+
+msgid "plugins.generic.reviewArchive.plan.action.label"
+msgstr "Label"
+
+msgid "plugins.generic.reviewArchive.plan.action.remove"
+msgstr "Removed"
+
+msgid "plugins.generic.reviewArchive.plan.action.keep"
+msgstr "Kept"
+
+msgid "plugins.generic.reviewArchive.plan.action.galley"
+msgstr "Galley"
+
+msgid "plugins.generic.reviewArchive.plan.reason.duplicate"
+msgstr "same content as another file"
+
+msgid "plugins.generic.reviewArchive.plan.reason.production"
+msgstr "production working document"
+
+msgid "plugins.generic.reviewArchive.plan.revisionsRemoved"
+msgstr "{$count} of {$total} revisions removed (duplicate/old)"
+
+msgid "plugins.generic.reviewArchive.results.success"
+msgstr "Import successful."
+
+msgid "plugins.generic.reviewArchive.results.successHelp"
+msgstr "The review files are shown in the Review Archive tab of each article's workflow."
+
+msgid "plugins.generic.reviewArchive.results.failed"
+msgstr "Import failed. Nothing was saved."

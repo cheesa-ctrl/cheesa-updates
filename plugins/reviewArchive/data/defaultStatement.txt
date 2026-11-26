@@ -1,0 +1,6 @@
+Artikel ini telah melalui proses penelaahan sejawat (peer review) dengan metode double-blind review.
+
+Riwayat proses review artikel ini berasal dari sistem OJS sebelumnya dan dipindahkan melalui impor Native XML. Karena itu, data penugasan reviewer tidak tampil pada tab Review. Dokumen proses review (naskah versi review, catatan reviewer dan editor, serta sertifikat reviewer) dapat diperiksa pada tab Arsip Review ini.
+
+Sertifikat reviewer artikel ini (ID {id}) tercantum di bawah. Seluruh sertifikat reviewer {jurnal} tersimpan di folder:
+https://drive.google.com/drive/folders/1r9zOh9cH64zLd2WxTcvlFDsxVBWI-F7p

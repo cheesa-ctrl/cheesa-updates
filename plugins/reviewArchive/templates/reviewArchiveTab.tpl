@@ -17,7 +17,39 @@
 	.pkp_review_archive td.ra_name {ldelim} word-break: break-word; {rdelim}
 	.pkp_review_archive td.ra_empty {ldelim} text-align: center; font-style: italic; color: #777; {rdelim}
 	.pkp_review_archive .ra_downloads a {ldelim} display: inline-block; margin: 0 .25rem .25rem 0; {rdelim}
+	.pkp_review_archive .ra_body {ldelim} padding: 1rem; font-size: .875rem; line-height: 1.6; {rdelim}
+	.pkp_review_archive .ra_body h5 {ldelim} margin: 1.25rem 0 .5rem; font-size: .875rem; {rdelim}
+	.pkp_review_archive .ra_statement {ldelim} border-left: 4px solid #006798; {rdelim}
+	.pkp_review_archive .ra_statement_note {ldelim} margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed #ddd; {rdelim}
+	.pkp_review_archive .ra_statement_text a {ldelim} word-break: break-all; {rdelim}
+	.pkp_review_archive .ra_certificates {ldelim} margin: 0; padding-left: 1.25rem; {rdelim}
+	.pkp_review_archive .ra_muted {ldelim} color: #666; {rdelim}
+	.pkp_review_archive .ra_small {ldelim} font-size: .8rem; margin-top: 1rem; {rdelim}
+	.pkp_review_archive .ra_edit {ldelim} margin-top: 1rem; {rdelim}
+	.pkp_review_archive .ra_edit summary {ldelim} cursor: pointer; color: #006798; font-weight: 700; {rdelim}
+	.pkp_review_archive .ra_statement_form {ldelim} margin-top: .75rem; {rdelim}
+	.pkp_review_archive .ra_statement_form label {ldelim} display: block; font-weight: 700; margin-bottom: .25rem; {rdelim}
+	.pkp_review_archive .ra_statement_form textarea {ldelim} width: 100%; box-sizing: border-box; font: inherit; padding: .5rem; {rdelim}
+	.pkp_review_archive .ra_save_status {ldelim} margin-left: .5rem; color: #666; {rdelim}
 </style>
+
+<script>
+	// Save the editor statement without leaving the tab.
+	$(document).off('submit.reviewArchive').on('submit.reviewArchive', 'form.ra_statement_form', function(e) {ldelim}
+		e.preventDefault();
+		var $form = $(this), $status = $form.find('.ra_save_status'), $box = $form.closest('.ra_statement');
+		$status.text($form.data('saving'));
+		$.post($form.attr('action'), $form.serialize(), function(response) {ldelim}
+			if (response && response.status && response.content) {ldelim}
+				$box.replaceWith(response.content);
+			{rdelim} else {ldelim}
+				$status.text((response && response.content) || $form.data('failed'));
+			{rdelim}
+		{rdelim}, 'json').fail(function() {ldelim}
+			$status.text($form.data('failed'));
+		{rdelim});
+	{rdelim});
+</script>
 
 {function name=reviewArchiveRows files=[] emptyKey="" dateFormat="%Y-%m-%d"}
 	{foreach from=$files item=file}
@@ -46,6 +78,8 @@
 {/function}
 
 <div class="pkp_review_archive">
+
+	{include file=$statementTemplate}
 
 	<div class="ra_section">
 		<div class="ra_header">
