@@ -45,9 +45,17 @@ class CheesaGuardPlugin extends GenericPlugin {
 	/** Ambil alih POST login untuk cek captcha + throttle sebelum kredensial diproses. */
 	public function loadLoginHandler($hookName, $params) {
 		if (($params[0] ?? '') !== 'login' || ($params[1] ?? '') !== 'signIn') return false;
-		require_once(__DIR__ . '/CheesaLoginGuardHandler.inc.php');
-		define('HANDLER_CLASS', 'CheesaLoginGuardHandler');
-		return true;
+		// Gagal-aman: bila kelas kita tak bisa dimuat, jatuhkan ke login inti (jangan 500).
+		try {
+			import('lib.pkp.pages.login.LoginHandler');
+			require_once(__DIR__ . '/CheesaLoginGuardHandler.inc.php');
+			if (!class_exists('CheesaLoginGuardHandler')) return false;
+			if (!defined('HANDLER_CLASS')) define('HANDLER_CLASS', 'CheesaLoginGuardHandler');
+			return true;
+		} catch (\Throwable $e) {
+			error_log('cheesaGuard loadLoginHandler: ' . $e->getMessage());
+			return false;
+		}
 	}
 
 	/**
@@ -55,45 +63,54 @@ class CheesaGuardPlugin extends GenericPlugin {
 	 * Jawaban disimpan di sesi; hanya diset bila penyisipan berhasil (gagal-aman).
 	 */
 	public function loginCaptcha($hookName, $args) {
-		$templateMgr = $args[0];
-		$template = $args[1];
-		if ($template !== 'frontend/pages/userLogin.tpl') return false;
+		// Gagal-aman total: error apa pun di sini TIDAK boleh menjatuhkan halaman.
+		try {
+			$template = $args[1] ?? null;
+			if ($template !== 'frontend/pages/userLogin.tpl') return false;
 
-		$request = Application::get()->getRequest();
-		$session = $request->getSession();
+			$templateMgr = $args[0];
+			$request = Application::get()->getRequest();
+			$session = ($request && method_exists($request, 'getSession')) ? $request->getSession() : null;
 
-		try { $a = random_int(1, 9); $b = random_int(1, 9); }
-		catch (\Exception $e) { $a = mt_rand(1, 9); $b = mt_rand(1, 9); }
+			try { $a = random_int(1, 9); $b = random_int(1, 9); }
+			catch (\Throwable $e) { $a = mt_rand(1, 9); $b = mt_rand(1, 9); }
 
-		$msg = $session->getSessionVar('cheesaLoginMsg');
-		if ($msg) $session->unsetSessionVar('cheesaLoginMsg');
+			$msg = $session ? $session->getSessionVar('cheesaLoginMsg') : null;
+			if ($msg && $session) $session->unsetSessionVar('cheesaLoginMsg');
 
-		$html = $templateMgr->fetch($template);
+			$html = $templateMgr->fetch($template);
+			if (!is_string($html) || $html === '') return false; // biarkan render normal
 
-		$err = $msg ? '<div style="color:#c62828;font-weight:600;margin-bottom:8px;">' . htmlspecialchars((string) $msg, ENT_QUOTES) . '</div>' : '';
-		$block = '<div class="cheesaCaptcha" style="margin:14px 0;padding:12px 14px;border:1px solid #d7dcea;border-radius:8px;background:#f7f9fc;">'
-			. $err
-			. '<label style="display:block;font-weight:600;margin-bottom:6px;">Verifikasi keamanan: berapa hasil <b>' . $a . ' + ' . $b . '</b>? <span class="required" aria-hidden="true">*</span></label>'
-			. '<input type="text" name="cheesaCaptcha" inputmode="numeric" autocomplete="off" required aria-required="true" style="max-width:140px;padding:6px 8px;" />'
-			. '</div>';
+			$err = $msg ? '<div style="color:#c62828;font-weight:600;margin-bottom:8px;">' . htmlspecialchars((string) $msg, ENT_QUOTES) . '</div>' : '';
+			$block = '<div class="cheesaCaptcha" style="margin:14px 0;padding:12px 14px;border:1px solid #d7dcea;border-radius:8px;background:#f7f9fc;">'
+				. $err
+				. '<label style="display:block;font-weight:600;margin-bottom:6px;">Verifikasi keamanan: berapa hasil <b>' . $a . ' + ' . $b . '</b>? <span class="required" aria-hidden="true">*</span></label>'
+				. '<input type="text" name="cheesaCaptcha" inputmode="numeric" autocomplete="off" required aria-required="true" style="max-width:140px;padding:6px 8px;" />'
+				. '</div>';
 
-		$injected = false;
-		if (strpos($html, '<div class="buttons">') !== false) {
-			$html = str_replace('<div class="buttons">', $block . '<div class="buttons">', $html);
-			$injected = true;
-		} elseif (preg_match('#</form>#i', $html)) {
-			$html = preg_replace('#</form>#i', $block . '</form>', $html, 1);
-			$injected = true;
+			$injected = false;
+			if (strpos($html, '<div class="buttons">') !== false) {
+				$html = str_replace('<div class="buttons">', $block . '<div class="buttons">', $html);
+				$injected = true;
+			} elseif (preg_match('#</form>#i', $html)) {
+				$html = preg_replace('#</form>#i', $block . '</form>', $html, 1);
+				$injected = true;
+			}
+
+			// Set jawaban HANYA bila captcha benar-benar tampil; jika tidak, captcha dilewati (gagal-aman).
+			if ($session) {
+				if ($injected) $session->setSessionVar('cheesaCaptchaAns', (string) ($a + $b));
+				else $session->unsetSessionVar('cheesaCaptchaAns');
+			}
+
+			if (!headers_sent()) header('Content-Type: text/html; charset=' . Config::getVar('i18n', 'client_charset', 'utf-8'));
+			$output =& $args[2];
+			$output = $html;
+			return true;
+		} catch (\Throwable $e) {
+			error_log('cheesaGuard loginCaptcha: ' . $e->getMessage());
+			return false; // render login normal tanpa captcha, situs tetap hidup
 		}
-
-		// Set jawaban HANYA bila captcha benar-benar tampil; jika tidak, captcha dilewati.
-		if ($injected) $session->setSessionVar('cheesaCaptchaAns', (string) ($a + $b));
-		else $session->unsetSessionVar('cheesaCaptchaAns');
-
-		if (!headers_sent()) header('Content-Type: text/html; charset=' . Config::getVar('i18n', 'client_charset', 'utf-8'));
-		$output =& $args[2];
-		$output = $html;
-		return true;
 	}
 
 	public function pageUrl($request) {

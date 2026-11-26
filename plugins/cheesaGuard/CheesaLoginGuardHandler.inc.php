@@ -10,36 +10,43 @@
  * namun throttle tetap berlaku.
  */
 
-import('pages.login.LoginHandler');
+import('lib.pkp.pages.login.LoginHandler');
 
 class CheesaLoginGuardHandler extends LoginHandler {
 
 	function signIn($args, $request) {
-		require_once(__DIR__ . '/classes/LoginThrottle.inc.php');
-		$ip = $request->getRemoteAddr();
-		$session = $request->getSession();
+		// Gagal-aman: kalau logika pengaman error, lanjut ke login inti agar tidak mengunci siapa pun.
+		try {
+			require_once(__DIR__ . '/classes/LoginThrottle.inc.php');
+			$ip = $request->getRemoteAddr();
+			$session = $request->getSession();
+			if ($session) {
+				// 1) Terkunci karena terlalu banyak percobaan?
+				$rem = CheesaLoginThrottle::remaining($ip);
+				if ($rem > 0) {
+					$session->setSessionVar('cheesaLoginMsg', 'Terlalu banyak percobaan login. Coba lagi dalam ' . (int) ceil($rem / 60) . ' menit.');
+					return $this->index($args, $request);
+				}
 
-		// 1) Terkunci karena terlalu banyak percobaan?
-		$rem = CheesaLoginThrottle::remaining($ip);
-		if ($rem > 0) {
-			$session->setSessionVar('cheesaLoginMsg', 'Terlalu banyak percobaan login. Coba lagi dalam ' . (int) ceil($rem / 60) . ' menit.');
-			return $this->index($args, $request);
-		}
+				// 2) Verifikasi captcha (hanya bila captcha memang sempat ditampilkan)
+				$ans = $session->getSessionVar('cheesaCaptchaAns');
+				if ($ans !== null && $ans !== '') {
+					$given = trim((string) $request->getUserVar('cheesaCaptcha'));
+					$session->unsetSessionVar('cheesaCaptchaAns'); // sekali pakai
+					if ($given === '' || (string) $ans !== $given) {
+						CheesaLoginThrottle::hit($ip);
+						$session->setSessionVar('cheesaLoginMsg', 'Jawaban verifikasi keamanan salah. Silakan coba lagi.');
+						return $this->index($args, $request);
+					}
+				}
 
-		// 2) Verifikasi captcha (hanya bila captcha memang sempat ditampilkan)
-		$ans = $session->getSessionVar('cheesaCaptchaAns');
-		if ($ans !== null && $ans !== '') {
-			$given = trim((string) $request->getUserVar('cheesaCaptcha'));
-			$session->unsetSessionVar('cheesaCaptchaAns'); // sekali pakai
-			if ($given === '' || (string) $ans !== $given) {
+				// 3) Catat percobaan.
 				CheesaLoginThrottle::hit($ip);
-				$session->setSessionVar('cheesaLoginMsg', 'Jawaban verifikasi keamanan salah. Silakan coba lagi.');
-				return $this->index($args, $request);
 			}
+		} catch (\Throwable $e) {
+			error_log('cheesaGuard signIn guard: ' . $e->getMessage());
 		}
-
-		// 3) Catat percobaan, lalu serahkan ke login inti.
-		CheesaLoginThrottle::hit($ip);
+		// Serahkan ke login inti.
 		return parent::signIn($args, $request);
 	}
 
