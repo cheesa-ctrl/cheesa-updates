@@ -72,8 +72,14 @@ class CheesaGuardPlugin extends GenericPlugin {
 			$request = Application::get()->getRequest();
 			$session = ($request && method_exists($request, 'getSession')) ? $request->getSession() : null;
 
-			try { $a = random_int(1, 9); $b = random_int(1, 9); }
-			catch (\Throwable $e) { $a = mt_rand(1, 9); $b = mt_rand(1, 9); }
+			try { $a = random_int(1, 9); $b = random_int(1, 9); $op = random_int(0, 1); }
+			catch (\Throwable $e) { $a = mt_rand(1, 9); $b = mt_rand(1, 9); $op = mt_rand(0, 1); }
+			if ($op === 1) { // pengurangan: pastikan hasil tidak negatif
+				if ($b > $a) { $tmp = $a; $a = $b; $b = $tmp; }
+				$sym = '&minus;'; $ans = $a - $b;
+			} else {
+				$sym = '+'; $ans = $a + $b;
+			}
 
 			$msg = $session ? $session->getSessionVar('cheesaLoginMsg') : null;
 			if ($msg && $session) $session->unsetSessionVar('cheesaLoginMsg');
@@ -84,8 +90,12 @@ class CheesaGuardPlugin extends GenericPlugin {
 			$err = $msg ? '<div style="color:#c62828;font-weight:600;margin-bottom:8px;">' . htmlspecialchars((string) $msg, ENT_QUOTES) . '</div>' : '';
 			$block = '<div class="cheesaCaptcha" style="margin:14px 0;padding:12px 14px;border:1px solid #d7dcea;border-radius:8px;background:#f7f9fc;">'
 				. $err
-				. '<label style="display:block;font-weight:600;margin-bottom:6px;">Verifikasi keamanan: berapa hasil <b>' . $a . ' + ' . $b . '</b>? <span class="required" aria-hidden="true">*</span></label>'
-				. '<input type="text" name="cheesaCaptcha" inputmode="numeric" autocomplete="off" required aria-required="true" style="max-width:140px;padding:6px 8px;" />'
+				. '<label style="display:block;font-weight:600;margin-bottom:6px;">Security check: what is <b>' . $a . ' ' . $sym . ' ' . $b . '</b>? <span class="required" aria-hidden="true">*</span></label>'
+				. '<input type="text" name="cheesaCaptcha" inputmode="numeric" autocomplete="off" required aria-required="true" style="max-width:140px;padding:6px 8px;" placeholder="Answer" />'
+				. '</div>'
+				// Honeypot: kolom umpan tersembunyi; manusia tak pernah mengisinya, bot biasanya mengisi.
+				. '<div aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;">'
+				. '<label>Leave this field blank<input type="text" name="cheesa_website" tabindex="-1" autocomplete="off" value="" /></label>'
 				. '</div>';
 
 			$injected = false;
@@ -99,8 +109,13 @@ class CheesaGuardPlugin extends GenericPlugin {
 
 			// Set jawaban HANYA bila captcha benar-benar tampil; jika tidak, captcha dilewati (gagal-aman).
 			if ($session) {
-				if ($injected) $session->setSessionVar('cheesaCaptchaAns', (string) ($a + $b));
-				else $session->unsetSessionVar('cheesaCaptchaAns');
+				if ($injected) {
+					$session->setSessionVar('cheesaCaptchaAns', (string) $ans);
+					$session->setSessionVar('cheesaFormTime', (string) time()); // untuk time-trap
+				} else {
+					$session->unsetSessionVar('cheesaCaptchaAns');
+					$session->unsetSessionVar('cheesaFormTime');
+				}
 			}
 
 			if (!headers_sent()) header('Content-Type: text/html; charset=' . Config::getVar('i18n', 'client_charset', 'utf-8'));

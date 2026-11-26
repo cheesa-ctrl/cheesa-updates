@@ -24,18 +24,36 @@ class CheesaLoginGuardHandler extends LoginHandler {
 				// 1) Terkunci karena terlalu banyak percobaan?
 				$rem = CheesaLoginThrottle::remaining($ip);
 				if ($rem > 0) {
-					$session->setSessionVar('cheesaLoginMsg', 'Terlalu banyak percobaan login. Coba lagi dalam ' . (int) ceil($rem / 60) . ' menit.');
+					$mins = (int) ceil($rem / 60);
+					$session->setSessionVar('cheesaLoginMsg', 'Too many login attempts. Please try again in ' . $mins . ' minute' . ($mins === 1 ? '' : 's') . '.');
 					return $this->index($args, $request);
 				}
 
-				// 2) Verifikasi captcha (hanya bila captcha memang sempat ditampilkan)
+				// 2a) Honeypot: kolom umpan tersembunyi harus kosong.
+				$hp = trim((string) $request->getUserVar('cheesa_website'));
+				if ($hp !== '') {
+					CheesaLoginThrottle::hit($ip);
+					$session->setSessionVar('cheesaLoginMsg', 'Security check failed. Please try again.');
+					return $this->index($args, $request);
+				}
+
+				// 2b) Time-trap: tolak kiriman yang terlalu cepat (ciri bot).
+				$ft = (int) $session->getSessionVar('cheesaFormTime');
+				if ($ft > 0 && (time() - $ft) < 2) {
+					CheesaLoginThrottle::hit($ip);
+					$session->setSessionVar('cheesaLoginMsg', 'Security check failed. Please try again.');
+					return $this->index($args, $request);
+				}
+				$session->unsetSessionVar('cheesaFormTime'); // sekali pakai
+
+				// 2c) Verifikasi captcha (hanya bila captcha memang sempat ditampilkan)
 				$ans = $session->getSessionVar('cheesaCaptchaAns');
 				if ($ans !== null && $ans !== '') {
 					$given = trim((string) $request->getUserVar('cheesaCaptcha'));
 					$session->unsetSessionVar('cheesaCaptchaAns'); // sekali pakai
 					if ($given === '' || (string) $ans !== $given) {
 						CheesaLoginThrottle::hit($ip);
-						$session->setSessionVar('cheesaLoginMsg', 'Jawaban verifikasi keamanan salah. Silakan coba lagi.');
+						$session->setSessionVar('cheesaLoginMsg', 'Incorrect security-check answer. Please try again.');
 						return $this->index($args, $request);
 					}
 				}
