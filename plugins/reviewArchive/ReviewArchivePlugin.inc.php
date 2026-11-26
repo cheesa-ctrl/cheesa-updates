@@ -76,7 +76,7 @@ class ReviewArchivePlugin extends GenericPlugin {
 				$menu = $new;
 			}
 			if (!isset($menu['cheesaPlugin']['submenu']) || !is_array($menu['cheesaPlugin']['submenu'])) $menu['cheesaPlugin']['submenu'] = [];
-			$url = $request->getDispatcher()->url($request, ROUTE_PAGE, null, self::IMPORT_PAGE, 'index');
+			$url = $request->getDispatcher()->url($request, ROUTE_PAGE, null, self::IMPORT_PAGE, 'page');
 			$menu['cheesaPlugin']['submenu']['reviewarchive'] = ['name' => 'Review Archive', 'url' => $url, 'isCurrent' => $request->getRequestedPage() === self::IMPORT_PAGE];
 			$tm->setState(['menu' => $menu]);
 		} catch (\Throwable $e) {

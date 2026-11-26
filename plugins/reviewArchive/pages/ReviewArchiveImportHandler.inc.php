@@ -43,7 +43,7 @@ class ReviewArchiveImportHandler extends Handler {
 		parent::__construct();
 		$this->addRoleAssignment(
 			[ROLE_ID_MANAGER, ROLE_ID_SITE_ADMIN],
-			['index', 'uploadChunk', 'analyze', 'import']
+			['index', 'page', 'uploadChunk', 'analyze', 'import']
 		);
 	}
 
@@ -78,6 +78,28 @@ class ReviewArchiveImportHandler extends Handler {
 			'raMaxSize' => self::MAX_SIZE,
 		]);
 		return $this->_json(true, $templateMgr->fetch(self::$plugin->getTemplateResource('importTab.tpl')));
+	}
+
+	/**
+	 * Full standalone page (for the sidebar menu), wrapping the import tab.
+	 * @param $args array
+	 * @param $request PKPRequest
+	 */
+	function page($args, $request) {
+		$this->setupTemplate($request);
+		$this->_cleanupOldUploads($request);
+		$dispatcher = $request->getDispatcher();
+		$templateMgr = TemplateManager::getManager($request);
+		$templateMgr->assign([
+			'raUploadUrl' => $dispatcher->url($request, ROUTE_PAGE, null, ReviewArchivePlugin::IMPORT_PAGE, 'uploadChunk'),
+			'raAnalyzeUrl' => $dispatcher->url($request, ROUTE_PAGE, null, ReviewArchivePlugin::IMPORT_PAGE, 'analyze'),
+			'raImportUrl' => $dispatcher->url($request, ROUTE_PAGE, null, ReviewArchivePlugin::IMPORT_PAGE, 'import'),
+			'raCsrfToken' => $request->getSession()->getCSRFToken(),
+			'raChunkSize' => self::CHUNK_SIZE,
+			'raMaxSize' => self::MAX_SIZE,
+		]);
+		$templateMgr->assign('raTabContent', $templateMgr->fetch(self::$plugin->getTemplateResource('importTab.tpl')));
+		return $templateMgr->display(self::$plugin->getTemplateResource('importPage.tpl'));
 	}
 
 	/**
