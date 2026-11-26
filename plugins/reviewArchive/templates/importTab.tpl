@@ -57,7 +57,7 @@
 		<div class="ra_actions">
 			<button type="button" class="pkpButton" id="raAnalyze">{translate key="plugins.generic.reviewArchive.import.analyze"}</button>
 			<button type="button" class="pkpButton" id="raImportButton" disabled>{translate key="plugins.generic.reviewArchive.import.run"}</button>
-			<button type="button" class="pkpButton" id="raBatchButton">Unggah &amp; impor semua</button>
+			<button type="button" class="pkpButton" id="raBatchButton">Unggah &amp; cek semua</button>
 		</div>
 	</div>
 
@@ -206,51 +206,88 @@
 			uploadId = null; uploadedFor = null;
 		{rdelim}).fail(function() {ldelim} status(cfg.text.failed, true); {rdelim});
 	{rdelim});
-
-	// ---- Mode banyak berkas: unggah -> cek judol -> impor, satu per satu ----
-	function esc(s) {ldelim} return $('<span>').text(s == null ? '' : s).html(); {rdelim}
-	function logRow(name, state, detail) {ldelim}
-		var color = state === 'done' ? '#107c10' : (state === 'blocked' ? '#b45309' : (state === 'busy' ? '#555' : '#d00a6c'));
-		var label = ({ldelim} busy: 'memproses…', done: '✓ diimpor', blocked: '⚠ diblokir (judol) — dilewati', failed: '✗ gagal' {rdelim})[state] || state;
-		var rid = 'ralog_' + name.replace(/[^a-z0-9]/gi, '_');
-		var $row = $('#' + rid);
-		if (!$row.length) $row = $('<li id="' + rid + '" style="margin:.25rem 0;"></li>').appendTo($('#raBatchLog'));
-		$row.html('<b>' + esc(name) + '</b> — <span style="color:' + color + '">' + label + (detail ? ' (' + esc(detail) + ')' : '') + '</span>');
-	{rdelim}
-	function batchProcess(files) {ldelim}
+{literal}
+	// ---- Mode banyak berkas: dua tahap (unggah+cek lalu impor per artikel / semua) ----
+	function esc(s){ return $('<span>').text(s==null?'':s).html(); }
+	var batchFiles = [];
+	function renderBatchShell(){
+		$result.html(
+			'<div class="ra_card">'
+			+ '<h3>Impor banyak berkas</h3>'
+			+ '<div id="raBatchBar" class="ra_status" style="margin-bottom:.5rem;"></div>'
+			+ '<div id="raBatchList"></div>'
+			+ '<div id="raBatchFoot" style="margin-top:1rem;display:none;">'
+			+   '<button type="button" class="pkpButton" id="raImportAll">Impor semua yang lolos</button>'
+			+ '</div></div>'
+		);
+		$('#raImportAll').on('click', importAll);
+	}
+	function cardEl(idx){ return $('#rafc_'+idx); }
+	function setCard(idx, state, name, msg, preview){
+		var color = state==='imported' ? '#107c10' : (state==='blocked' ? '#b45309' : (state==='failed' ? '#d00a6c' : '#555'));
+		var label = ({ checking:'memeriksa…', checked:'siap diimpor', importing:'mengimpor…', imported:'✓ diimpor', blocked:'⚠ diblokir (judol)', failed:'✗ gagal' })[state] || state;
+		var $c = cardEl(idx);
+		if(!$c.length){ $c = $('<div class="ra_fcard" id="rafc_'+idx+'" style="border:1px solid #e3e3e3;border-radius:4px;padding:.6rem .85rem;margin:.5rem 0;"></div>').appendTo('#raBatchList'); }
+		var btn = (state==='checked' || state==='failed') ? '<button type="button" class="pkpButton ra_fimport" data-idx="'+idx+'" style="margin-top:.5rem;">Impor artikel ini</button>' : '';
+		$c.html('<div><b>'+esc(name)+'</b> — <span style="color:'+color+'">'+label+(msg?' ('+esc(msg)+')':'')+'</span></div>' + (preview ? '<div style="margin-top:.4rem;">'+preview+'</div>' : '') + btn);
+		$c.find('.ra_fimport').on('click', function(){ importOne(parseInt($(this).attr('data-idx'),10)); });
+	}
+	function batchCheckAll(fileArr){
+		batchFiles = fileArr.map(function(f){ return { file:f, id:null, state:'pending' }; });
 		$analyze.prop('disabled', true); $import.prop('disabled', true); $batch.prop('disabled', true);
-		$result.html('<div class="ra_card"><h3>Impor banyak berkas</h3><ol id="raBatchLog" style="margin:.5rem 0 0 1.25rem;"></ol></div>');
-		var i = 0, ok = 0, blocked = 0, failed = 0;
-		function finish() {ldelim}
-			$batch.prop('disabled', false); $analyze.prop('disabled', false); progress(1);
-			status(files.length + ' berkas: ' + ok + ' diimpor, ' + blocked + ' diblokir, ' + failed + ' gagal.', failed > 0);
-		{rdelim}
-		function next() {ldelim}
-			if (i >= files.length) {ldelim} finish(); return; {rdelim}
-			var file = files[i];
-			progress(i / files.length);
-			status('Berkas ' + (i + 1) + '/' + files.length + ': ' + file.name);
-			if (file.size > cfg.maxSize) {ldelim} logRow(file.name, 'failed', 'terlalu besar'); failed++; i++; next(); return; {rdelim}
-			logRow(file.name, 'busy', 'mengunggah');
-			upload(file).done(function(id) {ldelim}
-				logRow(file.name, 'busy', 'memeriksa judol');
-				$.ajax({ldelim} url: cfg.analyzeUrl, type: 'POST', data: options(id), dataType: 'json' {rdelim}).done(function(r) {ldelim}
-					if (!r || !r.status) {ldelim} logRow(file.name, 'failed', (r && r.content) ? 'cek gagal' : ''); failed++; i++; next(); return; {rdelim}
-					if (r.blocked) {ldelim} logRow(file.name, 'blocked'); blocked++; i++; next(); return; {rdelim}
-					logRow(file.name, 'busy', 'mengimpor');
-					$.ajax({ldelim} url: cfg.importUrl, type: 'POST', data: options(id), dataType: 'json' {rdelim}).done(function(ri) {ldelim}
-						if (ri && ri.status) {ldelim} logRow(file.name, 'done'); ok++; {rdelim} else {ldelim} logRow(file.name, 'failed'); failed++; {rdelim}
-						i++; next();
-					{rdelim}).fail(function() {ldelim} logRow(file.name, 'failed', 'impor timeout/galat'); failed++; i++; next(); {rdelim});
-				{rdelim}).fail(function() {ldelim} logRow(file.name, 'failed', 'cek timeout/galat'); failed++; i++; next(); {rdelim});
-			{rdelim}).fail(function() {ldelim} logRow(file.name, 'failed', 'unggah gagal'); failed++; i++; next(); {rdelim});
-		{rdelim}
+		renderBatchShell();
+		var i=0;
+		function next(){
+			if(i>=batchFiles.length){ afterCheck(); return; }
+			var item = batchFiles[i], file = item.file;
+			progress(i/batchFiles.length);
+			$('#raBatchBar').text('Memeriksa '+(i+1)+'/'+batchFiles.length+': '+file.name);
+			setCard(i,'checking',file.name);
+			if(file.size>cfg.maxSize){ item.state='failed'; setCard(i,'failed',file.name,'terlalu besar'); i++; next(); return; }
+			upload(file).done(function(id){
+				item.id=id;
+				$.ajax({ url:cfg.analyzeUrl, type:'POST', data:options(id), dataType:'json' }).done(function(r){
+					if(!r||!r.status){ item.state='failed'; setCard(i,'failed',file.name,(r&&r.content)?'cek gagal':''); i++; next(); return; }
+					if(r.blocked){ item.state='blocked'; setCard(i,'blocked',file.name,'',r.content); i++; next(); return; }
+					item.state='checked'; setCard(i,'checked',file.name,'',r.content); i++; next();
+				}).fail(function(){ item.state='failed'; setCard(i,'failed',file.name,'cek timeout/galat'); i++; next(); });
+			}).fail(function(){ item.state='failed'; setCard(i,'failed',file.name,'unggah gagal'); i++; next(); });
+		}
 		next();
-	{rdelim}
-	$batch.on('click', function() {ldelim}
+	}
+	function afterCheck(){
+		progress(1);
+		var ready=0, blocked=0, failed=0;
+		batchFiles.forEach(function(x){ if(x.state==='checked')ready++; else if(x.state==='blocked')blocked++; else if(x.state==='failed')failed++; });
+		$('#raBatchBar').text('Cek selesai: '+ready+' siap, '+blocked+' diblokir, '+failed+' gagal. Impor per artikel, atau semua sekaligus.');
+		$batch.prop('disabled', false); $analyze.prop('disabled', false);
+		if(ready>0) $('#raBatchFoot').show();
+	}
+	function importOne(idx){
+		var item = batchFiles[idx];
+		if(!item || !item.id || item.state==='imported' || item.state==='importing') return;
+		setCard(idx,'importing',item.file.name);
+		return $.ajax({ url:cfg.importUrl, type:'POST', data:options(item.id), dataType:'json' }).done(function(ri){
+			if(ri&&ri.status){ item.state='imported'; setCard(idx,'imported',item.file.name,'',ri.content); }
+			else { item.state='failed'; setCard(idx,'failed',item.file.name); }
+		}).fail(function(){ item.state='failed'; setCard(idx,'failed',item.file.name,'impor timeout/galat'); });
+	}
+	function importAll(){
+		$('#raImportAll').prop('disabled', true);
+		var idxs=[]; batchFiles.forEach(function(x,i){ if(x.state==='checked') idxs.push(i); });
+		var k=0;
+		function go(){
+			if(k>=idxs.length){ $('#raImportAll').prop('disabled', false); $('#raBatchBar').text('Selesai impor semua.'); return; }
+			var p = importOne(idxs[k]); k++;
+			if(p && p.always) p.always(go); else go();
+		}
+		go();
+	}
+	$batch.on('click', function(){
 		var files = $('#raFile')[0].files;
-		if (!files || !files.length) {ldelim} status(cfg.text.chooseFile, true); return; {rdelim}
-		batchProcess(Array.prototype.slice.call(files));
-	{rdelim});
+		if(!files || !files.length){ status(cfg.text.chooseFile, true); return; }
+		batchCheckAll(Array.prototype.slice.call(files));
+	});
+{/literal}
 {rdelim}(jQuery));
 </script>
