@@ -1,0 +1,114 @@
+msgid ""
+msgstr ""
+"Language: id_ID\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "plugins.generic.reviewArchive.displayName"
+msgstr "Arsip Review & Deteksi Judol"
+
+msgid "plugins.generic.reviewArchive.description"
+msgstr "Menambahkan tab \"Arsip Review\" di alur kerja naskah untuk berkas review yang tidak tampil setelah impor Native XML, dan memeriksa berkas Native XML dari indikasi judi online (judol) sebelum diimpor."
+
+msgid "plugins.generic.reviewArchive.tabTitle"
+msgstr "Arsip Review"
+
+msgid "plugins.generic.reviewArchive.marked.title"
+msgstr "Berkas Review"
+
+msgid "plugins.generic.reviewArchive.marked.description"
+msgstr "Berkas yang namanya mengandung {$marker}. Berkas ini juga tetap tampil di tab Submission."
+
+msgid "plugins.generic.reviewArchive.marked.empty"
+msgstr "Tidak ada berkas bertanda review."
+
+msgid "plugins.generic.reviewArchive.hidden.title"
+msgstr "Berkas Tahap Review & Lampiran Lainnya"
+
+msgid "plugins.generic.reviewArchive.hidden.description"
+msgstr "Berkas tahap review, lampiran, dan berkas diskusi milik naskah ini. Setelah impor Native XML, berkas seperti ini biasanya tidak tampil karena ronde review, penugasan reviewer, dan diskusinya tidak ikut terimpor."
+
+msgid "plugins.generic.reviewArchive.hidden.empty"
+msgstr "Tidak ada berkas lain."
+
+msgid "plugins.generic.reviewArchive.column.file"
+msgstr "Nama berkas"
+
+msgid "plugins.generic.reviewArchive.column.stage"
+msgstr "Tahap"
+
+msgid "plugins.generic.reviewArchive.column.date"
+msgstr "Tanggal"
+
+msgid "plugins.generic.reviewArchive.column.download"
+msgstr "Unduh"
+
+msgid "plugins.generic.reviewArchive.download.latest"
+msgstr "Terbaru"
+
+msgid "plugins.generic.reviewArchive.download.revision"
+msgstr "Revisi {$number}"
+
+msgid "plugins.generic.reviewArchive.fileStage.submission"
+msgstr "Submission"
+
+msgid "plugins.generic.reviewArchive.fileStage.reviewFile"
+msgstr "Berkas review"
+
+msgid "plugins.generic.reviewArchive.fileStage.reviewAttachment"
+msgstr "Lampiran reviewer"
+
+msgid "plugins.generic.reviewArchive.fileStage.reviewRevision"
+msgstr "Revisi review"
+
+msgid "plugins.generic.reviewArchive.fileStage.attachment"
+msgstr "Lampiran"
+
+msgid "plugins.generic.reviewArchive.fileStage.query"
+msgstr "Berkas diskusi"
+
+msgid "plugins.generic.reviewArchive.fileStage.note"
+msgstr "Catatan"
+
+msgid "plugins.generic.reviewArchive.fileStage.final"
+msgstr "Draf final"
+
+msgid "plugins.generic.reviewArchive.fileStage.copyedit"
+msgstr "Copyedit"
+
+msgid "plugins.generic.reviewArchive.fileStage.proof"
+msgstr "Proof"
+
+msgid "plugins.generic.reviewArchive.fileStage.productionReady"
+msgstr "Siap produksi"
+
+msgid "plugins.generic.reviewArchive.fileStage.other"
+msgstr "Lainnya"
+
+msgid "plugins.generic.reviewArchive.judol.blocked.title"
+msgstr "Impor dibatalkan: ditemukan indikasi judi online"
+
+msgid "plugins.generic.reviewArchive.judol.blocked.description"
+msgstr "Berkas \"{$file}\" TIDAK diimpor. Ditemukan {$count} indikasi judi online (judol) atau kode tersembunyi di dalam XML atau berkas yang tertanam di dalamnya."
+
+msgid "plugins.generic.reviewArchive.judol.blocked.scanned"
+msgstr "Jumlah berkas tertanam yang dipindai: {$count}."
+
+msgid "plugins.generic.reviewArchive.judol.column.location"
+msgstr "Lokasi"
+
+msgid "plugins.generic.reviewArchive.judol.column.term"
+msgstr "Temuan"
+
+msgid "plugins.generic.reviewArchive.judol.column.context"
+msgstr "Kutipan"
+
+msgid "plugins.generic.reviewArchive.judol.kind.code"
+msgstr "kode/HTML tersembunyi"
+
+msgid "plugins.generic.reviewArchive.judol.skipped"
+msgstr "Berkas yang tidak dapat dipindai:"
+
+msgid "plugins.generic.reviewArchive.judol.nextSteps"
+msgstr "Bersihkan bagian yang ditandai (atau hapus berkas tertanam yang bermasalah dari XML), lalu unggah dan impor ulang. Jika temuan ternyata keliru, sesuaikan daftar pola di plugins/generic/reviewArchive/classes/JudolScanner.inc.php."

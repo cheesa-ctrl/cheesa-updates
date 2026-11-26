@@ -1,0 +1,114 @@
+msgid ""
+msgstr ""
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "plugins.generic.reviewArchive.displayName"
+msgstr "Review Archive & Gambling-Spam Check"
+
+msgid "plugins.generic.reviewArchive.description"
+msgstr "Adds a \"Review Archive\" tab to the submission workflow for review files that are not shown after a Native XML import, and checks Native XML files for online-gambling spam before they are imported."
+
+msgid "plugins.generic.reviewArchive.tabTitle"
+msgstr "Review Archive"
+
+msgid "plugins.generic.reviewArchive.marked.title"
+msgstr "Review Files"
+
+msgid "plugins.generic.reviewArchive.marked.description"
+msgstr "Files whose name contains {$marker}. They also remain visible in the Submission tab."
+
+msgid "plugins.generic.reviewArchive.marked.empty"
+msgstr "No files marked as review files."
+
+msgid "plugins.generic.reviewArchive.hidden.title"
+msgstr "Other Review-Stage Files & Attachments"
+
+msgid "plugins.generic.reviewArchive.hidden.description"
+msgstr "Review-stage files, attachments and discussion files of this submission. After a Native XML import these are usually not shown, because review rounds, reviewer assignments and discussions are not imported."
+
+msgid "plugins.generic.reviewArchive.hidden.empty"
+msgstr "No other files."
+
+msgid "plugins.generic.reviewArchive.column.file"
+msgstr "File name"
+
+msgid "plugins.generic.reviewArchive.column.stage"
+msgstr "Stage"
+
+msgid "plugins.generic.reviewArchive.column.date"
+msgstr "Date"
+
+msgid "plugins.generic.reviewArchive.column.download"
+msgstr "Download"
+
+msgid "plugins.generic.reviewArchive.download.latest"
+msgstr "Latest"
+
+msgid "plugins.generic.reviewArchive.download.revision"
+msgstr "Revision {$number}"
+
+msgid "plugins.generic.reviewArchive.fileStage.submission"
+msgstr "Submission"
+
+msgid "plugins.generic.reviewArchive.fileStage.reviewFile"
+msgstr "Review file"
+
+msgid "plugins.generic.reviewArchive.fileStage.reviewAttachment"
+msgstr "Reviewer attachment"
+
+msgid "plugins.generic.reviewArchive.fileStage.reviewRevision"
+msgstr "Review revision"
+
+msgid "plugins.generic.reviewArchive.fileStage.attachment"
+msgstr "Attachment"
+
+msgid "plugins.generic.reviewArchive.fileStage.query"
+msgstr "Discussion file"
+
+msgid "plugins.generic.reviewArchive.fileStage.note"
+msgstr "Note"
+
+msgid "plugins.generic.reviewArchive.fileStage.final"
+msgstr "Final draft"
+
+msgid "plugins.generic.reviewArchive.fileStage.copyedit"
+msgstr "Copyedited"
+
+msgid "plugins.generic.reviewArchive.fileStage.proof"
+msgstr "Proof"
+
+msgid "plugins.generic.reviewArchive.fileStage.productionReady"
+msgstr "Production ready"
+
+msgid "plugins.generic.reviewArchive.fileStage.other"
+msgstr "Other"
+
+msgid "plugins.generic.reviewArchive.judol.blocked.title"
+msgstr "Import stopped: online-gambling content found"
+
+msgid "plugins.generic.reviewArchive.judol.blocked.description"
+msgstr "The file \"{$file}\" was NOT imported. {$count} online-gambling indication(s) or hidden code were found in the XML or in the files embedded in it."
+
+msgid "plugins.generic.reviewArchive.judol.blocked.scanned"
+msgstr "Embedded files scanned: {$count}."
+
+msgid "plugins.generic.reviewArchive.judol.column.location"
+msgstr "Location"
+
+msgid "plugins.generic.reviewArchive.judol.column.term"
+msgstr "Finding"
+
+msgid "plugins.generic.reviewArchive.judol.column.context"
+msgstr "Excerpt"
+
+msgid "plugins.generic.reviewArchive.judol.kind.code"
+msgstr "hidden code/HTML"
+
+msgid "plugins.generic.reviewArchive.judol.skipped"
+msgstr "Files that could not be scanned:"
+
+msgid "plugins.generic.reviewArchive.judol.nextSteps"
+msgstr "Clean the marked parts (or remove the affected embedded file from the XML), then upload and import again. If a finding is a false positive, adjust the pattern list in plugins/generic/reviewArchive/classes/JudolScanner.inc.php."

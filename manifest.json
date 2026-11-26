@@ -116,7 +116,16 @@
             "sha256": "e1030862427869701bfb92c75fdd666a52abde08810f8567315504b21e1d1a4e",
             "size": 2324341,
             "released": "2026-11-16"
+        },
+        "reviewArchive": {
+            "category": "generic",
+            "label": "Review Archive",
+            "version": "1.0.0.0",
+            "file": "reviewArchive-1.0.0.0.tar.gz",
+            "sha256": "48c4cd6ad3c7ef2d29b185f025824be0c8ebfde4ee0594af7049ba50e6438add",
+            "size": 16288,
+            "released": "2026-11-26"
         }
     },
-    "generated": "2026-11-25T09:14:44+00:00"
+    "generated": "2026-11-26T05:35:29+00:00"
 }
