@@ -21,20 +21,20 @@
         "cheesaControlPanel": {
             "category": "generic",
             "label": "CHEESA Control Panel",
-            "version": "1.7.0.0",
-            "file": "cheesaControlPanel-1.7.0.0.tar.gz",
-            "sha256": "e7fce03e076177e9561b93dfeb827060a1d52c9d7a2f70adb20838a7c5983313",
-            "size": 25873,
-            "released": "2026-11-18"
+            "version": "1.8.0.0",
+            "file": "cheesaControlPanel-1.8.0.0.tar.gz",
+            "sha256": "12d7d9adf1bb1d697a569974aa44130ade3346183e36367a4e0e12a3e65f9f9c",
+            "size": 25753,
+            "released": "2026-11-26"
         },
         "cheesaEditorialPick": {
             "category": "generic",
             "label": "Cheesa Editorial Pick",
-            "version": "1.0.6.0",
-            "file": "cheesaEditorialPick-1.0.6.0.tar.gz",
-            "sha256": "ce606ca473319fd8b1cca0cfdb61569ce04b635f58920d00a2b22a63b2466152",
-            "size": 10113,
-            "released": "2026-11-25"
+            "version": "1.0.7.0",
+            "file": "cheesaEditorialPick-1.0.7.0.tar.gz",
+            "sha256": "2cdaa7e473d897a87e94e2447009bbf913d7a47ac1378c1ecdae4a8beab935de",
+            "size": 10247,
+            "released": "2026-11-26"
         },
         "cheesaFullText": {
             "category": "generic",
@@ -48,11 +48,11 @@
         "cheesaMailer": {
             "category": "generic",
             "label": "Cheesa Mailer",
-            "version": "1.6.0.0",
-            "file": "cheesaMailer-1.6.0.0.tar.gz",
-            "sha256": "4af20a5de9518b384c715f61ab1b9282d55884f0bfedcd072ad30a72bf80ba88",
-            "size": 17934,
-            "released": "2026-11-25"
+            "version": "1.7.0.0",
+            "file": "cheesaMailer-1.7.0.0.tar.gz",
+            "sha256": "17904c32dac07e4313c4a8088e40eeb3a972bf4d07f3d29e342bcd06b84da76a",
+            "size": 18088,
+            "released": "2026-11-26"
         },
         "cheesaNovelty": {
             "category": "themes",
@@ -66,11 +66,11 @@
         "cheesaUserManager": {
             "category": "generic",
             "label": "Cheesa User Manager",
-            "version": "1.10.0.0",
-            "file": "cheesaUserManager-1.10.0.0.tar.gz",
-            "sha256": "742c20aa907c5a811242129e0ac0ec5dbcfb8065ae7622f80e14ab4505d0ce48",
-            "size": 23491,
-            "released": "2026-11-25"
+            "version": "1.11.0.0",
+            "file": "cheesaUserManager-1.11.0.0.tar.gz",
+            "sha256": "754d02091faf747ec5ff1365058c9dc656d7dd7d512b99f98585a0701053fd54",
+            "size": 23626,
+            "released": "2026-11-26"
         },
         "countryStats": {
             "category": "generic",
@@ -127,5 +127,5 @@
             "released": "2026-11-26"
         }
     },
-    "generated": "2026-11-26T06:13:58+00:00"
+    "generated": "2026-11-26T06:33:54+00:00"
 }
