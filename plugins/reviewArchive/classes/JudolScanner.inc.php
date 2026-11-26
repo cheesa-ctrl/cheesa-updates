@@ -65,14 +65,14 @@ class JudolScanner extends TextExtractor {
 	const MAX_TOTAL = 100;
 
 	/**
-	 * Jaring pengaman agar impor sangat besar tak melewati timeout web-server.
-	 * Nilainya longgar: untuk berkas per-artikel yang normal, cap ini tak pernah
-	 * tersentuh sehingga tiap berkas dipindai PENUH. Hanya berkas tunggal yang
-	 * luar biasa besar (> 20 MB) yang dipotong, dan itu pun dilaporkan.
+	 * Jaring pengaman agar impor besar / PDF bermasalah tak melewati timeout web-server.
+	 * Untuk berkas per-artikel normal, cap ini praktis tak tersentuh (tiap berkas dipindai
+	 * penuh). Berkas tunggal > cap dipotong dan dilaporkan. Cap dibuat konservatif agar satu
+	 * PDF yang memicu regex "macet" tidak pernah membuat permintaan menggantung.
 	 */
-	const MAX_FILE_BYTES = 20971520;  // 20 MB per-embed (PDF galley/review normal jauh di bawah ini)
-	const MAX_TEXT = 2097152;         // 2 MB teks untuk pemindai regex
-	const TIME_BUDGET = 40;           // detik: jaring pengaman; berkas sisa dilewati & dilaporkan
+	const MAX_FILE_BYTES = 4194304;   // 4 MB per-embed (PDF galley/review normal jauh di bawah ini)
+	const MAX_TEXT = 1048576;         // 1 MB teks untuk pemindai regex
+	const TIME_BUDGET = 20;           // detik: jaring pengaman; berkas sisa dilewati & dilaporkan
 
 	/** @var array */
 	protected $_findings = [];
@@ -109,6 +109,11 @@ class JudolScanner extends TextExtractor {
 		$this->_skipped = [];
 		$this->_scannedFiles = 0;
 		$this->_start = microtime(true);
+
+		// Batasi langkah regex agar pola "catastrophic backtracking" pada PDF tertentu
+		// gagal cepat alih-alih menggantung sampai timeout web-server.
+		@ini_set('pcre.backtrack_limit', '1000000');
+		@ini_set('pcre.recursion_limit', '100000');
 
 		$previous = libxml_use_internal_errors(true);
 		$dom = new DOMDocument();

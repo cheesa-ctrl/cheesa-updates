@@ -159,8 +159,13 @@ class ReviewArchiveImportHandler extends Handler {
 
 		// 1. Online gambling check on the file as uploaded.
 		self::$plugin->import('classes.JudolScanner');
-		$scanner = new JudolScanner();
-		$report = $scanner->scanXmlString($xml);
+		try {
+			$scanner = new JudolScanner();
+			$report = $scanner->scanXmlString($xml);
+		} catch (\Throwable $e) {
+			error_log('reviewArchive analyze scan: ' . $e->getMessage());
+			return $this->_json(false, 'Galat saat memindai judol: ' . $e->getMessage());
+		}
 		if (!empty($report['findings'])) {
 			self::$plugin->logBlocked($request->getUser(), $meta['name'], $report);
 			$this->_deleteUpload($request);
@@ -175,8 +180,9 @@ class ReviewArchiveImportHandler extends Handler {
 		try {
 			$processor = new ReviewArchiveXmlProcessor($xml, $this->_options($request));
 			$plan = $processor->process();
-		} catch (Exception $e) {
-			return $this->_json(false, __('plugins.generic.reviewArchive.import.error.xml'));
+		} catch (\Throwable $e) {
+			error_log('reviewArchive analyze process: ' . $e->getMessage());
+			return $this->_json(false, __('plugins.generic.reviewArchive.import.error.xml') . ' (' . $e->getMessage() . ')');
 		}
 		$templateMgr = TemplateManager::getManager($request);
 		$templateMgr->assign([
@@ -207,8 +213,13 @@ class ReviewArchiveImportHandler extends Handler {
 
 		// Never import without checking again.
 		self::$plugin->import('classes.JudolScanner');
-		$scanner = new JudolScanner();
-		$report = $scanner->scanXmlString($xml);
+		try {
+			$scanner = new JudolScanner();
+			$report = $scanner->scanXmlString($xml);
+		} catch (\Throwable $e) {
+			error_log('reviewArchive import scan: ' . $e->getMessage());
+			return $this->_json(false, 'Galat saat memindai judol: ' . $e->getMessage());
+		}
 		if (!empty($report['findings'])) {
 			self::$plugin->logBlocked($request->getUser(), $meta['name'], $report);
 			$this->_deleteUpload($request);
@@ -220,7 +231,7 @@ class ReviewArchiveImportHandler extends Handler {
 			$processor = new ReviewArchiveXmlProcessor($xml, $this->_options($request));
 			$plan = $processor->process();
 			$xml = $processor->getXml();
-		} catch (Exception $e) {
+		} catch (\Throwable $e) {
 			return $this->_json(false, __('plugins.generic.reviewArchive.import.error.xml'));
 		}
 		unset($processor);

@@ -247,7 +247,7 @@
 			upload(file).done(function(id){
 				item.id=id;
 				$.ajax({ url:cfg.analyzeUrl, type:'POST', data:options(id), dataType:'json' }).done(function(r){
-					if(!r||!r.status){ item.state='failed'; setCard(i,'failed',file.name,(r&&r.content)?'cek gagal':''); i++; next(); return; }
+					if(!r||!r.status){ var m=(r&&r.content)?$('<div>').html(r.content).text().replace(/\s+/g,' ').trim().slice(0,220):''; item.state='failed'; setCard(i,'failed',file.name,m||'cek gagal'); i++; next(); return; }
 					if(r.blocked){ item.state='blocked'; setCard(i,'blocked',file.name,'',r.content); i++; next(); return; }
 					item.state='checked'; setCard(i,'checked',file.name,'',r.content); i++; next();
 				}).fail(function(){ item.state='failed'; setCard(i,'failed',file.name,'cek timeout/galat'); i++; next(); });
@@ -269,7 +269,7 @@
 		setCard(idx,'importing',item.file.name);
 		return $.ajax({ url:cfg.importUrl, type:'POST', data:options(item.id), dataType:'json' }).done(function(ri){
 			if(ri&&ri.status){ item.state='imported'; setCard(idx,'imported',item.file.name,'',ri.content); }
-			else { item.state='failed'; setCard(idx,'failed',item.file.name); }
+			else { var m=(ri&&ri.content)?$('<div>').html(ri.content).text().replace(/\s+/g,' ').trim().slice(0,220):''; item.state='failed'; setCard(idx,'failed',item.file.name,m); }
 		}).fail(function(){ item.state='failed'; setCard(idx,'failed',item.file.name,'impor timeout/galat'); });
 	}
 	function importAll(){
