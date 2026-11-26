@@ -17,7 +17,7 @@ class CheesaGuardHandler extends Handler {
 
 	function __construct() {
 		parent::__construct();
-		$this->addRoleAssignment([ROLE_ID_SITE_ADMIN, ROLE_ID_MANAGER, ROLE_ID_SUB_EDITOR], ['index', 'scan', 'fix', 'restore']);
+		$this->addRoleAssignment([ROLE_ID_SITE_ADMIN, ROLE_ID_MANAGER], ['index', 'scan', 'fix', 'restore']);
 	}
 
 	function authorize($request, &$args, $roleAssignments) {

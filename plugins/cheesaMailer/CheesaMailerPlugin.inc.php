@@ -57,7 +57,7 @@ class CheesaMailerPlugin extends GenericPlugin {
 			$allow = Validation::isSiteAdmin();
 			if (!$allow) {
 				$ug = DAORegistry::getDAO('UserGroupDAO')->getByUserId($u->getId(), (int) $c->getId());
-				while ($ug && ($g = $ug->next())) { if (in_array((int) $g->getRoleId(), [ROLE_ID_MANAGER, ROLE_ID_SUB_EDITOR])) { $allow = true; break; } }
+				while ($ug && ($g = $ug->next())) { if (in_array((int) $g->getRoleId(), [ROLE_ID_MANAGER])) { $allow = true; break; } }
 			}
 			if (!$allow) return false;
 			$tm = TemplateManager::getManager($request);

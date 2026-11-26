@@ -21,19 +21,19 @@
         "cheesaControlPanel": {
             "category": "generic",
             "label": "CHEESA Control Panel",
-            "version": "1.8.1.0",
-            "file": "cheesaControlPanel-1.8.1.0.tar.gz",
-            "sha256": "91f4c82e193b5f0b42b789d368852609f7ae7a89976673d3304fe916b78f6081",
-            "size": 25751,
+            "version": "1.8.2.0",
+            "file": "cheesaControlPanel-1.8.2.0.tar.gz",
+            "sha256": "2098a70309c41ad36e4286df1f8e7633dfd25444678adc3fb6b56daa378886d2",
+            "size": 25735,
             "released": "2026-11-26"
         },
         "cheesaEditorialPick": {
             "category": "generic",
             "label": "Cheesa Editorial Pick",
-            "version": "1.0.7.0",
-            "file": "cheesaEditorialPick-1.0.7.0.tar.gz",
-            "sha256": "2cdaa7e473d897a87e94e2447009bbf913d7a47ac1378c1ecdae4a8beab935de",
-            "size": 10247,
+            "version": "1.0.8.0",
+            "file": "cheesaEditorialPick-1.0.8.0.tar.gz",
+            "sha256": "badf89c1154714da018b93689970e3e18efcfa1ad8aa9f7c63e7fbb23497fd43",
+            "size": 10232,
             "released": "2026-11-26"
         },
         "cheesaFullText": {
@@ -48,19 +48,19 @@
         "cheesaGuard": {
             "category": "generic",
             "label": "Cheesa Guard",
-            "version": "1.2.4.0",
-            "file": "cheesaGuard-1.2.4.0.tar.gz",
-            "sha256": "5096803dfc933619a7fc7f5dcb3173debb4bf630a89b01a2f8347c24defb71bc",
-            "size": 14092,
+            "version": "1.2.5.0",
+            "file": "cheesaGuard-1.2.5.0.tar.gz",
+            "sha256": "cd1c23f105933671a68e198d3cca4d37cc8a60f9700e15ca2b3722713a64b027",
+            "size": 14080,
             "released": "2026-11-26"
         },
         "cheesaMailer": {
             "category": "generic",
             "label": "Cheesa Mailer",
-            "version": "1.7.0.0",
-            "file": "cheesaMailer-1.7.0.0.tar.gz",
-            "sha256": "17904c32dac07e4313c4a8088e40eeb3a972bf4d07f3d29e342bcd06b84da76a",
-            "size": 18088,
+            "version": "1.7.1.0",
+            "file": "cheesaMailer-1.7.1.0.tar.gz",
+            "sha256": "34a400ba9a2ad060759905f8e4493a210d9a68bc921e00fa71740572ff080d3b",
+            "size": 18086,
             "released": "2026-11-26"
         },
         "cheesaNovelty": {
@@ -75,10 +75,10 @@
         "cheesaUserManager": {
             "category": "generic",
             "label": "Cheesa User Manager",
-            "version": "1.11.1.0",
-            "file": "cheesaUserManager-1.11.1.0.tar.gz",
-            "sha256": "fe7d0790245d1fb88621b49cffa4eb72d1fce9d4441a70c816e0c49ec2874206",
-            "size": 23629,
+            "version": "1.11.2.0",
+            "file": "cheesaUserManager-1.11.2.0.tar.gz",
+            "sha256": "1f8aa0554f973889bf6d4c00b9b24fa315219b10b07e519bf4971dc6828a5df6",
+            "size": 23616,
             "released": "2026-11-26"
         },
         "countryStats": {
@@ -129,12 +129,12 @@
         "reviewArchive": {
             "category": "generic",
             "label": "Review Archive",
-            "version": "1.5.0.0",
-            "file": "reviewArchive-1.5.0.0.tar.gz",
-            "sha256": "a0255e96efc92c81666463e8d1c62875b1186bc2ba2cf4a96d2d986b31b30fb3",
-            "size": 47139,
+            "version": "1.5.1.0",
+            "file": "reviewArchive-1.5.1.0.tar.gz",
+            "sha256": "faa28863c2a9121813b137b6df29d230c1335a41967312f2d9c7eb83ed392625",
+            "size": 47128,
             "released": "2026-11-26"
         }
     },
-    "generated": "2026-11-26T20:24:06+00:00"
+    "generated": "2026-11-26T20:29:10+00:00"
 }

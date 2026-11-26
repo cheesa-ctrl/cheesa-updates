@@ -18,7 +18,7 @@ class CheesaEditorialPickGenericHandler extends Handler {
 
 	public function __construct() {
 		parent::__construct();
-		$this->addRoleAssignment([ROLE_ID_SITE_ADMIN, ROLE_ID_MANAGER, ROLE_ID_SUB_EDITOR], ['index', 'save']);
+		$this->addRoleAssignment([ROLE_ID_SITE_ADMIN, ROLE_ID_MANAGER], ['index', 'save']);
 	}
 
 	public function authorize($request, &$args, $roleAssignments) {
