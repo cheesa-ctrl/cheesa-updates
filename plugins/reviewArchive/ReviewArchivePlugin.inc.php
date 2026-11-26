@@ -46,8 +46,43 @@ class ReviewArchivePlugin extends GenericPlugin {
 			HookRegistry::register('LoadHandler', [$this, 'loadHandler']);
 			HookRegistry::register('Schema::get::submission', [$this, 'addSubmissionProps']);
 			HookRegistry::register('Templates::Management::Settings::tools', [$this, 'addToolsTab']);
+			HookRegistry::register('TemplateManager::setupBackendPage', [$this, 'addBackendMenu']);
 		}
 		return $success;
+	}
+
+	/**
+	 * Menu "Review Archive" di sidebar dasbor, di bawah grup "CHEESA Plugin".
+	 */
+	public function addBackendMenu($hookName, $args) {
+		try {
+			$request = Application::get()->getRequest();
+			$c = $request->getContext(); $u = $request->getUser();
+			if (!$c || !$u) return false;
+			$allow = Validation::isSiteAdmin();
+			if (!$allow) {
+				$ug = DAORegistry::getDAO('UserGroupDAO')->getByUserId($u->getId(), (int) $c->getId());
+				while ($ug && ($g = $ug->next())) { if (in_array((int) $g->getRoleId(), [ROLE_ID_MANAGER, ROLE_ID_SUB_EDITOR])) { $allow = true; break; } }
+			}
+			if (!$allow) return false;
+			$tm = TemplateManager::getManager($request);
+			$menu = $tm->getState('menu');
+			if (!is_array($menu)) return false;
+			if (!isset($menu['cheesaPlugin'])) {
+				$parent = ['name' => 'CHEESA Plugin', 'submenu' => []];
+				$new = []; $placed = false;
+				foreach ($menu as $k => $v) { $new[$k] = $v; if ($k === 'announcements') { $new['cheesaPlugin'] = $parent; $placed = true; } }
+				if (!$placed) $new['cheesaPlugin'] = $parent;
+				$menu = $new;
+			}
+			if (!isset($menu['cheesaPlugin']['submenu']) || !is_array($menu['cheesaPlugin']['submenu'])) $menu['cheesaPlugin']['submenu'] = [];
+			$url = $request->getDispatcher()->url($request, ROUTE_PAGE, null, self::IMPORT_PAGE, 'index');
+			$menu['cheesaPlugin']['submenu']['reviewarchive'] = ['name' => 'Review Archive', 'url' => $url, 'isCurrent' => $request->getRequestedPage() === self::IMPORT_PAGE];
+			$tm->setState(['menu' => $menu]);
+		} catch (\Throwable $e) {
+			error_log('reviewArchive menu: ' . $e->getMessage());
+		}
+		return false;
 	}
 
 	/**

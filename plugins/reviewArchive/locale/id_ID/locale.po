@@ -6,10 +6,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 msgid "plugins.generic.reviewArchive.displayName"
-msgstr "Arsip Review & Deteksi Judol"
+msgstr "Review Archive & Gambling-Spam Check"
 
 msgid "plugins.generic.reviewArchive.description"
-msgstr "Tab \"Arsip Review\" (Pernyataan Editor untuk asesor, sertifikat reviewer, dan berkas review hasil migrasi) serta alat Import XML dengan unggah bertahap, pemeriksaan judi online, label review otomatis, dan pembuangan berkas duplikat."
+msgstr "Adds a \"Review Archive\" tab to the submission workflow for review files that are not shown after a Native XML import, and checks Native XML files for online-gambling spam before they are imported."
 
 msgid "plugins.generic.reviewArchive.tabTitle"
 msgstr "Arsip Review"
@@ -165,13 +165,13 @@ msgid "plugins.generic.reviewArchive.settings.certificates.description"
 msgstr "Format CSV: id_artikel,nomor,url,nama_file (satu sertifikat per baris). ID artikel adalah ID di OJS lama, yaitu angka dalam DOI. Saat ini terbaca {$count} sertifikat."
 
 msgid "plugins.generic.reviewArchive.import.open"
-msgstr "Buka Import XML"
+msgstr "Open XML Import"
 
 msgid "plugins.generic.reviewArchive.import.tabTitle"
-msgstr "Import XML Arsip Review"
+msgstr "Import Review Archive XML"
 
 msgid "plugins.generic.reviewArchive.import.title"
-msgstr "Import XML Arsip Review"
+msgstr "Import Review Archive XML"
 
 msgid "plugins.generic.reviewArchive.import.intro"
 msgstr "Mengimpor berkas Native XML seperti Native XML Plugin, dengan langkah tambahan berikut:"

@@ -64,7 +64,7 @@ class CheesaUserManagerPlugin extends GenericPlugin {
 				$menu = $new;
 			}
 			if (!isset($menu['cheesaPlugin']['submenu']) || !is_array($menu['cheesaPlugin']['submenu'])) $menu['cheesaPlugin']['submenu'] = [];
-			$menu['cheesaPlugin']['submenu']['users'] = ['name' => 'Kelola Akun', 'url' => $this->pageUrl($request), 'isCurrent' => $request->getRequestedPage() === self::PAGE];
+			$menu['cheesaPlugin']['submenu']['users'] = ['name' => 'User Manager', 'url' => $this->pageUrl($request), 'isCurrent' => $request->getRequestedPage() === self::PAGE];
 			$tm->setState(['menu' => $menu]);
 		} catch (\Throwable $e) {
 			error_log('cheesaUserManager menu: ' . $e->getMessage());

@@ -93,7 +93,7 @@ class CheesaControlPanelPlugin extends GenericPlugin {
 				$menu = $new;
 			}
 			if (!isset($menu['cheesaPlugin']['submenu']) || !is_array($menu['cheesaPlugin']['submenu'])) $menu['cheesaPlugin']['submenu'] = [];
-			$menu['cheesaPlugin']['submenu']['panel'] = ['name' => 'Kontrol Panel', 'url' => $this->pageUrl($request), 'isCurrent' => $request->getRequestedPage() === self::PAGE];
+			$menu['cheesaPlugin']['submenu']['panel'] = ['name' => 'Control Panel', 'url' => $this->pageUrl($request), 'isCurrent' => $request->getRequestedPage() === self::PAGE];
 			$tm->setState(['menu' => $menu]);
 		} catch (\Throwable $e) {
 			error_log('cheesaControlPanel menu: ' . $e->getMessage());
