@@ -283,87 +283,54 @@ class ReviewArchiveTabHandler extends Handler {
 			),
 		];
 		try {
-			$dispatcher = $request->getDispatcher();
 			$queryDao = DAORegistry::getDAO('QueryDAO'); /** @var $queryDao QueryDAO */
-			$noteDao = DAORegistry::getDAO('NoteDAO'); /** @var $noteDao NoteDAO */
-			$userDao = DAORegistry::getDAO('UserDAO'); /** @var $userDao UserDAO */
-			$fileService = Services::get('submissionFile');
-
-			$queries = $queryDao->getByAssoc(ASSOC_TYPE_SUBMISSION, $submission->getId());
+			$seen = [];
 			$list = [];
+
+			// Live discussions straight from the OJS database.
+			$queries = $queryDao->getByAssoc(ASSOC_TYPE_SUBMISSION, $submission->getId());
 			while ($query = $queries->next()) { /** @var $query Query */
-				$headNote = $query->getHeadNote();
-				$title = $headNote ? trim((string) $headNote->getTitle()) : '';
-
-				$participants = [];
-				foreach ((array) $queryDao->getParticipantIds($query->getId()) as $uid) {
-					$u = $userDao->getById($uid);
-					if ($u) $participants[] = $u->getFullName();
-				}
-
-				$messages = [];
-				$notes = $noteDao->getByAssoc(ASSOC_TYPE_QUERY, $query->getId());
-				while ($note = $notes->next()) { /** @var $note Note */
-					$u = $userDao->getById($note->getUserId());
-					$atts = [];
-					$noteFiles = $fileService->getMany([
-						'submissionIds' => [$submission->getId()],
-						'assocTypes' => [ASSOC_TYPE_NOTE],
-						'assocIds' => [$note->getId()],
-					]);
-					foreach ($noteFiles as $sf) { /** @var $sf SubmissionFile */
-						$atts[] = [
-							'name' => (string) $sf->getLocalizedData('name'),
-							'url' => $dispatcher->url($request, ROUTE_COMPONENT, null, 'api.file.FileApiHandler', 'downloadFile', null, [
-								'submissionFileId' => $sf->getId(),
-								'submissionId' => $submission->getId(),
-								'stageId' => $query->getStageId(),
-								'fileId' => $sf->getData('fileId'),
-							]),
-						];
-					}
-					$raw = (string) $note->getContents();
-					$raw = preg_replace('#<\s*(br|/p|/div|/li)\b[^>]*>#i', "\n", $raw);
-					$body = trim(html_entity_decode(strip_tags($raw), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
-					$messages[] = [
-						'from' => $u ? $u->getFullName() : '',
-						'date' => (string) $note->getDateCreated(),
-						'title' => trim((string) $note->getTitle()),
-						'bodyHtml' => $body !== '' ? self::$plugin->formatText($body) : '',
-						'attachments' => $atts,
-					];
-				}
-
-				$list[] = [
-					'title' => $title !== '' ? $title : ('Diskusi #' . $query->getId()),
-					'stage' => $this->_stageName($query->getStageId()),
-					'participants' => $participants,
-					'messages' => $messages,
-				];
+				$list[] = $this->_threadFromQuery($request, $submission, $query);
+				$seen[(int) $query->getId()] = true;
 			}
 
-			// Pasted discussion archive (for migrated articles whose queries
-			// did not come across in the Native XML import).
+			// Pasted archive: a full panel, or a list whose rows carry a
+			// queryId we can resolve to the real thread in the database.
 			$pasted = (string) $submission->getData('reviewArchiveDiscussionText');
 			if (trim($pasted) !== '') {
 				self::$plugin->import('classes.DiscussionParser');
 				foreach (DiscussionParser::parse($pasted) as $d) {
+					if (!empty($d['indexOnly'])) {
+						$qid = isset($d['queryId']) ? (int) $d['queryId'] : 0;
+						if ($qid && isset($seen[$qid])) continue; // already shown live
+						$q = $qid ? $queryDao->getById($qid, ASSOC_TYPE_SUBMISSION, $submission->getId()) : null;
+						if ($q) { // pull the real content from the DB
+							$list[] = $this->_threadFromQuery($request, $submission, $q);
+							$seen[$qid] = true;
+							continue;
+						}
+						// Not in this database: keep it as an index entry + link.
+						$list[] = [
+							'title' => $d['title'], 'stage' => 'daftar',
+							'participants' => [], 'messages' => [], 'indexOnly' => true,
+							'link' => (string) ($d['link'] ?? ''), 'from' => (string) ($d['from'] ?? ''),
+							'date' => (string) ($d['date'] ?? ''), 'replies' => (string) ($d['replies'] ?? ''),
+							'closed' => !empty($d['closed']),
+						];
+						continue;
+					}
+					// Full panel paste.
 					$msgs = [];
 					foreach ($d['messages'] as $m) {
 						$msgs[] = [
-							'from' => $m['from'],
-							'date' => $m['date'],
-							'title' => $m['title'],
+							'from' => $m['from'], 'date' => $m['date'], 'title' => $m['title'],
 							'bodyHtml' => $m['body'] !== '' ? self::$plugin->formatText($m['body']) : '',
 							'attachments' => $m['attachments'],
 						];
 					}
 					$list[] = [
-						'title' => $d['title'],
-						'stage' => 'arsip tempel',
-						'participants' => $d['participants'],
-						'messages' => $msgs,
-						'rawDate' => true,
+						'title' => $d['title'], 'stage' => 'arsip tempel',
+						'participants' => $d['participants'], 'messages' => $msgs,
 					];
 				}
 			}
@@ -374,6 +341,71 @@ class ReviewArchiveTabHandler extends Handler {
 			$out['discussionsError'] = $e->getMessage();
 		}
 		return $out;
+	}
+
+	/**
+	 * Build one discussion thread (title, stage, participants, messages with
+	 * attachments) from an OJS Query object.
+	 * @param $request PKPRequest
+	 * @param $submission Submission
+	 * @param $query Query
+	 * @return array
+	 */
+	protected function _threadFromQuery($request, $submission, $query) {
+		$dispatcher = $request->getDispatcher();
+		$noteDao = DAORegistry::getDAO('NoteDAO'); /** @var $noteDao NoteDAO */
+		$userDao = DAORegistry::getDAO('UserDAO'); /** @var $userDao UserDAO */
+		$queryDao = DAORegistry::getDAO('QueryDAO'); /** @var $queryDao QueryDAO */
+		$fileService = Services::get('submissionFile');
+
+		$headNote = $query->getHeadNote();
+		$title = $headNote ? trim((string) $headNote->getTitle()) : '';
+
+		$participants = [];
+		foreach ((array) $queryDao->getParticipantIds($query->getId()) as $uid) {
+			$u = $userDao->getById($uid);
+			if ($u) $participants[] = $u->getFullName();
+		}
+
+		$messages = [];
+		$notes = $noteDao->getByAssoc(ASSOC_TYPE_QUERY, $query->getId());
+		while ($note = $notes->next()) { /** @var $note Note */
+			$u = $userDao->getById($note->getUserId());
+			$atts = [];
+			$noteFiles = $fileService->getMany([
+				'submissionIds' => [$submission->getId()],
+				'assocTypes' => [ASSOC_TYPE_NOTE],
+				'assocIds' => [$note->getId()],
+			]);
+			foreach ($noteFiles as $sf) { /** @var $sf SubmissionFile */
+				$atts[] = [
+					'name' => (string) $sf->getLocalizedData('name'),
+					'url' => $dispatcher->url($request, ROUTE_COMPONENT, null, 'api.file.FileApiHandler', 'downloadFile', null, [
+						'submissionFileId' => $sf->getId(),
+						'submissionId' => $submission->getId(),
+						'stageId' => $query->getStageId(),
+						'fileId' => $sf->getData('fileId'),
+					]),
+				];
+			}
+			$raw = (string) $note->getContents();
+			$raw = preg_replace('#<\s*(br|/p|/div|/li)\b[^>]*>#i', "\n", $raw);
+			$body = trim(html_entity_decode(strip_tags($raw), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+			$messages[] = [
+				'from' => $u ? $u->getFullName() : '',
+				'date' => (string) $note->getDateCreated(),
+				'title' => trim((string) $note->getTitle()),
+				'bodyHtml' => $body !== '' ? self::$plugin->formatText($body) : '',
+				'attachments' => $atts,
+			];
+		}
+
+		return [
+			'title' => $title !== '' ? $title : ('Diskusi #' . $query->getId()),
+			'stage' => $this->_stageName($query->getStageId()),
+			'participants' => $participants,
+			'messages' => $messages,
+		];
 	}
 
 	/**

@@ -248,24 +248,31 @@
 		</div>
 		{foreach from=$discussions item=d}
 			<div class="ra_disc_thread">
-				<h5 class="ra_disc_title">{$d.title|escape}{if $d.stage}<span class="ra_dv_badge">{$d.stage|escape}</span>{/if}</h5>
-				{if $d.participants}
-					<p class="ra_disc_part"><strong>Peserta:</strong> {foreach from=$d.participants item=p name=pp}{$p|escape}{if !$smarty.foreach.pp.last}, {/if}{/foreach}</p>
+				<h5 class="ra_disc_title">{$d.title|escape}{if $d.stage}<span class="ra_dv_badge">{$d.stage|escape}</span>{/if}{if $d.indexOnly && $d.closed}<span class="ra_dv_badge">ditutup</span>{/if}</h5>
+				{if $d.indexOnly}
+					<p class="ra_disc_part">
+						{if $d.from}<strong>Dibuat oleh:</strong> {$d.from|escape}{/if}{if $d.date} &middot; {$d.date|escape}{/if}{if $d.replies != ''} &middot; Balasan: {$d.replies|escape}{/if}
+					</p>
+					{if $d.link}<p class="ra_disc_part"><a href="{$d.link|escape}" target="_blank" rel="noopener">Buka diskusi di OJS</a> <span class="ra_muted">— daftar saja; isi pesan tidak termuat. Tempel panel diskusinya untuk pesan lengkap.</span></p>{/if}
+				{else}
+					{if $d.participants}
+						<p class="ra_disc_part"><strong>Peserta:</strong> {foreach from=$d.participants item=p name=pp}{$p|escape}{if !$smarty.foreach.pp.last}, {/if}{/foreach}</p>
+					{/if}
+					<ul class="ra_disc_msgs">
+						{foreach from=$d.messages item=m}
+							<li class="ra_disc_msg">
+								<div class="ra_disc_metline"><span class="ra_disc_from">{$m.from|escape}</span>{if $m.date}<span class="ra_disc_date">{$m.date|date_format:"%Y-%m-%d %H:%M"}</span>{/if}</div>
+								{if $m.title}<div class="ra_disc_subj">{$m.title|escape}</div>{/if}
+								{if $m.bodyHtml}<div class="ra_disc_body">{$m.bodyHtml}</div>{/if}
+								{if $m.attachments}
+									<div class="ra_disc_att">
+										{foreach from=$m.attachments item=a}{if $a.url}<a class="dl" href="{$a.url|escape}">{$a.name|escape}</a>{else}<span class="ra_dv_badge" title="Lampiran lama — unduh dari Google Drive">{$a.name|escape}</span>{/if}{/foreach}
+									</div>
+								{/if}
+							</li>
+						{/foreach}
+					</ul>
 				{/if}
-				<ul class="ra_disc_msgs">
-					{foreach from=$d.messages item=m}
-						<li class="ra_disc_msg">
-							<div class="ra_disc_metline"><span class="ra_disc_from">{$m.from|escape}</span>{if $m.date}<span class="ra_disc_date">{$m.date|date_format:"%Y-%m-%d %H:%M"}</span>{/if}</div>
-							{if $m.title}<div class="ra_disc_subj">{$m.title|escape}</div>{/if}
-							{if $m.bodyHtml}<div class="ra_disc_body">{$m.bodyHtml}</div>{/if}
-							{if $m.attachments}
-								<div class="ra_disc_att">
-									{foreach from=$m.attachments item=a}<a class="dl" href="{$a.url|escape}">{$a.name|escape}</a>{/foreach}
-								</div>
-							{/if}
-						</li>
-					{/foreach}
-				</ul>
 			</div>
 		{/foreach}
 
@@ -276,7 +283,7 @@
 		{if $discussionCanEdit}
 			<details class="ra_dv_edit"{if !$discussions} open{/if}>
 				<summary>Tempel diskusi dari OJS (HTML)</summary>
-				<p class="ra_dv_meta">Buka diskusi di OJS (mis. "Revisi Kembali"), klik kanan &rarr; <em>Inspect</em> pada panel diskusi, salin elemen panelnya (yang memuat Participants + Messages), lalu tempel di sini. Bisa tempel <strong>beberapa diskusi sekaligus</strong> (mis. Review lalu Copyediting) — cukup tempel panel-panelnya berurutan, tiap panel akan jadi thread sendiri. Plugin membaca peserta, pesan, dan lampiran tiap diskusi. Kosongkan lalu simpan untuk menghapus.</p>
+				<p class="ra_dv_meta">Buka diskusi di OJS (mis. "Revisi Kembali"), klik kanan &rarr; <em>Inspect</em> pada panel diskusi, salin elemen panelnya (yang memuat Participants + Messages), lalu tempel di sini. Bisa tempel <strong>beberapa diskusi sekaligus</strong> (mis. Review lalu Copyediting) — tempel panel-panelnya berurutan, tiap panel jadi thread sendiri. Plugin juga mengenali HTML <strong>daftar diskusi</strong> (tabel "Review Discussions") dan menampilkannya sebagai indeks (judul, pembuat, tanggal, tautan) — namun daftar tidak memuat isi pesan, jadi untuk pesan lengkap tempel panel tiap diskusinya. Kosongkan lalu simpan untuk menghapus.</p>
 				<form class="ra_disc_form" method="post" action="{$discussionSaveUrl|escape}" data-saving="Menyimpan…" data-saved="Tersimpan. Buka tab lain lalu kembali ke sini untuk melihat hasilnya." data-failed="Gagal menyimpan.">
 					<input type="hidden" name="csrfToken" value="{$csrfToken|escape}">
 					<textarea name="reviewArchiveDiscussionText" rows="6" style="width:100%;box-sizing:border-box;font:inherit;padding:.5rem;" placeholder="Tempel HTML diskusi dari OJS di sini…">{$discussionText|escape}</textarea>

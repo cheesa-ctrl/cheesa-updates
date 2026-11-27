@@ -46,6 +46,7 @@ class DiscussionParser {
 		$xp = new DOMXPath($doc);
 		$threads = [];
 
+		// 1) Full discussion panel(s): the modal with Participants + Messages.
 		$containers = $xp->query("//div[contains(concat(' ', normalize-space(@class), ' '), ' pkp_controllers_query ')]");
 		if ($containers->length) {
 			foreach ($containers as $container) {
@@ -53,12 +54,64 @@ class DiscussionParser {
 				if ($t) $threads[] = $t;
 			}
 		}
-		if (!$threads) {
-			// Fallback: no recognised container, parse the whole document once.
-			$t = self::_extractThread($xp, $doc->documentElement);
-			if ($t) $threads[] = $t;
+		if ($threads) return $threads;
+
+		// 2) Discussion LIST (the queries grid): rows that link to each
+		//    discussion but carry no messages. Rendered as an index.
+		$list = self::_parseList($xp);
+		if ($list) return $list;
+
+		// 3) Fallback: a bare notes grid without its container wrapper.
+		$t = self::_extractThread($xp, $doc->documentElement);
+		return $t ? [$t] : [];
+	}
+
+	/**
+	 * Parse the "Review Discussions" list grid into index entries (title,
+	 * creator, date, replies, closed, link) — no messages are present here.
+	 * @param $xp DOMXPath
+	 * @return array
+	 */
+	protected static function _parseList($xp) {
+		$entries = [];
+		foreach ($xp->query("//a[contains(@class,'pkp_linkaction_readQuery')]") as $a) {
+			$title = self::_clean($a->textContent);
+			if ($title === '') continue;
+			$href = trim($a->getAttribute('href'));
+			$queryId = null;
+			if (preg_match('/[?&]queryId=(\d+)/', $href, $qm)) $queryId = $qm[1];
+			$rowSet = $xp->query("ancestor::tr[contains(concat(' ', normalize-space(@class), ' '), ' gridRow ')][1]", $a);
+			$from = '';
+			$date = '';
+			$replies = '';
+			$closed = false;
+			if ($rowSet->length) {
+				$row = $rowSet->item(0);
+				$fromCell = $xp->query(".//span[contains(@id,'-from')]", $row);
+				if ($fromCell->length) {
+					$lines = preg_split('/\n+/', self::_nodeText($fromCell->item(0)));
+					$from = self::_clean($lines[0] ?? '');
+					$date = self::_clean(implode(' ', array_slice($lines, 1)));
+				}
+				$repCell = $xp->query(".//span[contains(@id,'-replies')]", $row);
+				if ($repCell->length) $replies = self::_clean($repCell->item(0)->textContent);
+				$chk = $xp->query(".//input[@type='checkbox']", $row);
+				if ($chk->length) $closed = $chk->item(0)->hasAttribute('checked');
+			}
+			$entries[] = [
+				'title' => $title,
+				'participants' => [],
+				'messages' => [],
+				'indexOnly' => true,
+				'queryId' => $queryId,
+				'link' => ($href !== '' && $href !== '#') ? $href : '',
+				'from' => $from,
+				'date' => $date,
+				'replies' => $replies,
+				'closed' => $closed,
+			];
 		}
-		return $threads;
+		return $entries;
 	}
 
 	/**
@@ -93,7 +146,9 @@ class DiscussionParser {
 			foreach ($xp->query(".//a[contains(@class,'downloadFile') or contains(@href,'download-file')]", $contentsTd) as $a) {
 				$name = self::_clean($a->textContent);
 				$href = trim($a->getAttribute('href'));
-				if ($name !== '' && $href !== '' && $href !== '#') $atts[] = ['name' => $name, 'url' => $href];
+				// Keep the file even when the link has no usable URL (href="#"):
+				// the name is still worth archiving; it just shows without a link.
+				if ($name !== '') $atts[] = ['name' => $name, 'url' => ($href !== '' && $href !== '#') ? $href : ''];
 			}
 
 			$body = '';
