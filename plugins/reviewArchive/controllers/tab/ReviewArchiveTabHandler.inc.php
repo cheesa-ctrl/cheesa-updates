@@ -137,6 +137,7 @@ class ReviewArchiveTabHandler extends Handler {
 
 		$templateMgr = TemplateManager::getManager($request);
 		$templateMgr->assign($this->_statementVars($request, $submission));
+		$templateMgr->assign($this->_discussionVars($request, $submission));
 		$templateMgr->assign($this->_driveVars($request, $submission));
 		$templateMgr->assign([
 			'submission' => $submission,
@@ -255,6 +256,102 @@ class ReviewArchiveTabHandler extends Handler {
 			SUBMISSION_FILE_PRODUCTION_READY => 'productionReady',
 		];
 		return 'plugins.generic.reviewArchive.fileStage.' . ($keys[$fileStage] ?? 'other');
+	}
+
+	//
+	// Feature: review discussions (OJS Query threads) for this article
+	//
+	/**
+	 * Collect the submission's discussion threads (editor/author/reviewer
+	 * conversations) with their messages and attachments, so a migrated or
+	 * accreditation review keeps its correspondence visible. Fails open.
+	 * @param $request PKPRequest
+	 * @param $submission Submission
+	 * @return array ['discussions' => [...]]
+	 */
+	protected function _discussionVars($request, $submission) {
+		$out = ['discussions' => []];
+		try {
+			$dispatcher = $request->getDispatcher();
+			$queryDao = DAORegistry::getDAO('QueryDAO'); /** @var $queryDao QueryDAO */
+			$noteDao = DAORegistry::getDAO('NoteDAO'); /** @var $noteDao NoteDAO */
+			$userDao = DAORegistry::getDAO('UserDAO'); /** @var $userDao UserDAO */
+			$fileService = Services::get('submissionFile');
+
+			$queries = $queryDao->getByAssoc(ASSOC_TYPE_SUBMISSION, $submission->getId());
+			$list = [];
+			while ($query = $queries->next()) { /** @var $query Query */
+				$headNote = $query->getHeadNote();
+				$title = $headNote ? trim((string) $headNote->getTitle()) : '';
+
+				$participants = [];
+				foreach ((array) $queryDao->getParticipantIds($query->getId()) as $uid) {
+					$u = $userDao->getById($uid);
+					if ($u) $participants[] = $u->getFullName();
+				}
+
+				$messages = [];
+				$notes = $noteDao->getByAssoc(ASSOC_TYPE_QUERY, $query->getId());
+				while ($note = $notes->next()) { /** @var $note Note */
+					$u = $userDao->getById($note->getUserId());
+					$atts = [];
+					$noteFiles = $fileService->getMany([
+						'submissionIds' => [$submission->getId()],
+						'assocTypes' => [ASSOC_TYPE_NOTE],
+						'assocIds' => [$note->getId()],
+					]);
+					foreach ($noteFiles as $sf) { /** @var $sf SubmissionFile */
+						$atts[] = [
+							'name' => (string) $sf->getLocalizedData('name'),
+							'url' => $dispatcher->url($request, ROUTE_COMPONENT, null, 'api.file.FileApiHandler', 'downloadFile', null, [
+								'submissionFileId' => $sf->getId(),
+								'submissionId' => $submission->getId(),
+								'stageId' => $query->getStageId(),
+								'fileId' => $sf->getData('fileId'),
+							]),
+						];
+					}
+					$raw = (string) $note->getContents();
+					$raw = preg_replace('#<\s*(br|/p|/div|/li)\b[^>]*>#i', "\n", $raw);
+					$body = trim(html_entity_decode(strip_tags($raw), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+					$messages[] = [
+						'from' => $u ? $u->getFullName() : '',
+						'date' => (string) $note->getDateCreated(),
+						'title' => trim((string) $note->getTitle()),
+						'bodyHtml' => $body !== '' ? self::$plugin->formatText($body) : '',
+						'attachments' => $atts,
+					];
+				}
+
+				$list[] = [
+					'title' => $title !== '' ? $title : ('Diskusi #' . $query->getId()),
+					'stage' => $this->_stageName($query->getStageId()),
+					'participants' => $participants,
+					'messages' => $messages,
+				];
+			}
+			$out['discussions'] = $list;
+		} catch (\Throwable $e) {
+			$out['discussions'] = [];
+			$out['discussionsError'] = $e->getMessage();
+		}
+		return $out;
+	}
+
+	/**
+	 * Short stage label for a discussion.
+	 * @param $stageId int
+	 * @return string
+	 */
+	protected function _stageName($stageId) {
+		switch ((int) $stageId) {
+			case WORKFLOW_STAGE_ID_SUBMISSION: return 'Submission';
+			case WORKFLOW_STAGE_ID_INTERNAL_REVIEW: return 'Review Internal';
+			case WORKFLOW_STAGE_ID_EXTERNAL_REVIEW: return 'Review';
+			case WORKFLOW_STAGE_ID_EDITING: return 'Copyediting';
+			case WORKFLOW_STAGE_ID_PRODUCTION: return 'Production';
+			default: return '';
+		}
 	}
 
 	//

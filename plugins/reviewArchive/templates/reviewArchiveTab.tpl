@@ -59,6 +59,22 @@
 	.ra_modal_hd .t {ldelim} flex: 1; font-size: .85rem; font-weight: 700; word-break: break-word; {rdelim}
 	.ra_modal_hd a, .ra_modal_hd button {ldelim} font-size: .8rem; cursor: pointer; {rdelim}
 	.ra_modal_box iframe {ldelim} flex: 1; border: 0; width: 100%; {rdelim}
+
+	/* Review discussions */
+	.pkp_review_archive .ra_disc_thread {ldelim} border: 1px solid #e3e3e3; border-radius: 4px; margin: 0 1rem 1rem; {rdelim}
+	.pkp_review_archive .ra_disc_title {ldelim} margin: 0; padding: .5rem .75rem; background: #f7f9fa; border-bottom: 1px solid #e3e3e3; font-size: .88rem; font-weight: 700; {rdelim}
+	.pkp_review_archive .ra_disc_part {ldelim} margin: 0; padding: .5rem .75rem; font-size: .82rem; color: #555; border-bottom: 1px dashed #eee; {rdelim}
+	.pkp_review_archive ul.ra_disc_msgs {ldelim} list-style: none; margin: 0; padding: 0; {rdelim}
+	.pkp_review_archive li.ra_disc_msg {ldelim} padding: .6rem .75rem; border-top: 1px solid #f1f1f1; font-size: .85rem; {rdelim}
+	.pkp_review_archive li.ra_disc_msg:first-child {ldelim} border-top: 0; {rdelim}
+	.pkp_review_archive .ra_disc_metline {ldelim} display: flex; gap: .5rem; align-items: baseline; margin-bottom: .2rem; {rdelim}
+	.pkp_review_archive .ra_disc_from {ldelim} font-weight: 700; color: #002c40; {rdelim}
+	.pkp_review_archive .ra_disc_date {ldelim} color: #999; font-size: .78rem; {rdelim}
+	.pkp_review_archive .ra_disc_subj {ldelim} font-weight: 700; margin: .1rem 0; {rdelim}
+	.pkp_review_archive .ra_disc_body {ldelim} line-height: 1.55; white-space: normal; {rdelim}
+	.pkp_review_archive .ra_disc_body a {ldelim} word-break: break-all; {rdelim}
+	.pkp_review_archive .ra_disc_att {ldelim} margin-top: .4rem; display: flex; flex-wrap: wrap; gap: .4rem; {rdelim}
+	.pkp_review_archive .ra_disc_att a.dl {ldelim} font-size: .78rem; padding: .2rem .55rem; border-radius: 3px; border: 1px solid #c3d4de; background: #fff; color: #006798; text-decoration: none; {rdelim}
 </style>
 
 <script>
@@ -211,6 +227,37 @@
 				<iframe id="raPreviewFrame" src="about:blank" referrerpolicy="no-referrer"></iframe>
 			</div>
 		</div>
+	</div>
+	{/if}
+
+	{if $discussions}
+	<div class="ra_section ra_disc">
+		<div class="ra_header">
+			<h4>Diskusi Review</h4>
+			<p>Percakapan editor, penulis, dan reviewer beserta lampirannya, diarsipkan dari OJS.</p>
+		</div>
+		{foreach from=$discussions item=d}
+			<div class="ra_disc_thread">
+				<h5 class="ra_disc_title">{$d.title|escape}{if $d.stage}<span class="ra_dv_badge">{$d.stage|escape}</span>{/if}</h5>
+				{if $d.participants}
+					<p class="ra_disc_part"><strong>Peserta:</strong> {foreach from=$d.participants item=p name=pp}{$p|escape}{if !$smarty.foreach.pp.last}, {/if}{/foreach}</p>
+				{/if}
+				<ul class="ra_disc_msgs">
+					{foreach from=$d.messages item=m}
+						<li class="ra_disc_msg">
+							<div class="ra_disc_metline"><span class="ra_disc_from">{$m.from|escape}</span>{if $m.date}<span class="ra_disc_date">{$m.date|date_format:"%Y-%m-%d %H:%M"}</span>{/if}</div>
+							{if $m.title}<div class="ra_disc_subj">{$m.title|escape}</div>{/if}
+							{if $m.bodyHtml}<div class="ra_disc_body">{$m.bodyHtml}</div>{/if}
+							{if $m.attachments}
+								<div class="ra_disc_att">
+									{foreach from=$m.attachments item=a}<a class="dl" href="{$a.url|escape}">{$a.name|escape}</a>{/foreach}
+								</div>
+							{/if}
+						</li>
+					{/foreach}
+				</ul>
+			</div>
+		{/foreach}
 	</div>
 	{/if}
 

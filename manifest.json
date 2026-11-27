@@ -129,12 +129,12 @@
         "reviewArchive": {
             "category": "generic",
             "label": "Review Archive",
-            "version": "1.7.2.0",
-            "file": "reviewArchive-1.7.2.0.tar.gz",
-            "sha256": "0c2ecedef151f7ce5602e82057730cd7fd00792f9e6168dbc13555c6c6a00809",
-            "size": 63842,
+            "version": "1.8.0.0",
+            "file": "reviewArchive-1.8.0.0.tar.gz",
+            "sha256": "200caae48fb80329f65f14cdd968da5bd6d6ae5d2c3ec5036a760d2bad83b476",
+            "size": 65329,
             "released": "2026-11-27"
         }
     },
-    "generated": "2026-11-27T21:54:05+00:00"
+    "generated": "2026-11-27T22:35:10+00:00"
 }
