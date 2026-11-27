@@ -328,8 +328,9 @@ class ReviewArchiveTabHandler extends Handler {
 							'attachments' => $m['attachments'],
 						];
 					}
+					$stage = (!empty($d['stage'])) ? $d['stage'] : 'arsip tempel';
 					$list[] = [
-						'title' => $d['title'], 'stage' => 'arsip tempel',
+						'title' => $d['title'], 'stage' => $stage,
 						'participants' => $d['participants'], 'messages' => $msgs,
 					];
 				}
@@ -436,8 +437,8 @@ class ReviewArchiveTabHandler extends Handler {
 	 */
 	protected function _stageName($stageId) {
 		switch ((int) $stageId) {
-			case WORKFLOW_STAGE_ID_SUBMISSION: return 'Submission';
-			case WORKFLOW_STAGE_ID_INTERNAL_REVIEW: return 'Review Internal';
+			case WORKFLOW_STAGE_ID_SUBMISSION: return 'Pre Review';
+			case WORKFLOW_STAGE_ID_INTERNAL_REVIEW: return 'Internal Review';
 			case WORKFLOW_STAGE_ID_EXTERNAL_REVIEW: return 'Review';
 			case WORKFLOW_STAGE_ID_EDITING: return 'Copyediting';
 			case WORKFLOW_STAGE_ID_PRODUCTION: return 'Production';

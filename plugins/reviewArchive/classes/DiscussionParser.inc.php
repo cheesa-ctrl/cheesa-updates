@@ -123,6 +123,13 @@ class DiscussionParser {
 	protected static function _extractThread($xp, $scope) {
 		$title = self::_titleFor($xp, $scope);
 
+		// Stage label, if the capture script embedded one (data-ra-stage).
+		$stage = '';
+		if ($scope && $scope->nodeType === XML_ELEMENT_NODE) {
+			$anc = $xp->query("ancestor-or-self::*[@data-ra-stage][1]", $scope);
+			if ($anc->length) $stage = trim($anc->item(0)->getAttribute('data-ra-stage'));
+		}
+
 		$participants = [];
 		foreach ($xp->query(".//ul[contains(@class,'participants')]/li", $scope) as $li) {
 			$t = self::_clean($li->textContent);
@@ -173,6 +180,7 @@ class DiscussionParser {
 		if (!$participants && !$messages) return null;
 		return [
 			'title' => $title !== '' ? $title : 'Diskusi (arsip)',
+			'stage' => $stage,
 			'participants' => $participants,
 			'messages' => $messages,
 		];
