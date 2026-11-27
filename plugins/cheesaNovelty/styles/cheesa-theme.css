@@ -1265,3 +1265,18 @@
     scrollbar-width: thin;
   }
 }
+
+/* ---------- Rapikan jarak antar-section (Research/Review Articles) ----------
+   Nama section sudah tampil sebagai badge di tiap kartu (lihat JS: ch-sec-badge),
+   sehingga heading section di TOC redundan dan menyisakan celah kosong besar.
+   Sembunyikan heading itu dan rapatkan jarak; antar-kartu tetap pakai margin kartu. */
+:root body .page_issue .obj_issue_toc .sections > .section > h2,
+:root body .page_issue .obj_issue_toc .sections > .section > .section_title,
+:root body .page_index_journal .current_issue .sections > .section > h2,
+:root body .page_index_journal .current_issue .sections > .section > .section_title { display: none !important; }
+:root body .page_issue .obj_issue_toc .sections > .section,
+:root body .page_index_journal .current_issue .sections > .section { margin: 0 !important; padding: 0 !important; }
+:root body .page_issue .obj_issue_toc .sections > .section + .section,
+:root body .page_index_journal .current_issue .sections > .section + .section { margin-top: 14px !important; }
+:root body .page_issue .obj_issue_toc .sections,
+:root body .page_index_journal .current_issue .sections { margin-top: 0 !important; }
