@@ -350,8 +350,17 @@ class ReviewArchiveXmlProcessor {
 	 * @return array|null
 	 */
 	public static function parseCertificate($text, $title = '') {
+		$text = (string) $text;
+		// Teks hasil ekstraksi PDF kerap memuat byte UTF-8 tidak valid; tanpa dibersihkan,
+		// semua regex dengan flag /u gagal diam-diam. Bersihkan dulu.
+		if (function_exists('mb_scrub')) {
+			$text = mb_scrub($text, 'UTF-8');
+		} elseif (!mb_check_encoding($text, 'UTF-8')) {
+			$clean = @iconv('UTF-8', 'UTF-8//IGNORE', $text);
+			if ($clean !== false) $text = $clean;
+		}
 		$text = str_replace(["\r\n", "\r"], "\n", $text);
-		if (!preg_match('/penghargaan|berkontribusi|melakukan\s*review|recognition|reviewer|appreciation/i', preg_replace('/\s+/', ' ', $text))) {
+		if (!preg_match('/penghargaan|berkontribusi|melakukan\s*review|recognition|reviewer|appreciation|menugaskan|surat\s*tugas/i', preg_replace('/\s+/', ' ', $text))) {
 			return null;
 		}
 
@@ -367,20 +376,51 @@ class ReviewArchiveXmlProcessor {
 			$date = ((int) $m[1]) . ' ' . $months[strtolower($m[2])] . ' ' . $m[3];
 		}
 
+		$flatSp = trim(preg_replace('/\s+/u', ' ', $text));
+		// Reviewer adalah PENERIMA tugas, bukan penanda tangan. Cari nama setelah
+		// "Menugaskan kepada" / "Diberikan kepada" / "Presented to", dsb.
+		$assign = 'menugaskan\s*kepada|ditugaskan\s*kepada|diberikan\s*kepada|dianugerahkan\s*kepada|presented\s*to|awarded\s*to|given\s*to';
+		$fieldStop = 'instansi|nidn|nip|nik|jabatan|sebagai|alamat|asal|prodi|program\s*studi|fakultas|email|tanggal|nomor|no\.';
+		$name = null;
+		if (preg_match('/\b(?:' . $assign . ')\b.{0,300}?\bnama\b\s*:?\s*(.+?)\s*(?:\b(?:' . $fieldStop . ')\b|$)/isu', $flatSp, $mm)) {
+			$name = self::_cleanName($mm[1]);
+		}
+		if (!$name && preg_match('/\b(?:' . $assign . ')\b\s*:?\s*([\p{L}][\p{L}\'’\.\- ]{2,70}?)\s*(?:\b(?:' . $fieldStop . '|menelaah|me-?review|artikel|paper)\b|$)/isu', $flatSp, $mm)) {
+			$name = self::_cleanName($mm[1]);
+		}
+		if ($name) return ['name' => $name, 'date' => $date];
+
+		// Fallback: pindai baris, tapi LEWATI blok penanda tangan (teks sebelum "kepada").
+		$body = $text;
+		if (preg_match('/\b(?:' . $assign . ')\b/isu', $text, $om, PREG_OFFSET_CAPTURE)) {
+			$body = substr($text, $om[0][1]);
+		}
 		$titleWords = array_filter(preg_split('/[^\p{L}\p{N}]+/u', mb_strtolower($title)));
-		$stop = '/\b(issn|website|publisher|sebagai|penghargaan|print|online|sertifikat|certificate|recognition|editor|chief|ketua|journal|jurnal|cheesa|chemical|engineering|universitas|university|pgri|madiun|diberikan|kepada|awarded|presented|reviewer|artikel|article|berjudul|http|www|' . implode('|', array_keys($months)) . ')\b/i';
+		$stop = '/\b(issn|website|publisher|sebagai|penghargaan|print|online|sertifikat|certificate|recognition|editor|chief|ketua|journal|jurnal|cheesa|chemical|engineering|universitas|university|institut|pgri|madiun|diberikan|kepada|menugaskan|awarded|presented|reviewer|instansi|nidn|nip|jabatan|artikel|article|berjudul|http|www|' . implode('|', array_keys($months)) . ')\b/i';
 		$namePattern = '/^(?:(?:Prof|Dr|Ir|Drs|Dra|drh|dr|H|Hj|Apt|Assoc)\.?\s+)*[A-Z][\p{L}\'’\-]+(?:\s+(?:[A-Z][\p{L}\'’\-\.]*|bin|binti|van|de|al|el)){1,5}(?:\s*,\s*[\p{L}\.\s]{1,20}){0,4}$/u';
-		foreach (preg_split('/\n+/', $text) as $line) {
+		foreach (preg_split('/\n+/', $body) as $line) {
 			$line = trim(preg_replace('/\s+/u', ' ', $line), " \t\"“”'");
+			$line = preg_replace('/^nama\s*:?\s*/i', '', $line);
 			if (mb_strlen($line) < 5 || mb_strlen($line) > 90) continue;
 			if (preg_match($stop, $line)) continue;
 			if (!preg_match($namePattern, $line)) continue;
 			if ($line === mb_strtoupper($line)) continue;
 			$words = array_filter(preg_split('/[^\p{L}\p{N}]+/u', mb_strtolower($line)));
 			if ($titleWords && count(array_diff($words, $titleWords)) === 0) continue;
-			return ['name' => $line, 'date' => $date];
+			$n = self::_cleanName($line);
+			if ($n) return ['name' => $n, 'date' => $date];
 		}
 		return ['name' => null, 'date' => $date];
+	}
+
+	/** Bersihkan & validasi kandidat nama; tolak yang jelas bukan nama reviewer. */
+	protected static function _cleanName($name) {
+		if ($name === null) return null;
+		$name = trim(preg_replace('/\s+/u', ' ', $name), " \t\"“”'.,:;-");
+		if (mb_strlen($name) < 3 || mb_strlen($name) > 90) return null;
+		if (preg_match('/\d|editor|chief|ketua|instansi|nidn|nip|jabatan|reviewer|sebagai|surat|tugas|universitas|institut|fakultas/iu', $name)) return null;
+		if (!preg_match('/\p{L}\s+\p{L}/u', $name)) return null; // minimal dua kata
+		return $name;
 	}
 
 	/**
