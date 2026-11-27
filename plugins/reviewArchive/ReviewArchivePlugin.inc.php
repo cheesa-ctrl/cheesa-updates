@@ -304,7 +304,7 @@ class ReviewArchivePlugin extends GenericPlugin {
 	 */
 	public function addSubmissionProps($hookName, $args) {
 		$schema =& $args[0];
-		foreach (['reviewArchiveStatement', 'reviewArchiveStatementBy', 'reviewArchiveStatementAt'] as $prop) {
+		foreach (['reviewArchiveStatement', 'reviewArchiveStatementBy', 'reviewArchiveStatementAt', 'reviewArchiveDriveFolder'] as $prop) {
 			$schema->properties->{$prop} = (object) [
 				'type' => 'string',
 				'apiSummary' => false,

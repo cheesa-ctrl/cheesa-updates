@@ -46,7 +46,7 @@ class ReviewArchiveImportHandler extends Handler {
 		parent::__construct();
 		$this->addRoleAssignment(
 			[ROLE_ID_MANAGER, ROLE_ID_SITE_ADMIN],
-			['index', 'page', 'uploadChunk', 'analyze', 'import']
+			['index', 'page', 'uploadChunk', 'analyze', 'import', 'driveList']
 		);
 	}
 
@@ -76,6 +76,8 @@ class ReviewArchiveImportHandler extends Handler {
 			'raUploadUrl' => $dispatcher->url($request, ROUTE_PAGE, null, ReviewArchivePlugin::IMPORT_PAGE, 'uploadChunk'),
 			'raAnalyzeUrl' => $dispatcher->url($request, ROUTE_PAGE, null, ReviewArchivePlugin::IMPORT_PAGE, 'analyze'),
 			'raImportUrl' => $dispatcher->url($request, ROUTE_PAGE, null, ReviewArchivePlugin::IMPORT_PAGE, 'import'),
+			'raDriveUrl' => $dispatcher->url($request, ROUTE_PAGE, null, ReviewArchivePlugin::IMPORT_PAGE, 'driveList'),
+			'raHasDriveKey' => (trim((string) self::$plugin->getSetting($request->getContext()->getId(), 'gdriveApiKey')) !== '') ? 1 : 0,
 			'raCsrfToken' => $request->getSession()->getCSRFToken(),
 			'raChunkSize' => self::CHUNK_SIZE,
 			'raDirectLimit' => self::DIRECT_LIMIT,
@@ -469,6 +471,138 @@ class ReviewArchiveImportHandler extends Handler {
 	 * @param $content string
 	 * @return JSONMessage
 	 */
+	//
+	// Google Drive source
+	//
+	/**
+	 * Read a public Google Drive folder link, group by subfolder, return an HTML list
+	 * with per-file Preview (popup) and Download actions. Uses the plugin's Google API Key.
+	 */
+	function driveList($args, $request) {
+		if (!$request->isPost() || !$request->checkCSRF()) return $this->_json(false, __('form.csrfInvalid'));
+		$this->setupTemplate($request);
+		$context = $request->getContext();
+		if (!$context) return $this->_json(false, 'Konteks jurnal tidak ditemukan.');
+		$key = trim((string) self::$plugin->getSetting($context->getId(), 'gdriveApiKey'));
+		if ($key === '') return $this->_json(false, 'Google API Key belum diisi. Buka pengaturan plugin Review Archive dan isi kuncinya dulu.');
+		$fid = $this->_driveFolderId((string) $request->getUserVar('folder'));
+		if (!$fid) return $this->_json(false, 'Link folder Google Drive tidak dikenali. Tempel tautan folder, mis. https://drive.google.com/drive/folders/XXXX');
+		try {
+			$groups = $this->_driveTree($fid, $key);
+		} catch (\Throwable $e) {
+			return $this->_json(false, 'Gagal membaca folder: ' . $e->getMessage() . ' (pastikan folder di-share "Anyone with the link" dan Drive API aktif untuk kunci).');
+		}
+		return $this->_json(true, $this->_renderDrive($groups));
+	}
+
+	/** Ambil folderId dari berbagai bentuk tautan Drive, atau dari ID mentah. */
+	protected function _driveFolderId($link) {
+		$link = trim($link);
+		if ($link === '') return null;
+		if (preg_match('#/folders/([A-Za-z0-9_-]{8,})#', $link, $m)) return $m[1];
+		if (preg_match('#[?&]id=([A-Za-z0-9_-]{8,})#', $link, $m)) return $m[1];
+		if (preg_match('#^[A-Za-z0-9_-]{8,}$#', $link)) return $link;
+		return null;
+	}
+
+	/** GET sederhana (curl, fallback file_get_contents). @return array [httpCode, body] */
+	protected function _httpGet($url) {
+		if (function_exists('curl_init')) {
+			$ch = curl_init($url);
+			curl_setopt_array($ch, [
+				CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 25, CURLOPT_CONNECTTIMEOUT => 12,
+				CURLOPT_FOLLOWLOCATION => true, CURLOPT_SSL_VERIFYPEER => true, CURLOPT_USERAGENT => 'CHEESA-ReviewArchive',
+			]);
+			$body = curl_exec($ch);
+			$code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			$err = curl_error($ch);
+			curl_close($ch);
+			if ($body === false) throw new Exception('koneksi gagal: ' . $err);
+			return [$code, $body];
+		}
+		$ctx = stream_context_create(['http' => ['timeout' => 25], 'ssl' => ['verify_peer' => true]]);
+		$body = @file_get_contents($url, false, $ctx);
+		if ($body === false) throw new Exception('tidak bisa menghubungi Google.');
+		return [200, $body];
+	}
+
+	/** Daftar anak langsung sebuah folder (dengan paging). */
+	protected function _driveChildren($fid, $key) {
+		$all = [];
+		$pageToken = '';
+		$guard = 0;
+		do {
+			$q = rawurlencode("'" . $fid . "' in parents and trashed = false");
+			$url = 'https://www.googleapis.com/drive/v3/files?q=' . $q . '&key=' . rawurlencode($key)
+				. '&fields=' . rawurlencode('nextPageToken,files(id,name,mimeType,size,modifiedTime)')
+				. '&pageSize=1000&orderBy=' . rawurlencode('folder,name_natural')
+				. '&supportsAllDrives=true&includeItemsFromAllDrives=true';
+			if ($pageToken) $url .= '&pageToken=' . rawurlencode($pageToken);
+			list($code, $body) = $this->_httpGet($url);
+			$j = json_decode($body, true);
+			if ($code >= 400 || isset($j['error'])) throw new Exception($j['error']['message'] ?? ('HTTP ' . $code));
+			foreach (($j['files'] ?? []) as $f) $all[] = $f;
+			$pageToken = $j['nextPageToken'] ?? '';
+		} while ($pageToken && count($all) < 5000 && ++$guard < 10);
+		return $all;
+	}
+
+	/** Bangun pengelompokan: tiap subfolder = satu grup; file di folder utama jadi grup sendiri. */
+	protected function _driveTree($fid, $key) {
+		$children = $this->_driveChildren($fid, $key);
+		$folders = [];
+		$rootFiles = [];
+		foreach ($children as $c) {
+			if (($c['mimeType'] ?? '') === 'application/vnd.google-apps.folder') $folders[] = $c;
+			else $rootFiles[] = $c;
+		}
+		$groups = [];
+		if ($rootFiles) $groups[] = ['name' => '(Folder utama)', 'files' => $rootFiles];
+		$i = 0;
+		foreach ($folders as $sf) {
+			if (++$i > 300) break; // jaring pengaman
+			$files = $this->_driveChildren($sf['id'], $key);
+			$files = array_values(array_filter($files, function ($x) { return ($x['mimeType'] ?? '') !== 'application/vnd.google-apps.folder'; }));
+			$groups[] = ['name' => $sf['name'], 'files' => $files];
+		}
+		return $groups;
+	}
+
+	protected function _humanSize($bytes) {
+		$bytes = (int) $bytes;
+		if ($bytes <= 0) return '';
+		$u = ['B', 'KB', 'MB', 'GB'];
+		$i = (int) floor(log($bytes, 1024));
+		$i = max(0, min($i, 3));
+		return round($bytes / pow(1024, $i), ($i >= 2 ? 1 : 0)) . ' ' . $u[$i];
+	}
+
+	/** Render daftar file terkelompok jadi HTML (tombol Lihat + Unduh). */
+	protected function _renderDrive($groups) {
+		$esc = function ($s) { return htmlspecialchars((string) $s, ENT_QUOTES, 'UTF-8'); };
+		$total = 0;
+		foreach ($groups as $g) $total += count($g['files']);
+		if ($total === 0) return '<div class="ra_note">Folder kosong atau tidak ada berkas yang bisa dibaca. Pastikan folder di-share "Anyone with the link".</div>';
+		$h = '<div class="ra-drive-result"><div class="ra-dv-sum">' . count($groups) . ' grup &middot; ' . $total . ' berkas</div>';
+		foreach ($groups as $g) {
+			$h .= '<div class="ra-dv-group"><h4 class="ra-dv-gh">' . $esc($g['name']) . ' <span class="ra-dv-n">(' . count($g['files']) . ')</span></h4><ul class="ra-dv-files">';
+			foreach ($g['files'] as $f) {
+				$id = $esc($f['id']);
+				$isG = strpos(($f['mimeType'] ?? ''), 'application/vnd.google-apps.') === 0;
+				$size = $this->_humanSize($f['size'] ?? 0);
+				$dl = $isG
+					? '<a class="ra-dv-dl" href="https://drive.google.com/open?id=' . $id . '" target="_blank" rel="noopener">Buka di Drive</a>'
+					: '<a class="ra-dv-dl" href="https://drive.google.com/uc?export=download&amp;id=' . $id . '" target="_blank" rel="noopener">Unduh</a>';
+				$h .= '<li class="ra-dv-file"><span class="ra-dv-name">' . $esc($f['name']) . '</span>'
+					. ($size ? '<span class="ra-dv-size">' . $esc($size) . '</span>' : '')
+					. '<span class="ra-dv-act"><button type="button" class="ra-dv-view" data-fid="' . $id . '">Lihat</button> ' . $dl . '</span></li>';
+			}
+			$h .= '</ul></div>';
+		}
+		$h .= '</div>';
+		return $h;
+	}
+
 	protected function _json($status, $content) {
 		header('Content-Type: application/json');
 		return new JSONMessage($status, $content);

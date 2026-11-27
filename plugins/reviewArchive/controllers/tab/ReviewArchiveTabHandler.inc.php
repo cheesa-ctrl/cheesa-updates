@@ -41,7 +41,7 @@ class ReviewArchiveTabHandler extends Handler {
 		);
 		$this->addRoleAssignment(
 			[ROLE_ID_MANAGER, ROLE_ID_SUB_EDITOR],
-			['saveStatement']
+			['saveStatement', 'saveDriveFolder']
 		);
 	}
 
@@ -137,6 +137,7 @@ class ReviewArchiveTabHandler extends Handler {
 
 		$templateMgr = TemplateManager::getManager($request);
 		$templateMgr->assign($this->_statementVars($request, $submission));
+		$templateMgr->assign($this->_driveVars($request, $submission));
 		$templateMgr->assign([
 			'submission' => $submission,
 			'markedFiles' => $marked,
@@ -254,5 +255,210 @@ class ReviewArchiveTabHandler extends Handler {
 			SUBMISSION_FILE_PRODUCTION_READY => 'productionReady',
 		];
 		return 'plugins.generic.reviewArchive.fileStage.' . ($keys[$fileStage] ?? 'other');
+	}
+
+	//
+	// Feature: Google Drive review files for this one article
+	//
+	/**
+	 * Save a manual per-article override link (an exact Drive sub-folder),
+	 * used when auto-matching picks the wrong folder or none.
+	 * @param $args array
+	 * @param $request PKPRequest
+	 * @return JSONMessage
+	 */
+	function saveDriveFolder($args, $request) {
+		if (!$request->isPost() || !$request->checkCSRF()) {
+			return new JSONMessage(false, __('form.csrfInvalid'));
+		}
+		$submission = $this->getAuthorizedContextObject(ASSOC_TYPE_SUBMISSION); /** @var $submission Submission */
+		// Store the raw link (empty clears it, back to auto-matching).
+		$raw = trim((string) $request->getUserVar('reviewArchiveDriveFolder'));
+		$submission->setData('reviewArchiveDriveFolder', mb_substr($raw, 0, 500));
+		DAORegistry::getDAO('SubmissionDAO')->updateObject($submission);
+		return new JSONMessage(true, '');
+	}
+
+	/**
+	 * Build the "Berkas Review (Google Drive)" section for this article.
+	 * Everything fails open: a missing key, missing collection folder, no
+	 * match or any network error just leaves the section empty/with a note.
+	 * @param $request PKPRequest
+	 * @param $submission Submission
+	 * @return array template vars
+	 */
+	protected function _driveVars($request, $submission) {
+		$plugin = self::$plugin;
+		$context = $request->getContext();
+		$off = [
+			'driveEnabled' => false, 'driveMatched' => false, 'driveGroups' => [],
+			'driveFolderName' => '', 'driveFolderUrl' => '', 'driveReason' => '',
+			'driveMessage' => '', 'driveCount' => 0, 'driveReviewers' => [],
+			'driveOverrideUrl' => (string) $submission->getData('reviewArchiveDriveFolder'),
+			'driveCanEdit' => (bool) array_intersect(
+				[ROLE_ID_MANAGER, ROLE_ID_SUB_EDITOR, ROLE_ID_SITE_ADMIN],
+				(array) $this->getAuthorizedContextObject(ASSOC_TYPE_USER_ROLES)
+			),
+			'driveSaveUrl' => $request->getDispatcher()->url(
+				$request, ROUTE_COMPONENT, null, ReviewArchivePlugin::TAB_COMPONENT,
+				'saveDriveFolder', null, ['submissionId' => $submission->getId()]
+			),
+		];
+		if (!$context) return $off;
+
+		$plugin->import('classes.DriveClient');
+		$key = trim((string) $plugin->getSetting($context->getId(), 'gdriveApiKey'));
+		$override = trim((string) $submission->getData('reviewArchiveDriveFolder'));
+		$collection = trim((string) $plugin->getSetting($context->getId(), 'gdriveCollectionFolder'));
+
+		// Nothing to show unless a key plus either a collection folder or an
+		// explicit per-article link is available.
+		if ($key === '' || ($collection === '' && $override === '')) return $off;
+		$off['driveEnabled'] = true;
+
+		try {
+			$targetId = null;
+			if ($override !== '') {
+				$targetId = DriveClient::folderId($override);
+				if ($targetId) { $off['driveReason'] = 'tautan manual'; $off['driveMatched'] = true; }
+			}
+			if (!$targetId && $collection !== '') {
+				$collId = DriveClient::folderId($collection);
+				if (!$collId) { $off['driveMessage'] = 'Link folder kumpulan di pengaturan tidak dikenali.'; return $off; }
+				$subs = $this->_cachedSubfolders($context->getId(), $collId, $key);
+				$match = DriveClient::matchFolder($subs, [
+					'ids' => $this->_matchIds($submission),
+					'surnames' => $this->_authorSurnames($submission),
+				]);
+				if ($match) {
+					$targetId = $match['id'];
+					$off['driveMatched'] = true;
+					$off['driveFolderName'] = $match['name'];
+					$off['driveReason'] = $match['reason'];
+				} else {
+					$off['driveMessage'] = 'Belum ada subfolder yang cocok dengan artikel ini di folder kumpulan. '
+						. 'Editor bisa menempel tautan subfolder artikel secara manual di bawah.';
+					return $off;
+				}
+			}
+			if (!$targetId) { $off['driveMessage'] = 'Tautan manual tidak dikenali.'; return $off; }
+
+			$off['driveFolderUrl'] = DriveClient::folderUrl($targetId);
+			$groups = DriveClient::tree($targetId, $key);
+			list($rendered, $count, $reviewers) = $this->_renderDriveGroups($groups);
+			$off['driveGroups'] = $rendered;
+			$off['driveCount'] = $count;
+			$off['driveReviewers'] = $reviewers;
+			if ($count === 0) $off['driveMessage'] = 'Folder ditemukan tetapi kosong atau belum dibagikan "Anyone with the link".';
+		} catch (\Throwable $e) {
+			$off['driveMatched'] = false;
+			$off['driveGroups'] = [];
+			$off['driveMessage'] = 'Gagal membaca Google Drive: ' . $e->getMessage()
+				. ' (pastikan folder di-share "Anyone with the link" dan Drive API aktif untuk kunci).';
+		}
+		return $off;
+	}
+
+	/**
+	 * Cached (15 min) list of the collection folder's sub-folders, so opening
+	 * article tabs does not hit the Drive API on every load.
+	 * @param $contextId int
+	 * @param $collId string
+	 * @param $key string
+	 * @return array [['id','name'], ...]
+	 * @throws Exception
+	 */
+	protected function _cachedSubfolders($contextId, $collId, $key) {
+		$plugin = self::$plugin;
+		$raw = (string) $plugin->getSetting($contextId, 'gdriveCollCache');
+		$cache = $raw !== '' ? json_decode($raw, true) : null;
+		if (is_array($cache) && ($cache['fid'] ?? '') === $collId
+				&& (time() - (int) ($cache['at'] ?? 0)) < 900 && isset($cache['subs'])) {
+			return $cache['subs'];
+		}
+		$subs = DriveClient::subfolders($collId, $key);
+		$plugin->updateSetting($contextId, 'gdriveCollCache', json_encode([
+			'fid' => $collId, 'at' => time(), 'subs' => $subs,
+		]), 'string');
+		return $subs;
+	}
+
+	/**
+	 * Match signals from the DOI number and the current submission id.
+	 * @param $submission Submission
+	 * @return array numeric strings
+	 */
+	protected function _matchIds($submission) {
+		$ids = [(string) $submission->getId()];
+		$sourceId = self::$plugin->getSourceId($submission); // DOI number, else submission id
+		if ($sourceId !== '') $ids[] = (string) $sourceId;
+		return array_values(array_unique($ids));
+	}
+
+	/**
+	 * Family names of the article's authors, for name-based folder matching.
+	 * @param $submission Submission
+	 * @return array lower-case family names
+	 */
+	protected function _authorSurnames($submission) {
+		$names = [];
+		$publication = $submission->getCurrentPublication();
+		if (!$publication) return $names;
+		$authors = (array) $publication->getData('authors');
+		foreach ($authors as $author) {
+			if (!is_object($author)) continue;
+			$fam = '';
+			if (method_exists($author, 'getLocalizedFamilyName')) $fam = (string) $author->getLocalizedFamilyName();
+			if ($fam === '' && method_exists($author, 'getFamilyName')) $fam = (string) $author->getFamilyName(null);
+			if ($fam === '' && method_exists($author, 'getLocalizedGivenName')) $fam = (string) $author->getLocalizedGivenName();
+			if ($fam !== '') $names[] = $fam;
+		}
+		return $names;
+	}
+
+	/**
+	 * Turn raw Drive groups into template-ready rows, flag reviewer /
+	 * activity-log groups, and collect reviewer labels. Activity-log groups
+	 * are pushed to the end.
+	 * @param $groups array from DriveClient::tree()
+	 * @return array [rows, totalFiles, reviewerLabels]
+	 */
+	protected function _renderDriveGroups($groups) {
+		$rows = [];
+		$logs = [];
+		$total = 0;
+		$reviewers = [];
+		foreach ($groups as $g) {
+			$isLog = DriveClient::looksLikeActivityLog($g['name']);
+			$isReviewer = (bool) preg_match('/reviewer|penelaah|mitra\s*bestari|review\s*\d/iu', (string) $g['name']);
+			if ($isReviewer && trim($g['name']) !== '' && $g['name'] !== '(Folder utama)') $reviewers[] = trim($g['name']);
+			$files = [];
+			foreach ($g['files'] as $f) {
+				$id = (string) ($f['id'] ?? '');
+				$mime = (string) ($f['mimeType'] ?? '');
+				$isGoogle = strpos($mime, 'application/vnd.google-apps.') === 0;
+				$name = (string) ($f['name'] ?? '');
+				if (DriveClient::looksLikeActivityLog($name) && !$isLog) {
+					// a stray log file inside a normal group: leave it in place but tagged
+				}
+				$files[] = [
+					'id' => $id,
+					'name' => $name,
+					'size' => DriveClient::humanSize($f['size'] ?? 0),
+					'isGoogle' => $isGoogle,
+					'canPreview' => !$isGoogle && $id !== '',
+					'openUrl' => 'https://drive.google.com/open?id=' . rawurlencode($id),
+					'dlUrl' => 'https://drive.google.com/uc?export=download&id=' . rawurlencode($id),
+					'isCert' => DriveClient::looksLikeCertificate($name),
+					'isLog' => DriveClient::looksLikeActivityLog($name),
+				];
+				$total++;
+			}
+			$row = ['name' => (string) $g['name'], 'isLog' => $isLog, 'isReviewer' => $isReviewer, 'files' => $files];
+			if ($isLog) $logs[] = $row; else $rows[] = $row;
+		}
+		foreach ($logs as $row) $rows[] = $row; // logs last
+		$reviewers = array_values(array_unique($reviewers));
+		return [$rows, $total, $reviewers];
 	}
 }

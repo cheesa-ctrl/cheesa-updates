@@ -20,6 +20,24 @@
 	.ra_import .ra_status.ra_error {ldelim} color: #d00a6c; font-weight: 700; {rdelim}
 	.ra_import .ra_actions {ldelim} margin-top: 1rem; display: flex; gap: .5rem; flex-wrap: wrap; {rdelim}
 	.ra_import button[disabled] {ldelim} opacity: .5; cursor: not-allowed; {rdelim}
+	.ra-dv-group {ldelim} margin: .75rem 0; {rdelim}
+	.ra-dv-gh {ldelim} margin: 0 0 .35rem; font-size: .95rem; color: #11213f; border-bottom: 1px solid #eee; padding-bottom: .25rem; {rdelim}
+	.ra-dv-n {ldelim} color: #888; font-weight: 400; {rdelim}
+	.ra-dv-files {ldelim} list-style: none; margin: 0; padding: 0; {rdelim}
+	.ra-dv-file {ldelim} display: flex; align-items: center; gap: .6rem; padding: .35rem .25rem; border-bottom: 1px solid #f2f2f2; {rdelim}
+	.ra-dv-name {ldelim} flex: 1; min-width: 0; overflow-wrap: anywhere; {rdelim}
+	.ra-dv-size {ldelim} color: #888; font-size: .82rem; white-space: nowrap; {rdelim}
+	.ra-dv-act {ldelim} display: flex; gap: .4rem; white-space: nowrap; {rdelim}
+	.ra-dv-view, .ra-dv-dl {ldelim} font-size: .82rem; padding: 3px 11px; border-radius: 5px; border: 1px solid #cdd3e6; background: #fff; color: #11213f; cursor: pointer; text-decoration: none; {rdelim}
+	.ra-dv-view:hover, .ra-dv-dl:hover {ldelim} border-color: #006798; color: #006798; {rdelim}
+	.ra-dv-sum {ldelim} color: #555; margin-bottom: .5rem; {rdelim}
+	.ra-modal {ldelim} position: fixed; inset: 0; background: rgba(10,16,40,.6); display: none; align-items: center; justify-content: center; z-index: 99999; {rdelim}
+	.ra-modal.on {ldelim} display: flex; {rdelim}
+	.ra-modal-box {ldelim} background: #fff; width: min(900px, 94vw); height: 86vh; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; {rdelim}
+	.ra-modal-head {ldelim} display: flex; align-items: center; gap: .5rem; padding: .5rem .75rem; border-bottom: 1px solid #eee; {rdelim}
+	.ra-modal-title {ldelim} flex: 1; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; {rdelim}
+	.ra-modal-x {ldelim} border: 0; background: #eee; width: 30px; height: 30px; border-radius: 6px; cursor: pointer; font-size: 18px; line-height: 1; {rdelim}
+	.ra-modal iframe {ldelim} flex: 1; width: 100%; border: 0; {rdelim}
 </style>
 
 <div class="ra_import" id="raImport">
@@ -64,6 +82,31 @@
 	</div>
 
 	<div id="raResult"></div>
+
+	<div class="ra_card">
+		<h3>Sumber Google Drive</h3>
+		<p>Tempel tautan <b>folder</b> Google Drive (di-share "Anyone with the link"). Berkas dibaca &amp; dikelompokkan per subfolder, lalu bisa <b>Lihat</b> (pratinjau popup) dan <b>Unduh</b>.</p>
+		{if !$raHasDriveKey}<div class="ra_status ra_error">Google API Key belum diisi — buka pengaturan plugin Review Archive dulu untuk mengisinya.</div>{/if}
+		<fieldset>
+			<input type="url" id="raDriveFolder" placeholder="https://drive.google.com/drive/folders/..." style="width:100%;box-sizing:border-box;padding:7px 9px;" {if !$raHasDriveKey}disabled{/if}>
+		</fieldset>
+		<div class="ra_actions">
+			<button type="button" class="pkpButton" id="raDriveBtn" {if !$raHasDriveKey}disabled{/if}>Baca folder</button>
+		</div>
+		<div class="ra_status" id="raDriveStatus" role="status"></div>
+		<div id="raDriveResult"></div>
+	</div>
+</div>
+
+<div class="ra-modal" id="raModal" aria-hidden="true">
+	<div class="ra-modal-box">
+		<div class="ra-modal-head">
+			<span class="ra-modal-title" id="raModalTitle">Pratinjau</span>
+			<a class="ra-dv-dl" id="raModalDl" target="_blank" rel="noopener">Unduh</a>
+			<button type="button" class="ra-modal-x" id="raModalX" aria-label="Tutup">&times;</button>
+		</div>
+		<iframe id="raModalFrame" title="Pratinjau berkas" src="about:blank"></iframe>
+	</div>
 </div>
 
 <script>
@@ -73,6 +116,7 @@
 		analyzeUrl: {$raAnalyzeUrl|json_encode},
 		importUrl: {$raImportUrl|json_encode},
 		csrfToken: {$raCsrfToken|json_encode},
+		driveUrl: {$raDriveUrl|json_encode},
 		chunkSize: {$raChunkSize},
 		maxSize: {$raMaxSize},
 		text: {ldelim}
@@ -290,6 +334,34 @@
 		if(!files || !files.length){ status(cfg.text.chooseFile, true); return; }
 		batchCheckAll(Array.prototype.slice.call(files));
 	});
+
+	// ---- Sumber Google Drive: baca folder -> daftar terkelompok -> preview popup + unduh ----
+	var $driveBtn = $('#raDriveBtn'), $driveRes = $('#raDriveResult'), $driveStat = $('#raDriveStatus');
+	function bindDriveActions(){
+		$driveRes.find('.ra-dv-view').off('click').on('click', function(){
+			var fid = $(this).attr('data-fid');
+			var name = $(this).closest('.ra-dv-file').find('.ra-dv-name').text();
+			$('#raModalTitle').text(name || 'Pratinjau');
+			$('#raModalDl').attr('href', 'https://drive.google.com/uc?export=download&id=' + encodeURIComponent(fid));
+			$('#raModalFrame').attr('src', 'https://drive.google.com/file/d/' + encodeURIComponent(fid) + '/preview');
+			$('#raModal').addClass('on').attr('aria-hidden', 'false');
+		});
+	}
+	function closeDriveModal(){ $('#raModal').removeClass('on').attr('aria-hidden', 'true'); $('#raModalFrame').attr('src', 'about:blank'); }
+	$('#raModalX').on('click', closeDriveModal);
+	$('#raModal').on('click', function(e){ if (e.target === this) closeDriveModal(); });
+	$(document).on('keydown', function(e){ if (e.key === 'Escape') closeDriveModal(); });
+	$driveBtn.on('click', function(){
+		var folder = ($('#raDriveFolder').val() || '').trim();
+		if (!folder){ $driveStat.text('Tempel dulu tautan folder Google Drive.'); return; }
+		$driveBtn.prop('disabled', true); $driveStat.text('Membaca folder…'); $driveRes.html('');
+		$.ajax({ url: cfg.driveUrl, type: 'POST', data: { csrfToken: cfg.csrfToken, folder: folder }, dataType: 'json' }).done(function(res){
+			$driveBtn.prop('disabled', false);
+			if (!res || res.status === false){ $driveStat.html('<span style="color:#d00a6c">' + (res && res.content ? res.content : 'Gagal membaca folder.') + '</span>'); return; }
+			$driveStat.text(''); $driveRes.html(res.content); bindDriveActions();
+		}).fail(function(){ $driveBtn.prop('disabled', false); $driveStat.html('<span style="color:#d00a6c">Gagal menghubungi server.</span>'); });
+	});
+	$('#raDriveFolder').on('keydown', function(e){ if (e.key === 'Enter'){ e.preventDefault(); $driveBtn.click(); } });
 {/literal}
 {rdelim}(jQuery));
 </script>

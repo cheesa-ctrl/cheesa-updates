@@ -39,13 +39,15 @@ class ReviewArchiveSettingsForm extends Form {
 	public function initData() {
 		$this->setData('defaultStatement', $this->_plugin->getDefaultStatement($this->_contextId));
 		$this->setData('certificateCsv', $this->_plugin->getCertificateCsv($this->_contextId));
+		$this->setData('gdriveApiKey', (string) $this->_plugin->getSetting($this->_contextId, 'gdriveApiKey'));
+		$this->setData('gdriveCollectionFolder', (string) $this->_plugin->getSetting($this->_contextId, 'gdriveCollectionFolder'));
 	}
 
 	/**
 	 * @copydoc Form::readInputData()
 	 */
 	public function readInputData() {
-		$this->readUserVars(['defaultStatement', 'certificateCsv']);
+		$this->readUserVars(['defaultStatement', 'certificateCsv', 'gdriveApiKey', 'gdriveCollectionFolder']);
 	}
 
 	/**
@@ -72,6 +74,10 @@ class ReviewArchiveSettingsForm extends Form {
 	public function execute(...$functionArgs) {
 		$this->_plugin->updateSetting($this->_contextId, 'defaultStatement', trim((string) $this->getData('defaultStatement')), 'string');
 		$this->_plugin->updateSetting($this->_contextId, 'certificateCsv', (string) $this->getData('certificateCsv'), 'string');
+		$this->_plugin->updateSetting($this->_contextId, 'gdriveApiKey', trim((string) $this->getData('gdriveApiKey')), 'string');
+		$this->_plugin->updateSetting($this->_contextId, 'gdriveCollectionFolder', trim((string) $this->getData('gdriveCollectionFolder')), 'string');
+		// A changed collection folder invalidates the cached sub-folder list.
+		$this->_plugin->updateSetting($this->_contextId, 'gdriveCollCache', '', 'string');
 		parent::execute(...$functionArgs);
 	}
 }
