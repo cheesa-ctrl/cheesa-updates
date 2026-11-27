@@ -1267,16 +1267,26 @@
 }
 
 /* ---------- Rapikan jarak antar-section (Research/Review Articles) ----------
-   Nama section sudah tampil sebagai badge di tiap kartu (lihat JS: ch-sec-badge),
-   sehingga heading section di TOC redundan dan menyisakan celah kosong besar.
-   Sembunyikan heading itu dan rapatkan jarak; antar-kartu tetap pakai margin kartu. */
-:root body .page_issue .obj_issue_toc .sections > .section > h2,
-:root body .page_issue .obj_issue_toc .sections > .section > .section_title,
-:root body .page_index_journal .current_issue .sections > .section > h2,
-:root body .page_index_journal .current_issue .sections > .section > .section_title { display: none !important; }
+   Heading section adalah <h3>. Margin bawaannya terlalu besar sehingga ada celah
+   kosong di antara section. Heading tetap tampil (sebagai label), tapi jaraknya
+   dirapatkan; antar-kartu tetap pakai margin kartu (14px). */
 :root body .page_issue .obj_issue_toc .sections > .section,
 :root body .page_index_journal .current_issue .sections > .section { margin: 0 !important; padding: 0 !important; }
-:root body .page_issue .obj_issue_toc .sections > .section + .section,
-:root body .page_index_journal .current_issue .sections > .section + .section { margin-top: 14px !important; }
+:root body .page_issue .obj_issue_toc .sections > .section > h3,
+:root body .page_issue .obj_issue_toc .sections > .section > h2,
+:root body .page_index_journal .current_issue .sections > .section > h3,
+:root body .page_index_journal .current_issue .sections > .section > h2 {
+  margin: 16px 0 10px !important;
+  padding: 0 !important;
+  font: 700 1.05rem var(--nv-sans) !important;
+  color: var(--nv-navy) !important;
+  line-height: 1.2 !important;
+}
+:root body .page_issue .obj_issue_toc .sections > .section:first-child > h3,
+:root body .page_issue .obj_issue_toc .sections > .section:first-child > h2,
+:root body .page_index_journal .current_issue .sections > .section:first-child > h3,
+:root body .page_index_journal .current_issue .sections > .section:first-child > h2 { margin-top: 0 !important; }
+:root body .page_issue .obj_issue_toc .sections > .section > ul.cmp_article_list,
+:root body .page_index_journal .current_issue .sections > .section > ul.cmp_article_list { margin: 0 !important; padding: 0 !important; list-style: none !important; }
 :root body .page_issue .obj_issue_toc .sections,
 :root body .page_index_journal .current_issue .sections { margin-top: 0 !important; }

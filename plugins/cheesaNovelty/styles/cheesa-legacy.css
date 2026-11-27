@@ -3103,31 +3103,31 @@ body.ch-article-page #customblock-menu-tema-child { display: none !important; }
 body .current_issue{position:relative!important;margin:28px 0!important;padding:34px 34px 30px!important;border-radius:18px!important;color:#dfe3ff!important;overflow:hidden!important;
  background:radial-gradient(110% 80% at 100% 0%,rgba(60,60,200,.55) 0%,transparent 60%),linear-gradient(160deg,#00003f,#000066 62%,#06067a)!important;
  box-shadow:0 24px 48px -20px rgba(0,0,90,.6),inset 0 0 0 1px rgba(227,195,116,.38)!important}
-body .current_issue::before{content:""!important;position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg,#b8923c,#f1d98f,#b8923c)}
+body .current_issue::before{content:""!important;position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg,#b8923c,#a86b00,#b8923c)}
 body .current_issue>h2{display:inline-flex!important;align-items:center;gap:9px;width:auto!important;margin:0 0 18px!important;padding:6px 15px 6px 12px!important;
  border:1px solid rgba(227,195,116,.55)!important;border-radius:999px!important;background:rgba(255,255,255,.05)!important;
- font:600 .82rem/1 Montserrat,sans-serif!important;letter-spacing:.04em!important;text-transform:none!important;color:#f1d98f!important}
+ font:600 .82rem/1 Montserrat,sans-serif!important;letter-spacing:.04em!important;text-transform:none!important;color:#a86b00!important}
 body .current_issue>h2::after{content:none!important;display:none!important}
 body .current_issue>h2::before{content:""!important;display:inline-block!important;flex:none;position:static!important;width:8px!important;height:8px!important;margin:0!important;padding:0!important;border:0!important;
- border-radius:50%!important;background:#f1d98f!important;animation:ch-pulse 2s ease-out infinite}
+ border-radius:50%!important;background:#a86b00!important;animation:ch-pulse 2s ease-out infinite}
 @keyframes ch-pulse{0%{box-shadow:0 0 0 0 rgba(241,217,143,.7)}100%{box-shadow:0 0 0 10px rgba(241,217,143,0)}}
 body .current_issue .heading,body .current_issue .heading a,body .current_issue .heading h1,body .current_issue .heading h2,body .current_issue .heading h3,body .current_issue .heading h4,body .current_issue .heading .title{
  font:700 clamp(1.5rem,3.2vw,2.15rem)/1.25 "Noto Serif",Georgia,serif!important;color:#fff!important;text-decoration:none!important;text-transform:none!important;letter-spacing:0!important}
 body .current_issue .heading{margin:0 0 6px!important}
 body .current_issue .description,body .current_issue .description p{color:#c9cffc!important;text-align:left!important;font-size:.95rem!important;line-height:1.7!important;max-width:62ch}
 body .current_issue .description{margin:12px 0 18px!important}
-body .current_issue .description strong,body .current_issue .description b{color:#f1d98f!important}
+body .current_issue .description strong,body .current_issue .description b{color:#a86b00!important}
 body .current_issue .flags{display:flex;gap:8px;margin-bottom:20px}
 body .current_issue .flags span,body .current_issue .flags img{width:36px;height:24px;border-radius:4px;box-shadow:0 0 0 1px rgba(255,255,255,.35)}
 body .current_issue .published{display:inline-flex!important;gap:10px;padding:8px 15px!important;border-radius:8px!important;background:rgba(255,255,255,.09)!important}
 body .current_issue .published,body .current_issue .published *{color:#fff!important;text-transform:none!important;letter-spacing:0!important;font-size:.85rem!important}
-body .current_issue .published .label,body .current_issue .published strong{color:#f1d98f!important;font-weight:600!important}
+body .current_issue .published .label,body .current_issue .published strong{color:#a86b00!important;font-weight:600!important}
 body .current_issue .ch-current-btn{margin:24px 0 0!important}
 body .current_issue .ch-btn,body .current_issue .ch-btn:visited{display:block!important;padding:14px 20px!important;border-radius:10px!important;text-align:center!important;font:700 .95rem "Noto Serif",Georgia,serif!important;
  color:#00003f!important;background:linear-gradient(180deg,#f6e3a4,#d9b45c)!important;box-shadow:0 8px 20px -8px rgba(217,180,92,.7);text-decoration:none!important;transition:transform .2s,box-shadow .2s}
 body .current_issue .ch-btn:hover{transform:translateY(-2px);box-shadow:0 14px 26px -10px rgba(217,180,92,.9)}
 body .current_issue .ch-btn:focus-visible{outline:3px solid #fff;outline-offset:3px}
-body .current_issue .read_more,body .current_issue .read_more:visited,body .current_issue a.read_more,body .current_issue .read_more *{color:#f1d98f!important;fill:#f1d98f!important}
+body .current_issue .read_more,body .current_issue .read_more:visited,body .current_issue a.read_more,body .current_issue .read_more *{color:#a86b00!important;fill:#a86b00!important}
 body .current_issue .read_more:hover{color:#fff!important}
 @media(max-width:600px){body .current_issue{padding:28px 20px 24px!important}}
 @media(prefers-reduced-motion:reduce){body .current_issue>h2::before{animation:none}body .current_issue .ch-btn{transition:none}}
@@ -3136,7 +3136,7 @@ body .current_issue .read_more:hover{color:#fff!important}
 body .pkp_footer_content:has(>.footer){position:relative!important;margin:32px 0 14px!important;padding:44px 44px 26px!important;border-radius:18px!important;overflow:hidden!important;color:#c9cffc!important;font-size:.92rem!important;line-height:1.7!important;
  background:radial-gradient(90% 70% at 0% 0%,rgba(60,60,200,.45),transparent 60%),linear-gradient(160deg,#00003f,#000066 65%,#06067a)!important;
  box-shadow:0 24px 48px -22px rgba(0,0,90,.6),inset 0 0 0 1px rgba(227,195,116,.3)!important}
-body .pkp_footer_content:has(>.footer)::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg,#b8923c,#f1d98f,#b8923c)}
+body .pkp_footer_content:has(>.footer)::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg,#b8923c,#a86b00,#b8923c)}
 body .pkp_footer_content .footer{display:grid!important;grid-template-columns:clamp(260px,26vw,380px) 1.3fr 1fr!important;grid-template-areas:"logo about contact" "logo addr contact"!important;column-gap:44px!important;row-gap:16px!important;margin:0 0 28px!important;align-items:start}
 body .pkp_footer_content .footer>div:nth-child(1){grid-area:about}
 body .pkp_footer_content .footer>div:nth-child(2){grid-area:addr;padding-left:14px;border-left:2px solid #d9b45c}
@@ -3145,7 +3145,7 @@ body .pkp_footer_content .footer>div:nth-child(3){grid-area:contact}
 body .pkp_footer_content .footer>div:nth-child(4){grid-area:logo}
 body .pkp_footer_content .logo{padding:18px 16px;border-radius:14px;background:#fff;box-shadow:0 12px 26px -14px rgba(0,0,0,.6)}
 body .pkp_footer_content .logo img{display:block;width:100%!important;height:auto!important;margin:0!important}
-body .pkp_footer_content a{color:#f1d98f!important;text-decoration:underline!important;text-decoration-color:rgba(241,217,143,.4)!important;text-underline-offset:3px}
+body .pkp_footer_content a{color:#a86b00!important;text-decoration:underline!important;text-decoration-color:rgba(241,217,143,.4)!important;text-underline-offset:3px}
 body .pkp_footer_content a:hover{color:#fff!important;text-decoration-color:#fff!important}
 body .pkp_footer_content .logo a{text-decoration:none!important}
 body .pkp_footer_content h4{display:inline-block;margin:0 0 12px!important;padding-bottom:8px;border-bottom:2px solid #d9b45c;font:600 1rem Montserrat,sans-serif!important;color:#fff!important}
