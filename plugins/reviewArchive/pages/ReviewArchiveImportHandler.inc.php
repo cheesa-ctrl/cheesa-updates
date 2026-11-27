@@ -253,7 +253,30 @@ class ReviewArchiveImportHandler extends Handler {
 		$user = $request->getUser();
 		$deployment = new NativeImportExportDeployment($context, $user);
 		libxml_use_internal_errors(true);
-		$content = $nativePlugin->importSubmissions($xml, $filter, $deployment);
+
+		// Impor dengan LIBXML_PARSEHUGE agar embed > 10 MB (base64) tidak memicu
+		// "huge text node". Core importSubmissions() mem-parse ulang STRING tanpa
+		// PARSEHUGE, jadi kita oper DOMDocument yang sudah di-parse langsung ke filter.
+		$content = null;
+		try {
+			$filterDao = DAORegistry::getDAO('FilterDAO'); /** @var $filterDao FilterDAO */
+			$importFilters = $filterDao->getObjectsByGroup($filter);
+			$importFilter = array_shift($importFilters);
+			if ($importFilter) {
+				$importFilter->setDeployment($deployment);
+				$hugeDoc = new DOMDocument('1.0', 'utf-8');
+				if ($hugeDoc->loadXml($xml, LIBXML_PARSEHUGE)) {
+					$content = $importFilter->process($hugeDoc);
+				}
+			}
+		} catch (\Throwable $e) {
+			error_log('reviewArchive PARSEHUGE import: ' . $e->getMessage());
+			$content = null;
+		}
+		if ($content === null) {
+			// Fallback ke cara standar (mungkin gagal untuk node > 10 MB).
+			$content = $nativePlugin->importSubmissions($xml, $filter, $deployment);
+		}
 		$validationErrors = array_filter(libxml_get_errors(), function($a) {
 			return $a->level == LIBXML_ERR_ERROR || $a->level == LIBXML_ERR_FATAL;
 		});
