@@ -41,7 +41,7 @@ class ReviewArchiveTabHandler extends Handler {
 		);
 		$this->addRoleAssignment(
 			[ROLE_ID_MANAGER, ROLE_ID_SUB_EDITOR],
-			['saveStatement', 'saveDriveFolder']
+			['saveStatement', 'saveDriveFolder', 'saveDiscussionHtml']
 		);
 	}
 
@@ -270,7 +270,18 @@ class ReviewArchiveTabHandler extends Handler {
 	 * @return array ['discussions' => [...]]
 	 */
 	protected function _discussionVars($request, $submission) {
-		$out = ['discussions' => []];
+		$out = [
+			'discussions' => [],
+			'discussionCanEdit' => (bool) array_intersect(
+				[ROLE_ID_MANAGER, ROLE_ID_SUB_EDITOR, ROLE_ID_SITE_ADMIN],
+				(array) $this->getAuthorizedContextObject(ASSOC_TYPE_USER_ROLES)
+			),
+			'discussionText' => (string) $submission->getData('reviewArchiveDiscussionText'),
+			'discussionSaveUrl' => $request->getDispatcher()->url(
+				$request, ROUTE_COMPONENT, null, ReviewArchivePlugin::TAB_COMPONENT,
+				'saveDiscussionHtml', null, ['submissionId' => $submission->getId()]
+			),
+		];
 		try {
 			$dispatcher = $request->getDispatcher();
 			$queryDao = DAORegistry::getDAO('QueryDAO'); /** @var $queryDao QueryDAO */
@@ -330,12 +341,60 @@ class ReviewArchiveTabHandler extends Handler {
 					'messages' => $messages,
 				];
 			}
+
+			// Pasted discussion archive (for migrated articles whose queries
+			// did not come across in the Native XML import).
+			$pasted = (string) $submission->getData('reviewArchiveDiscussionText');
+			if (trim($pasted) !== '') {
+				self::$plugin->import('classes.DiscussionParser');
+				foreach (DiscussionParser::parse($pasted) as $d) {
+					$msgs = [];
+					foreach ($d['messages'] as $m) {
+						$msgs[] = [
+							'from' => $m['from'],
+							'date' => $m['date'],
+							'title' => $m['title'],
+							'bodyHtml' => $m['body'] !== '' ? self::$plugin->formatText($m['body']) : '',
+							'attachments' => $m['attachments'],
+						];
+					}
+					$list[] = [
+						'title' => $d['title'],
+						'stage' => 'arsip tempel',
+						'participants' => $d['participants'],
+						'messages' => $msgs,
+						'rawDate' => true,
+					];
+				}
+			}
+
 			$out['discussions'] = $list;
 		} catch (\Throwable $e) {
 			$out['discussions'] = [];
 			$out['discussionsError'] = $e->getMessage();
 		}
 		return $out;
+	}
+
+	/**
+	 * Save (or clear) the pasted discussion-HTML archive for this article.
+	 * @param $args array
+	 * @param $request PKPRequest
+	 * @return JSONMessage
+	 */
+	function saveDiscussionHtml($args, $request) {
+		if (!$request->isPost() || !$request->checkCSRF()) {
+			return new JSONMessage(false, __('form.csrfInvalid'));
+		}
+		$submission = $this->getAuthorizedContextObject(ASSOC_TYPE_SUBMISSION); /** @var $submission Submission */
+		$raw = (string) $request->getUserVar('reviewArchiveDiscussionText');
+		// Scripts are dropped (noise/risk); cap the stored size.
+		$raw = preg_replace('#<script\b[^>]*>.*?</script>#is', '', $raw);
+		$raw = trim($raw);
+		if (mb_strlen($raw) > 300000) $raw = mb_substr($raw, 0, 300000);
+		$submission->setData('reviewArchiveDiscussionText', $raw);
+		DAORegistry::getDAO('SubmissionDAO')->updateObject($submission);
+		return new JSONMessage(true, '');
 	}
 
 	/**

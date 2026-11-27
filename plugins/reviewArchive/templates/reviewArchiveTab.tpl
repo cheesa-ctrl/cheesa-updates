@@ -127,6 +127,16 @@
 				$status.text((response && response.status) ? $form.data('saved') : ($form.data('failed')));
 			}, 'json').fail(function() { $status.text($form.data('failed')); });
 		});
+
+		// Save the pasted discussion-HTML archive.
+		$doc.off('submit.raDisc').on('submit.raDisc', 'form.ra_disc_form', function(e) {
+			e.preventDefault();
+			var $form = $(this), $status = $form.find('.ra_disc_status');
+			$status.text($form.data('saving'));
+			$.post($form.attr('action'), $form.serialize(), function(response) {
+				$status.text((response && response.status) ? $form.data('saved') : ($form.data('failed')));
+			}, 'json').fail(function() { $status.text($form.data('failed')); });
+		});
 	})();
 </script>
 {/literal}
@@ -230,7 +240,7 @@
 	</div>
 	{/if}
 
-	{if $discussions}
+	{if $discussions || $discussionCanEdit}
 	<div class="ra_section ra_disc">
 		<div class="ra_header">
 			<h4>Diskusi Review</h4>
@@ -258,6 +268,23 @@
 				</ul>
 			</div>
 		{/foreach}
+
+		{if !$discussions}
+			<div class="ra_dv_note">Tidak ada diskusi di OJS untuk artikel ini. Jika artikel ini hasil migrasi, diskusinya mungkin tidak ikut terbawa — tempel HTML diskusi dari OJS lama di bawah, atau lihat folder Google Drive.</div>
+		{/if}
+
+		{if $discussionCanEdit}
+			<details class="ra_dv_edit"{if !$discussions} open{/if}>
+				<summary>Tempel diskusi dari OJS (HTML)</summary>
+				<p class="ra_dv_meta">Buka diskusi di OJS (mis. "Revisi Kembali"), klik kanan &rarr; <em>Inspect</em> pada panel diskusi, salin elemen panelnya (yang memuat Participants + Messages), lalu tempel di sini. Bisa tempel <strong>beberapa diskusi sekaligus</strong> (mis. Review lalu Copyediting) — cukup tempel panel-panelnya berurutan, tiap panel akan jadi thread sendiri. Plugin membaca peserta, pesan, dan lampiran tiap diskusi. Kosongkan lalu simpan untuk menghapus.</p>
+				<form class="ra_disc_form" method="post" action="{$discussionSaveUrl|escape}" data-saving="Menyimpan…" data-saved="Tersimpan. Buka tab lain lalu kembali ke sini untuk melihat hasilnya." data-failed="Gagal menyimpan.">
+					<input type="hidden" name="csrfToken" value="{$csrfToken|escape}">
+					<textarea name="reviewArchiveDiscussionText" rows="6" style="width:100%;box-sizing:border-box;font:inherit;padding:.5rem;" placeholder="Tempel HTML diskusi dari OJS di sini…">{$discussionText|escape}</textarea>
+					<button type="submit" class="pkpButton">Simpan diskusi</button>
+					<span class="ra_disc_status ra_muted"></span>
+				</form>
+			</details>
+		{/if}
 	</div>
 	{/if}
 
