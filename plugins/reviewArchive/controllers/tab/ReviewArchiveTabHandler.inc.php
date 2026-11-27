@@ -431,7 +431,15 @@ class ReviewArchiveTabHandler extends Handler {
 		foreach ($groups as $g) {
 			$isLog = DriveClient::looksLikeActivityLog($g['name']);
 			$isReviewer = (bool) preg_match('/reviewer|penelaah|mitra\s*bestari|review\s*\d/iu', (string) $g['name']);
-			if ($isReviewer && trim($g['name']) !== '' && $g['name'] !== '(Folder utama)') $reviewers[] = trim($g['name']);
+			// The path's last segment, e.g. "2. Review File / 1. Reviewer" -> "1. Reviewer".
+			$segments = preg_split('#\s*/\s*#', (string) $g['name']);
+			$last = trim((string) end($segments));
+			// Only collect a reviewer chip when the segment carries an actual
+			// name, not just numbering + the word "Reviewer"/"Editor".
+			if ($isReviewer) {
+				$nameOnly = trim(preg_replace('/^\s*\d+\s*[.\)-]*\s*|reviewer|penelaah|mitra\s*bestari|review\s*file|editor/iu', '', $last));
+				if (preg_match('/\p{L}{3,}/u', $nameOnly)) $reviewers[] = $last;
+			}
 			$files = [];
 			foreach ($g['files'] as $f) {
 				$id = (string) ($f['id'] ?? '');

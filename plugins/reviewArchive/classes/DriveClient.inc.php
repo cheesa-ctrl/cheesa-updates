@@ -26,6 +26,7 @@ class DriveClient {
 	const GAPP_FOLDER = 'application/vnd.google-apps.folder';
 	const MAX_SUBFOLDERS = 400;
 	const MAX_NODES = 1500;
+	const MAX_DEPTH = 8;
 
 	/**
 	 * Pull a folder ID out of any Drive link shape, or a raw ID.
@@ -114,36 +115,50 @@ class DriveClient {
 	}
 
 	/**
-	 * Group one article folder by its structure: each sub-folder becomes a
-	 * group; loose files in the article folder become a "(Folder utama)" group.
-	 * One level of recursion is enough for the usual
-	 * "article / Reviewer 1 / files" layout. A node cap guards runaway trees.
+	 * Group one article folder by its structure, descending through ALL nested
+	 * sub-folders (e.g. "2. Review File / 1. Reviewer"). Every folder that
+	 * directly holds files becomes one group, labelled by its path relative to
+	 * the article folder. Loose files in the article folder itself go to a
+	 * "(Folder utama)" group. Depth, folder and node caps guard runaway trees.
 	 * @param $fid string
 	 * @param $key string
 	 * @return array of ['name' => , 'files' => [[id,name,mimeType,size], ...]]
 	 * @throws Exception
 	 */
 	public static function tree($fid, $key) {
-		$children = self::children($fid, $key);
-		$folders = [];
-		$rootFiles = [];
-		foreach ($children as $c) {
-			if (($c['mimeType'] ?? '') === self::GAPP_FOLDER) $folders[] = $c;
-			else $rootFiles[] = $c;
-		}
 		$groups = [];
-		if ($rootFiles) $groups[] = ['name' => '(Folder utama)', 'files' => $rootFiles];
-		$nodes = count($rootFiles);
-		$i = 0;
-		foreach ($folders as $sf) {
-			if (++$i > self::MAX_SUBFOLDERS || $nodes > self::MAX_NODES) break;
-			$files = array_values(array_filter(self::children($sf['id'], $key), function ($x) {
-				return ($x['mimeType'] ?? '') !== self::GAPP_FOLDER;
-			}));
-			$nodes += count($files);
-			$groups[] = ['name' => $sf['name'], 'files' => $files];
-		}
+		$ctr = ['nodes' => 0, 'folders' => 0];
+		self::_walk($fid, $key, '', 0, $groups, $ctr);
 		return $groups;
+	}
+
+	/**
+	 * Depth-first walk used by tree().
+	 * @param $fid string current folder
+	 * @param $key string
+	 * @param $path string path label so far ('' at the article root)
+	 * @param $depth int
+	 * @param $groups array by reference, collected groups
+	 * @param $ctr array by reference, ['nodes','folders'] running caps
+	 * @throws Exception
+	 */
+	protected static function _walk($fid, $key, $path, $depth, &$groups, &$ctr) {
+		if ($depth > self::MAX_DEPTH || $ctr['folders'] > self::MAX_SUBFOLDERS || $ctr['nodes'] > self::MAX_NODES) return;
+		$files = [];
+		$subs = [];
+		foreach (self::children($fid, $key) as $c) {
+			if (($c['mimeType'] ?? '') === self::GAPP_FOLDER) $subs[] = $c;
+			else $files[] = $c;
+		}
+		if ($files) {
+			$groups[] = ['name' => ($path === '' ? '(Folder utama)' : $path), 'files' => $files];
+			$ctr['nodes'] += count($files);
+		}
+		foreach ($subs as $sf) {
+			if (++$ctr['folders'] > self::MAX_SUBFOLDERS || $ctr['nodes'] > self::MAX_NODES) break;
+			$childPath = ($path === '' ? (string) $sf['name'] : $path . ' / ' . $sf['name']);
+			self::_walk($sf['id'], $key, $childPath, $depth + 1, $groups, $ctr);
+		}
 	}
 
 	/**
