@@ -49,6 +49,8 @@
 				<small>{translate key="plugins.generic.reviewArchive.import.option.production.help"}</small></label>
 			<label class="ra_option"><input type="checkbox" name="dropOldRevisions" value="1"> {translate key="plugins.generic.reviewArchive.import.option.revisions"}
 				<small>{translate key="plugins.generic.reviewArchive.import.option.revisions.help"}</small></label>
+			<label class="ra_option"><input type="checkbox" name="deepScan" value="1"> Pindai isi berkas (PDF) lebih dalam
+				<small>Default mati = cepat &amp; ringan: metadata/judul/abstrak/URL tetap dipindai penuh, hanya isi berkas yang dilewati. Aktifkan hanya jika server sedang sepi (mis. malam hari) karena jauh lebih berat.</small></label>
 		</fieldset>
 
 		<div class="ra_progress" aria-hidden="true"><span id="raBar"></span></div>

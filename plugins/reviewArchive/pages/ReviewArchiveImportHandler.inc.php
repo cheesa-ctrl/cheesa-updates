@@ -161,6 +161,7 @@ class ReviewArchiveImportHandler extends Handler {
 		self::$plugin->import('classes.JudolScanner');
 		try {
 			$scanner = new JudolScanner();
+			$scanner->setDeepFiles((bool) $request->getUserVar('deepScan'));
 			$report = $scanner->scanXmlString($xml);
 		} catch (\Throwable $e) {
 			error_log('reviewArchive analyze scan: ' . $e->getMessage());
@@ -215,6 +216,7 @@ class ReviewArchiveImportHandler extends Handler {
 		self::$plugin->import('classes.JudolScanner');
 		try {
 			$scanner = new JudolScanner();
+			$scanner->setDeepFiles((bool) $request->getUserVar('deepScan'));
 			$report = $scanner->scanXmlString($xml);
 		} catch (\Throwable $e) {
 			error_log('reviewArchive import scan: ' . $e->getMessage());

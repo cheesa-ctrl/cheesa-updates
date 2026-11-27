@@ -86,6 +86,15 @@ class JudolScanner extends TextExtractor {
 	/** @var float Waktu mulai pindai (untuk batas waktu). */
 	protected $_start = 0.0;
 
+	/** @var bool Pindai isi berkas ter-embed (decode + ekstraksi teks PDF). Default MATI demi keandalan. */
+	protected $_deepFiles = false;
+
+	/** @var int Jumlah berkas yang isinya tidak dipindai pada mode cepat. */
+	protected $_lightSkipped = 0;
+
+	/** Aktifkan pemindaian isi berkas (lebih dalam, lebih lambat/berat). */
+	public function setDeepFiles($b) { $this->_deepFiles = (bool) $b; }
+
 	/**
 	 * Scan a Native XML file.
 	 * @param $path string
@@ -108,6 +117,7 @@ class JudolScanner extends TextExtractor {
 		$this->_findings = [];
 		$this->_skipped = [];
 		$this->_scannedFiles = 0;
+		$this->_lightSkipped = 0;
 		$this->_start = microtime(true);
 
 		// Batasi langkah regex agar pola "catastrophic backtracking" pada PDF tertentu
@@ -172,6 +182,13 @@ class JudolScanner extends TextExtractor {
 		$fileElement = $embed->parentNode;
 		$extension = strtolower((string) ($fileElement instanceof DOMElement ? $fileElement->getAttribute('extension') : ''));
 		$location = $this->_describeFile($embed);
+
+		// Mode cepat (default): jangan decode/ekstrak isi berkas. Metadata tetap dipindai penuh
+		// di tempat lain. Ini membuat analyze cepat & ringan sehingga tahan timeout/beban server.
+		if (!$this->_deepFiles) {
+			$this->_lightSkipped++;
+			return;
+		}
 
 		// Batas waktu: setelah TIME_BUDGET, lewati berkas sisa agar tidak kena timeout server.
 		if ((microtime(true) - $this->_start) > self::TIME_BUDGET) {
@@ -397,9 +414,13 @@ class JudolScanner extends TextExtractor {
 	 * @return array
 	 */
 	protected function _result($error) {
+		$skipped = $this->_skipped;
+		if ($this->_lightSkipped > 0) {
+			$skipped[] = $this->_lightSkipped . ' berkas: isi tidak dipindai (mode cepat; metadata/teks tetap dipindai penuh)';
+		}
 		return [
 			'findings' => $this->_findings,
-			'skipped' => $this->_skipped,
+			'skipped' => $skipped,
 			'scannedFiles' => $this->_scannedFiles,
 			'error' => $error,
 		];
