@@ -230,12 +230,14 @@ class DriveClient {
 	}
 
 	/**
-	 * Does this name look like a reviewer certificate / assignment letter?
+	 * Does this name look like a reviewer certificate (CHEESA "Surat Tugas")?
+	 * Kept deliberately narrow: a cover letter, a reviewer-comment file or a
+	 * "review-assignment" manuscript must NOT be flagged.
 	 * @param $name string
 	 * @return bool
 	 */
 	public static function looksLikeCertificate($name) {
-		return (bool) preg_match('/surat\s*tugas|sertifik|certificate|penugasan|lor|letter|reviewer|penelaah|mitra\s*bestari/iu', (string) $name);
+		return (bool) preg_match('/surat\s*tugas|sertifik(?:at|asi)?|\bcertificate\b|surat\s*penugasan/iu', (string) $name);
 	}
 
 	/**
@@ -244,7 +246,7 @@ class DriveClient {
 	 * @return bool
 	 */
 	public static function looksLikeActivityLog($name) {
-		return (bool) preg_match('/activity|history|riwayat|aktivitas|\blog\b|catatan/iu', (string) $name);
+		return (bool) preg_match('/activity\s*log|activity|history|riwayat|aktivitas|\blog\b/iu', (string) $name);
 	}
 
 	/**
