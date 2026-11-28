@@ -336,12 +336,30 @@ class ReviewArchiveTabHandler extends Handler {
 				}
 			}
 
+			foreach ($list as &$ld) {
+				$ld['stageClass'] = $this->_stageClass(isset($ld['stage']) ? $ld['stage'] : '');
+			}
+			unset($ld);
 			$out['discussions'] = $list;
 		} catch (\Throwable $e) {
 			$out['discussions'] = [];
 			$out['discussionsError'] = $e->getMessage();
 		}
 		return $out;
+	}
+
+	/**
+	 * CSS slug for a stage label, used to colour-code a discussion.
+	 * @param $stage string
+	 * @return string
+	 */
+	protected function _stageClass($stage) {
+		$s = mb_strtolower(trim((string) $stage));
+		if (strpos($s, 'pre') !== false) return 'pre';
+		if (strpos($s, 'copyedit') !== false) return 'copyedit';
+		if (strpos($s, 'production') !== false) return 'prod';
+		if (strpos($s, 'review') !== false) return 'review';
+		return 'other';
 	}
 
 	/**

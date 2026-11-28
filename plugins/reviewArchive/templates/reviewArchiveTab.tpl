@@ -37,9 +37,17 @@
 	.pkp_review_archive .ra_dv_meta {ldelim} font-size: .8rem; color: #555; padding: 0 1rem; margin: .25rem 0 .75rem; {rdelim}
 	.pkp_review_archive .ra_dv_badge {ldelim} display: inline-block; background: #e6f0f5; color: #006798; border-radius: 10px; padding: .02rem .5rem; font-size: .72rem; margin-left: .35rem; vertical-align: middle; {rdelim}
 	.pkp_review_archive .ra_dv_rev {ldelim} background: #eaf6ea; color: #2a7a2a; {rdelim}
-	.pkp_review_archive .ra_dv_group {ldelim} border: 1px solid #e3e3e3; border-radius: 4px; margin: 0 1rem 1rem; {rdelim}
-	.pkp_review_archive .ra_dv_gh {ldelim} margin: 0; padding: .5rem .75rem; background: #f7f9fa; border-bottom: 1px solid #e3e3e3; font-size: .85rem; font-weight: 700; {rdelim}
-	.pkp_review_archive .ra_dv_gh.is_log {ldelim} background: #fff7e6; {rdelim}
+	.pkp_review_archive details.ra_dv_group {ldelim} border: 1px solid #e3e3e3; border-left: 4px solid #9aa7b1; border-radius: 5px; margin: 0 1rem .75rem; overflow: hidden; background: #fff; {rdelim}
+	.pkp_review_archive details.ra_dv_group[open] {ldelim} box-shadow: 0 1px 3px rgba(0,0,0,.06); {rdelim}
+	.pkp_review_archive details.ra_dv_group.is_rev {ldelim} border-left-color: #2a7a2a; {rdelim}
+	.pkp_review_archive details.ra_dv_group.is_log {ldelim} border-left-color: #d98a00; {rdelim}
+	.pkp_review_archive summary.ra_dv_gh {ldelim} list-style: none; cursor: pointer; margin: 0; padding: .55rem .75rem; background: #f7f9fa; font-size: .85rem; font-weight: 700; display: flex; align-items: center; gap: .45rem; user-select: none; {rdelim}
+	.pkp_review_archive summary.ra_dv_gh::-webkit-details-marker {ldelim} display: none; {rdelim}
+	.pkp_review_archive summary.ra_dv_gh::before {ldelim} content: "\25B8"; color: #8a99a5; font-size: .8rem; transition: transform .15s; {rdelim}
+	.pkp_review_archive details.ra_dv_group[open] > summary.ra_dv_gh::before {ldelim} transform: rotate(90deg); {rdelim}
+	.pkp_review_archive details.ra_dv_group.is_log > summary.ra_dv_gh {ldelim} background: #fff7e6; {rdelim}
+	.pkp_review_archive details.ra_dv_group.is_rev > summary.ra_dv_gh {ldelim} background: #f1f8f1; {rdelim}
+	.pkp_review_archive .ra_dv_gname {ldelim} flex: 1; {rdelim}
 	.pkp_review_archive .ra_dv_n {ldelim} color: #999; font-weight: 400; {rdelim}
 	.pkp_review_archive ul.ra_dv_files {ldelim} list-style: none; margin: 0; padding: 0; {rdelim}
 	.pkp_review_archive li.ra_dv_file {ldelim} display: flex; align-items: center; gap: .5rem; padding: .45rem .75rem; border-top: 1px solid #f1f1f1; font-size: .85rem; {rdelim}
@@ -60,9 +68,25 @@
 	.ra_modal_hd a, .ra_modal_hd button {ldelim} font-size: .8rem; cursor: pointer; {rdelim}
 	.ra_modal_box iframe {ldelim} flex: 1; border: 0; width: 100%; {rdelim}
 
-	/* Review discussions */
-	.pkp_review_archive .ra_disc_thread {ldelim} border: 1px solid #e3e3e3; border-radius: 4px; margin: 0 1rem 1rem; {rdelim}
-	.pkp_review_archive .ra_disc_title {ldelim} margin: 0; padding: .5rem .75rem; background: #f7f9fa; border-bottom: 1px solid #e3e3e3; font-size: .88rem; font-weight: 700; {rdelim}
+	/* Review discussions (collapsible, colour-coded per stage) */
+	.pkp_review_archive details.ra_disc_thread {ldelim} border: 1px solid #e3e3e3; border-left: 4px solid #9aa7b1; border-radius: 5px; margin: 0 1rem .75rem; overflow: hidden; background: #fff; {rdelim}
+	.pkp_review_archive details.ra_disc_thread[open] {ldelim} box-shadow: 0 1px 3px rgba(0,0,0,.06); {rdelim}
+	.pkp_review_archive details.ra_disc_thread.ra_stg_pre {ldelim} border-left-color: #d98a00; {rdelim}
+	.pkp_review_archive details.ra_disc_thread.ra_stg_review {ldelim} border-left-color: #006798; {rdelim}
+	.pkp_review_archive details.ra_disc_thread.ra_stg_copyedit {ldelim} border-left-color: #2a7a2a; {rdelim}
+	.pkp_review_archive details.ra_disc_thread.ra_stg_prod {ldelim} border-left-color: #7b4ea8; {rdelim}
+	.pkp_review_archive summary.ra_disc_sum {ldelim} list-style: none; cursor: pointer; display: flex; align-items: center; gap: .5rem; padding: .55rem .75rem; background: #f7f9fa; font-size: .86rem; user-select: none; {rdelim}
+	.pkp_review_archive summary.ra_disc_sum::-webkit-details-marker {ldelim} display: none; {rdelim}
+	.pkp_review_archive summary.ra_disc_sum::before {ldelim} content: "\25B8"; color: #8a99a5; font-size: .8rem; transition: transform .15s; {rdelim}
+	.pkp_review_archive details.ra_disc_thread[open] > summary.ra_disc_sum::before {ldelim} transform: rotate(90deg); {rdelim}
+	.pkp_review_archive .ra_disc_stage {ldelim} flex: none; font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .02em; color: #fff; background: #9aa7b1; border-radius: 3px; padding: .08rem .45rem; {rdelim}
+	.pkp_review_archive .ra_stg_pre .ra_disc_stage {ldelim} background: #d98a00; {rdelim}
+	.pkp_review_archive .ra_stg_review .ra_disc_stage {ldelim} background: #006798; {rdelim}
+	.pkp_review_archive .ra_stg_copyedit .ra_disc_stage {ldelim} background: #2a7a2a; {rdelim}
+	.pkp_review_archive .ra_stg_prod .ra_disc_stage {ldelim} background: #7b4ea8; {rdelim}
+	.pkp_review_archive .ra_disc_name {ldelim} flex: 1; font-weight: 700; color: #002c40; word-break: break-word; {rdelim}
+	.pkp_review_archive .ra_disc_count {ldelim} flex: none; color: #888; font-size: .76rem; {rdelim}
+	.pkp_review_archive .ra_disc_bd {ldelim} border-top: 1px solid #eee; {rdelim}
 	.pkp_review_archive .ra_disc_part {ldelim} margin: 0; padding: .5rem .75rem; font-size: .82rem; color: #555; border-bottom: 1px dashed #eee; {rdelim}
 	.pkp_review_archive ul.ra_disc_msgs {ldelim} list-style: none; margin: 0; padding: 0; {rdelim}
 	.pkp_review_archive li.ra_disc_msg {ldelim} padding: .6rem .75rem; border-top: 1px solid #f1f1f1; font-size: .85rem; {rdelim}
@@ -187,11 +211,12 @@
 		{/if}
 
 		{if $driveGroups}
-			{foreach from=$driveGroups item=g}
-				<div class="ra_dv_group">
-					<h5 class="ra_dv_gh{if $g.isLog} is_log{/if}">
-						{$g.name|escape}{if $g.isReviewer}<span class="ra_dv_badge ra_dv_rev">reviewer</span>{/if}{if $g.isLog}<span class="ra_dv_badge">activity log</span>{/if} <span class="ra_dv_n">({$g.files|@count})</span>
-					</h5>
+			{foreach from=$driveGroups item=g name=dgrp}
+				<details class="ra_dv_group{if $g.isLog} is_log{elseif $g.isReviewer} is_rev{/if}"{if $smarty.foreach.dgrp.first} open{/if}>
+					<summary class="ra_dv_gh">
+						<span class="ra_dv_gname">{$g.name|escape}{if $g.isReviewer}<span class="ra_dv_badge ra_dv_rev">reviewer</span>{/if}{if $g.isLog}<span class="ra_dv_badge">activity log</span>{/if}</span>
+						<span class="ra_dv_n">{$g.files|@count} berkas</span>
+					</summary>
 					<ul class="ra_dv_files">
 						{foreach from=$g.files item=f}
 							<li class="ra_dv_file">
@@ -204,7 +229,7 @@
 							</li>
 						{/foreach}
 					</ul>
-				</div>
+				</details>
 			{/foreach}
 		{/if}
 
@@ -246,34 +271,40 @@
 			<h4>Diskusi Review</h4>
 			<p>Percakapan editor, penulis, dan reviewer beserta lampirannya, diarsipkan dari OJS.</p>
 		</div>
-		{foreach from=$discussions item=d}
-			<div class="ra_disc_thread">
-				<h5 class="ra_disc_title">{$d.title|escape}{if $d.stage}<span class="ra_dv_badge">{$d.stage|escape}</span>{/if}{if $d.indexOnly && $d.closed}<span class="ra_dv_badge">ditutup</span>{/if}</h5>
-				{if $d.indexOnly}
-					<p class="ra_disc_part">
-						{if $d.from}<strong>Dibuat oleh:</strong> {$d.from|escape}{/if}{if $d.date} &middot; {$d.date|escape}{/if}{if $d.replies != ''} &middot; Balasan: {$d.replies|escape}{/if}
-					</p>
-					{if $d.link}<p class="ra_disc_part"><a href="{$d.link|escape}" target="_blank" rel="noopener">Buka diskusi di OJS</a> <span class="ra_muted">— daftar saja; isi pesan tidak termuat. Tempel panel diskusinya untuk pesan lengkap.</span></p>{/if}
-				{else}
-					{if $d.participants}
-						<p class="ra_disc_part"><strong>Peserta:</strong> {foreach from=$d.participants item=p name=pp}{$p|escape}{if !$smarty.foreach.pp.last}, {/if}{/foreach}</p>
+		{foreach from=$discussions item=d name=dloop}
+			<details class="ra_disc_thread ra_stg_{$d.stageClass}"{if $smarty.foreach.dloop.first} open{/if}>
+				<summary class="ra_disc_sum">
+					{if $d.stage}<span class="ra_disc_stage">{$d.stage|escape}</span>{/if}
+					<span class="ra_disc_name">{$d.title|escape}{if $d.indexOnly && $d.closed} <span class="ra_dv_badge">ditutup</span>{/if}</span>
+					{if $d.indexOnly}<span class="ra_disc_count">daftar</span>{else}<span class="ra_disc_count">{$d.messages|@count} pesan</span>{/if}
+				</summary>
+				<div class="ra_disc_bd">
+					{if $d.indexOnly}
+						<p class="ra_disc_part">
+							{if $d.from}<strong>Dibuat oleh:</strong> {$d.from|escape}{/if}{if $d.date} &middot; {$d.date|escape}{/if}{if $d.replies != ''} &middot; Balasan: {$d.replies|escape}{/if}
+						</p>
+						{if $d.link}<p class="ra_disc_part"><a href="{$d.link|escape}" target="_blank" rel="noopener">Buka diskusi di OJS</a> <span class="ra_muted">— daftar saja; isi pesan tidak termuat. Tempel panel diskusinya untuk pesan lengkap.</span></p>{/if}
+					{else}
+						{if $d.participants}
+							<p class="ra_disc_part"><strong>Peserta:</strong> {foreach from=$d.participants item=p name=pp}{$p|escape}{if !$smarty.foreach.pp.last}, {/if}{/foreach}</p>
+						{/if}
+						<ul class="ra_disc_msgs">
+							{foreach from=$d.messages item=m}
+								<li class="ra_disc_msg">
+									<div class="ra_disc_metline"><span class="ra_disc_from">{$m.from|escape}</span>{if $m.date}<span class="ra_disc_date">{$m.date|date_format:"%Y-%m-%d %H:%M"}</span>{/if}</div>
+									{if $m.title}<div class="ra_disc_subj">{$m.title|escape}</div>{/if}
+									{if $m.bodyHtml}<div class="ra_disc_body">{$m.bodyHtml}</div>{/if}
+									{if $m.attachments}
+										<div class="ra_disc_att">
+											{foreach from=$m.attachments item=a}{if $a.url}<a class="dl" href="{$a.url|escape}">{$a.name|escape}</a>{else}<span class="ra_dv_badge" title="Lampiran lama — unduh dari Google Drive">{$a.name|escape}</span>{/if}{/foreach}
+										</div>
+									{/if}
+								</li>
+							{/foreach}
+						</ul>
 					{/if}
-					<ul class="ra_disc_msgs">
-						{foreach from=$d.messages item=m}
-							<li class="ra_disc_msg">
-								<div class="ra_disc_metline"><span class="ra_disc_from">{$m.from|escape}</span>{if $m.date}<span class="ra_disc_date">{$m.date|date_format:"%Y-%m-%d %H:%M"}</span>{/if}</div>
-								{if $m.title}<div class="ra_disc_subj">{$m.title|escape}</div>{/if}
-								{if $m.bodyHtml}<div class="ra_disc_body">{$m.bodyHtml}</div>{/if}
-								{if $m.attachments}
-									<div class="ra_disc_att">
-										{foreach from=$m.attachments item=a}{if $a.url}<a class="dl" href="{$a.url|escape}">{$a.name|escape}</a>{else}<span class="ra_dv_badge" title="Lampiran lama — unduh dari Google Drive">{$a.name|escape}</span>{/if}{/foreach}
-									</div>
-								{/if}
-							</li>
-						{/foreach}
-					</ul>
-				{/if}
-			</div>
+				</div>
+			</details>
 		{/foreach}
 
 		{if !$discussions}
